@@ -270,3 +270,4 @@ gradle-app.setting
 
 # applicaion.yml or properties
 application.yml
+applicaion-swagger.yml

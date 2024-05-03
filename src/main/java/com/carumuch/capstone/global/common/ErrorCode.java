@@ -34,6 +34,8 @@ public enum ErrorCode {
     /**
      * 409 : CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재
      */
+    DUPLICATE_LOGINID(HttpStatus.CONFLICT, "이미 사용 중인 아이디 입니다."),
+    DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일 입니다."),
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "데이터가 이미 존재합니다."),
     RESOURCE_CONFLICT(HttpStatus.CONFLICT, "리소스 상태와 충돌이 발생했습니다."),
     OVER_VALIDATION(HttpStatus.CONFLICT,"더 이상 데이터를 저장 할 수 없습니다."),

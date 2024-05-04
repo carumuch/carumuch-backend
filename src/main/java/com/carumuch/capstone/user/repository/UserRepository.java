@@ -10,4 +10,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     boolean existsByLoginId(String loginId);
 
+    /**
+     * 이메일 중복 체크
+     */
+    boolean existsByEmail(String email);
+
 }

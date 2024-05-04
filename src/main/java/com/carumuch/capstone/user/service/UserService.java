@@ -27,12 +27,22 @@ public class UserService {
     }
 
     /**
+     * 이메일 중복 확인
+     */
+    public boolean checkEmailDuplicate(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    /**
      * Create: 회원 가입
      */
     @Transactional
     public Long join(JoinReqDto joinReqDto) {
         if (checkLoginIdDuplicate(joinReqDto.getLoginId())) {
             throw new CustomException(ErrorCode.DUPLICATE_LOGINID);
+        }
+        if (checkEmailDuplicate(joinReqDto.getEmail())) {
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
         return userRepository.save(User.builder()
                 .loginId(joinReqDto.getLoginId())

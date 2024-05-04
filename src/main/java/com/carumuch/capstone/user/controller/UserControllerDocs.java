@@ -14,7 +14,7 @@ public interface UserControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회원 가입 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
-            @ApiResponse(responseCode = "409", description = "아이디 중복")
+            @ApiResponse(responseCode = "409", description = "아이디/이메일 중복")
     })
     ResponseEntity<?> join(JoinReqDto joinReqDto);
 }

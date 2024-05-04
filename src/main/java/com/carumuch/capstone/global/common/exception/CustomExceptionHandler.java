@@ -1,5 +1,7 @@
 package com.carumuch.capstone.global.common.exception;
 
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,5 +24,13 @@ public class CustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<CustomErrorResponseDto> handleValidationException(MethodArgumentNotValidException e) {
         return CustomErrorResponseDto.valid(e);
+    }
+
+    /**
+     * validation param
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException e) {
+        return CustomErrorResponseDto.validParam(e);
     }
 }

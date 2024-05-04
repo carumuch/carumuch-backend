@@ -1,7 +1,6 @@
 package com.carumuch.capstone.global.common;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

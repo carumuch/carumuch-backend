@@ -1,14 +1,16 @@
 package com.carumuch.capstone.global.common.exception;
 
 import com.carumuch.capstone.global.common.ErrorCode;
+import jakarta.validation.ConstraintViolationException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @Getter
@@ -55,12 +57,28 @@ public class CustomErrorResponseDto {
 
         log.error(400 +"에러 발생 -> " + fieldName + " 필드의 입력값[ " + rejectedValue + " ]이 유효하지 않습니다.");
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(BAD_REQUEST)
                 .body(CustomErrorResponseDto.builder()
                         .success(false)
                         .status(400)
                         .code(fieldError.getDefaultMessage())
                         .message(fieldName + " 필드의 입력값[ " + rejectedValue + " ]이 유효하지 않습니다.")
+                        .build());
+    }
+
+    /**
+     * validation param
+     */
+    public static ResponseEntity<CustomErrorResponseDto> validParam(ConstraintViolationException e) {
+        String errorMessage = e.getMessage().substring(e.getMessage().indexOf(":") + 1).trim();
+        log.error(400 +"에러 발생 -> " + errorMessage);
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(CustomErrorResponseDto.builder()
+                        .success(false)
+                        .status(400)
+                        .code(BAD_REQUEST.name())
+                        .message(errorMessage)
                         .build());
     }
 }

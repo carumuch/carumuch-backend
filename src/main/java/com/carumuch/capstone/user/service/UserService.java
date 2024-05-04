@@ -22,15 +22,19 @@ public class UserService {
     /**
      * 아이디 중복 확인
      **/
-    public boolean checkLoginIdDuplicate(String loginId) {
-        return userRepository.existsByLoginId(loginId);
+    public void checkLoginIdDuplicate(String loginId) {
+        if (userRepository.existsByLoginId(loginId)) {
+            throw new CustomException(ErrorCode.DUPLICATE_LOGINID);
+        }
     }
 
     /**
      * 이메일 중복 확인
      */
-    public boolean checkEmailDuplicate(String email) {
-        return userRepository.existsByEmail(email);
+    public void checkEmailDuplicate(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
+        }
     }
 
     /**
@@ -38,12 +42,8 @@ public class UserService {
      */
     @Transactional
     public Long join(JoinReqDto joinReqDto) {
-        if (checkLoginIdDuplicate(joinReqDto.getLoginId())) {
-            throw new CustomException(ErrorCode.DUPLICATE_LOGINID);
-        }
-        if (checkEmailDuplicate(joinReqDto.getEmail())) {
-            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
-        }
+        checkLoginIdDuplicate(joinReqDto.getLoginId()); // 아이디 중복 확인
+        checkEmailDuplicate(joinReqDto.getEmail()); // 이메일 중복 확인
         return userRepository.save(User.builder()
                 .loginId(joinReqDto.getLoginId())
                 .password(joinReqDto.getPassword())

@@ -17,8 +17,12 @@ public class SwaggerConfig {
      */
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("JWT"))
-                .components(new Components().addSecuritySchemes("JWT", createAPIKeyScheme()))
+        return new OpenAPI().addSecurityItem(new SecurityRequirement()
+                        .addList("Access Token ")
+                        .addList("Refresh Token"))
+                .components(new Components()
+                        .addSecuritySchemes("Access Token ", createAPIKeyScheme())
+                        .addSecuritySchemes("Refresh Token", createRTKeyScheme()))
                 .info(new Info()
                         .title("Capstone")
                         .version("v2.0.2")
@@ -27,11 +31,23 @@ public class SwaggerConfig {
     }
 
     /**
-     * JWT header 설정
+     * Access Token header 설정
      */
     private SecurityScheme createAPIKeyScheme() {
-        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .in(SecurityScheme.In.HEADER)
                 .bearerFormat("JWT")
                 .scheme("bearer");
+    }
+
+    /**
+     * Refresh Token header 설정
+     */
+    private SecurityScheme createRTKeyScheme() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("refresh-token");
     }
 }

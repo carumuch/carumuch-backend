@@ -21,6 +21,14 @@ public interface AuthControllerDocs {
     @PostMapping("/login")
     ResponseEntity<?> login(@RequestBody LoginReqDto loginReqDto);
 
+    /* 로그아웃 -> Filter 로 진행 */
+    @Operation(summary = "로그아웃 요청", description = "**성공 응답 데이터:** 헤더의 `쿠키 0` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "401", description = "로그아웃 실패"),
+    })
+    @PostMapping("/logout")
+    ResponseEntity<?> logout();
 
     /* 재발급 */
     @Operation(summary = "재발급 요청", description = "**성공 데이터:** 헤더의 `토큰`," +

@@ -28,6 +28,12 @@ public class AuthController implements AuthControllerDocs {
         return null;
     }
 
+    /* 로그아웃 Docs */
+    @Override
+    public ResponseEntity<?> logout() {
+        return null;
+    }
+
     /**
      * 토큰 재발급
      */

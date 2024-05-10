@@ -121,8 +121,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(7776000);
-        cookie.setSecure(true);
-        cookie.setPath("/");
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;

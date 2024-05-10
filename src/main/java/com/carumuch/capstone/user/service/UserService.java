@@ -8,6 +8,7 @@ import com.carumuch.capstone.user.dto.JoinReqDto;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 아이디 중복 확인
@@ -46,7 +48,7 @@ public class UserService {
         checkEmailDuplicate(joinReqDto.getEmail()); // 이메일 중복 확인
         return userRepository.save(User.builder()
                 .loginId(joinReqDto.getLoginId())
-                .password(joinReqDto.getPassword())
+                .password(bCryptPasswordEncoder.encode(joinReqDto.getPassword()))
                 .email(joinReqDto.getEmail())
                 .name(joinReqDto.getName())
                 .role(Role.ADMIN)

@@ -41,4 +41,10 @@ public class User extends BaseTimeEntity {
         this.name = name;
         this.role = role;
     }
+
+    /* OAuth2 사용자 정보 업데이트 */
+    public void updateOAuth2(String name,String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

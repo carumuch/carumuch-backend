@@ -51,7 +51,7 @@ public class UserService {
                 .password(bCryptPasswordEncoder.encode(joinReqDto.getPassword()))
                 .email(joinReqDto.getEmail())
                 .name(joinReqDto.getName())
-                .role(Role.ADMIN)
+                .role(Role.USER)
                 .build()).getId();
     }
 }

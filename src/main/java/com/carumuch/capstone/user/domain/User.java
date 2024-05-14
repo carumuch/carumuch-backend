@@ -1,5 +1,6 @@
 package com.carumuch.capstone.user.domain;
 
+import com.carumuch.capstone.board.domain.Board;
 import com.carumuch.capstone.global.auditing.BaseTimeEntity;
 import com.carumuch.capstone.user.domain.type.Role;
 import jakarta.persistence.*;
@@ -7,6 +8,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @Table(name = "user")
@@ -32,6 +38,9 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Board> boards = new ArrayList<>();
 
     @Builder
     public User(String loginId, String password, String email, String name, Role role) {

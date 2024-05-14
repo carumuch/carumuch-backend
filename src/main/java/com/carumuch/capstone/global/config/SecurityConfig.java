@@ -1,10 +1,8 @@
 package com.carumuch.capstone.global.config;
 
-import com.carumuch.capstone.auth.jwt.CustomLogoutFilter;
-import com.carumuch.capstone.auth.jwt.JwtAuthenticationFilter;
-import com.carumuch.capstone.auth.jwt.JwtTokenProvider;
-import com.carumuch.capstone.auth.jwt.CustomUsernamePasswordAuthenticationFilter;
+import com.carumuch.capstone.auth.jwt.*;
 import com.carumuch.capstone.auth.service.AuthService;
+import com.carumuch.capstone.auth.service.CustomOAuth2UserService;
 import com.carumuch.capstone.global.common.exception.CustomAccessDeniedHandler;
 import com.carumuch.capstone.global.common.exception.CustomAuthenticationEntryPoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,14 +34,25 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtTokenProvider jwtTokenProvider, AuthService authService, ObjectMapper objectMapper, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          JwtTokenProvider jwtTokenProvider,
+                          AuthService authService,
+                          ObjectMapper objectMapper,
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                          CustomAccessDeniedHandler customAccessDeniedHandler,
+                          CustomOAuth2UserService customOAuth2UserService,
+                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authService = authService;
         this.objectMapper = objectMapper;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
@@ -101,6 +110,12 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         CustomUsernamePasswordAuthenticationFilter.class);
+        /* 소셜 로그인 */
+        http
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService)))
+                        .successHandler(customOAuth2SuccessHandler));
         /* 로그인 필터 */
         http
                 .addFilterAt(new CustomUsernamePasswordAuthenticationFilter(

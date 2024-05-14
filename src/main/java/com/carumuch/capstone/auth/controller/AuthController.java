@@ -39,7 +39,6 @@ public class AuthController implements AuthControllerDocs {
      */
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request) {
-
         /* 쿠키의 Refresh token 추출 */
         String requestRefreshToken = null;
         Cookie[] cookies = request.getCookies();

@@ -7,14 +7,10 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    /**
-     * 로그인 아이디 중복 체크
-     */
+    /* 로그인 아이디 중복 체크 */
     boolean existsByLoginId(String loginId);
 
-    /**
-     * 이메일 중복 체크
-     */
+    /* 이메일 중복 체크 */
     boolean existsByEmail(String email);
 
     /**
@@ -28,5 +24,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * 1. 회원 탈퇴
      */
     void deleteByLoginId(String loginId);
+
+    /**
+     * Select
+     * 1. OAuth2 유저 갱신 사용
+     */
+    User findOAuth2UserByLoginId(String loginId);
 
 }

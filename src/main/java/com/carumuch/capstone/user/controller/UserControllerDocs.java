@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -49,4 +50,11 @@ public interface UserControllerDocs {
     ResponseEntity<?> checkEmail(
             @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$",
                     message = "이메일 형식에 맞지 않습니다.") String email);
+
+    @Operation(summary = "회원탈퇴 요청", description = "**성공 응답 데이터:**  `쿠키` 초기화")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "회원 탈퇴 완료"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다 혹은 서버 측 소셜 로그인 토큰이 만료 되었습니다. 재 로그인이 필요합니다."),
+    })
+    ResponseEntity<?> delete(HttpServletRequest request);
 }

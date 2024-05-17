@@ -15,15 +15,21 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final RedisService redisService;
+    private final long ACCESS_TOKEN_EXPIRATION = 3600 * 1000;
 
-    public CustomOAuth2UserService(UserRepository userRepository) {
+    public CustomOAuth2UserService(UserRepository userRepository, RedisService redisService) {
         this.userRepository = userRepository;
+        this.redisService = redisService;
     }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
+
+        /* 회원 탈퇴 토큰 추출 */
+        String oauth2AccessToken = userRequest.getAccessToken().getTokenValue();
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -56,6 +62,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(Role.USER)
                     .build());
 
+            /*레디스 소셜 로그인 토큰 저장*/
+            redisService.setValuesWithTimeout("AT(oauth2):" + loginId , oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
+
             /* 유저 정보 전달 */
             return new CustomOAuth2User(UserDto.builder()
                     .loginId(loginId)
@@ -66,6 +75,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         else {
             User user = userRepository.findOAuth2UserByLoginId(loginId);
             user.updateOAuth2(oAuth2Response.getName(), oAuth2Response.getEmail());
+
+            /* oauth2 토큰 중복 방지 */
+            if (redisService.getValues("AT(oauth2):" + loginId) != null) {
+                redisService.deleteValues("AT(oauth2):" + loginId);
+            }
+            /* 레디스 토큰 정보 */
+            redisService.setValuesWithTimeout("AT(oauth2):" + loginId ,oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
 
             return new CustomOAuth2User(UserDto.builder()
                     .loginId(user.getLoginId())

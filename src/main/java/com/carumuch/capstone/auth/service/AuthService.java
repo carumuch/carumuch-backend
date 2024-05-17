@@ -25,6 +25,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final String SERVER = "Server";
 
+    private final OAuth2UnlinkService oAuth2UnlinkService;
+
     /**
      * 로그아웃: Access Token 무효화
      */
@@ -39,6 +41,11 @@ public class AuthService {
             redisService.deleteValues("RT(" + SERVER + "):" + principal);
         }
 
+        /* 소셜 로그인 유저 일 경우 oauth2 access 토큰 삭제 */
+        if (redisService.getValues("AT(oauth2):" + principal) != null) {
+            redisService.deleteValues("AT(oauth2):" + principal);
+        }
+
         /* Redis에 로그아웃 처리한 Access Token 저장 */
         long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
         redisService.setValuesWithTimeout(requestAccessToken,
@@ -50,7 +57,6 @@ public class AuthService {
     /**
      * DELETE
      */
-    /* TODO : 회원 탈퇴 시 이용 (회원 탈퇴 미구현) */
     @Transactional
     public void delete(String requestAccessTokenInHeader) {
         String requestAccessToken = resolveToken(requestAccessTokenInHeader);
@@ -68,6 +74,13 @@ public class AuthService {
                 expiration);
         /* DB에 저장 되어 있는 회원 삭제 */
         userRepository.deleteByLoginId(principal);
+        if (principal.startsWith("kakao") || principal.startsWith("google") || principal.startsWith("naver")) {
+            oAuth2UnlinkService.unlink(principal);
+        }
+        /* oauth2 access 토큰 삭제 */
+        if (redisService.getValues("AT(oauth2):" + principal) != null) {
+            redisService.deleteValues("AT(oauth2):" + principal);
+        }
         log.info(principal + " : " + "delete" + "(" + new Date() + ")");
     }
 

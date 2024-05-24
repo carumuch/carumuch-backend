@@ -59,4 +59,14 @@ public class ImageService {
     public String getImagePath(MultipartFile image){
         return SetImageKey.buildImageKey(Objects.requireNonNull(image.getOriginalFilename()));
     }
+
+    /*이미지 로드*/
+    public String getImage(String imageKey){
+        GetUrlRequest getUrlRequest = GetUrlRequest.builder()
+                .bucket(bucket)
+                .key(imageKey)
+                .build();
+
+        return s3Client.utilities().getUrl(getUrlRequest).toString();
+    }
 }

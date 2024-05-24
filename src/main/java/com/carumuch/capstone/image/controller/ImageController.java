@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestController
@@ -27,6 +28,14 @@ public class ImageController implements ImageControllerDocs {
         return ResponseEntity
                 .status(CREATED)
                 .body(ResponseDto.success(CREATED,imageUrl));
+    }
+
+    @Override
+    public ResponseEntity<?> s3Load(@RequestParam("imageKey") String imageKey){
+        String imageUrl = imageService.getImage(imageKey);
+        return ResponseEntity
+                .status(OK)
+                .body(ResponseDto.success(OK,imageUrl));
     }
 
 }

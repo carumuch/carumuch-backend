@@ -20,6 +20,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLoginId(String loginId);
 
     /**
+     * select: 로그인 된 회원 검색
+     */
+    User findLonginUserByLoginId(String loginId);
+
+    /**
      * DELETE
      * 1. 회원 탈퇴
      */

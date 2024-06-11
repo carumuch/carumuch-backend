@@ -56,4 +56,15 @@ public class User extends BaseTimeEntity {
         this.name = name;
         this.email = email;
     }
+
+    /* 사용자 정보 수정 */
+    public void update(String name,String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    /* 사용자 비밀번호 수정 */
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

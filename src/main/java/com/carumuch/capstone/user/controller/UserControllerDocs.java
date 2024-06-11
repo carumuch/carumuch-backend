@@ -1,6 +1,8 @@
 package com.carumuch.capstone.user.controller;
 
 import com.carumuch.capstone.user.dto.JoinReqDto;
+import com.carumuch.capstone.user.dto.UpdatePasswordReqDto;
+import com.carumuch.capstone.user.dto.UpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -57,4 +59,20 @@ public interface UserControllerDocs {
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다 혹은 서버 측 소셜 로그인 토큰이 만료 되었습니다. 재 로그인이 필요합니다."),
     })
     ResponseEntity<?> delete(HttpServletRequest request);
+
+    @Operation(summary = "회원 수정 요청", description = "**성공 응답 데이터:**  사용자의 `user_id` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "회원 수정 완료"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다 혹은 서버 측 소셜 로그인 토큰이 만료 되었습니다. 재 로그인이 필요합니다."),
+            @ApiResponse(responseCode = "409", description = "이메일 중복")
+    })
+    ResponseEntity<?> update(UpdateReqDto updateReqDto);
+
+    @Operation(summary = "비밀번호 수정 요청", description = "**성공 응답 데이터:**  사용자의 `user_id` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "비밀번호 수정 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다 혹은 서버 측 소셜 로그인 토큰이 만료 되었습니다. 재 로그인이 필요합니다.")
+    })
+    ResponseEntity<?> updatePassword(UpdatePasswordReqDto updatePasswordReqDto);
 }

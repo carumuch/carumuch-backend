@@ -4,6 +4,8 @@ import com.carumuch.capstone.auth.service.AuthService;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.user.dto.JoinReqDto;
+import com.carumuch.capstone.user.dto.UpdatePasswordReqDto;
+import com.carumuch.capstone.user.dto.UpdateReqDto;
 import com.carumuch.capstone.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +68,23 @@ public class UserController implements UserControllerDocs{
                 .status(OK)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ResponseDto.success(OK,null));
+    }
+
+    /**
+     * Update: 회원 수정
+     */
+    @PutMapping
+    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody UpdateReqDto updateReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, userService.update(updateReqDto)));
+    }
+
+    /**
+     * Update: 비밀번호 수정
+     */
+    @PutMapping("/pwd")
+    public ResponseEntity<?> updatePassword(@Validated(ValidationSequence.class) @RequestBody UpdatePasswordReqDto updatePasswordReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, userService.updatePassword(updatePasswordReqDto)));
     }
 }

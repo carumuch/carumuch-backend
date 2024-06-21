@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Schema(name = "UpdateReqDto: 회원 수정 요청 Dto")
-public class UpdateReqDto {
+public class UserUpdateReqDto {
 
     @NotBlank(message = "이메일이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$",
@@ -27,7 +27,7 @@ public class UpdateReqDto {
     private String name;
 
     @Builder
-    public UpdateReqDto(String email, String name) {
+    public UserUpdateReqDto(String email, String name) {
         this.email = email;
         this.name = name;
     }

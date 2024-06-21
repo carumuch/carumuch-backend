@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * select: 로그인 된 회원 검색
      */
-    User findLonginUserByLoginId(String loginId);
+    User findLoginUserByLoginId(String loginId);
 
     /**
      * DELETE

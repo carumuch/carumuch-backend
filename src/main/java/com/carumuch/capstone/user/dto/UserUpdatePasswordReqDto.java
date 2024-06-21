@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Schema(name = "UpdatePasswordReqDto: 비밀번호 수정 Dto")
-public class UpdatePasswordReqDto {
+@Schema(name = "UpdatePasswordReqDto: 비밀번호 수정 요청 Dto")
+public class UserUpdatePasswordReqDto {
 
     @NotBlank(message = "비밀번호가 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}$",
@@ -30,7 +30,7 @@ public class UpdatePasswordReqDto {
     private String newPassword;
 
     @Builder
-    public UpdatePasswordReqDto(String password, String newPassword) {
+    public UserUpdatePasswordReqDto(String password, String newPassword) {
         this.password = password;
         this.newPassword = newPassword;
     }

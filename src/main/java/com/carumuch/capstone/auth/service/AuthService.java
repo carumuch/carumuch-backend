@@ -1,7 +1,11 @@
 package com.carumuch.capstone.auth.service;
 
+import com.carumuch.capstone.auth.dto.ResetPasswordDto;
 import com.carumuch.capstone.auth.dto.TokenDto;
 import com.carumuch.capstone.auth.jwt.JwtTokenProvider;
+import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -171,5 +175,15 @@ public class AuthService {
             return requestAccessTokenInHeader.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 3. 비밀번호 찾기: 새 비밀번호 업데이트
+     */
+    @Transactional
+    public void resetPassword(String email, ResetPasswordDto resetPasswordDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.updatePassword(resetPasswordDto.getNewPassword());
     }
 }

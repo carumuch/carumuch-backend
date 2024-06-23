@@ -1,9 +1,11 @@
-package com.carumuch.capstone.auth.dto;
+package com.carumuch.capstone.auth.dto.oauth2;
 
+
+import com.carumuch.capstone.auth.dto.oauth2.OAuth2Response;
 
 import java.util.Map;
 
-public class KakaoResponse implements OAuth2Response{
+public class KakaoResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
     private final String id;

@@ -93,7 +93,7 @@ public class UserController implements UserControllerDocs{
     /**
      * Update: 비밀번호 수정
      */
-    @PutMapping("/pwd")
+    @PutMapping("/password")
     public ResponseEntity<?> updatePassword(@Validated(ValidationSequence.class) @RequestBody UserUpdatePasswordReqDto userUpdatePasswordReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, userService.updatePassword(userUpdatePasswordReqDto)));

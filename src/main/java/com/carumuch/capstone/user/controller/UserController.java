@@ -39,7 +39,7 @@ public class UserController implements UserControllerDocs{
     /**
      * CREATE: 회원 가입
      */
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody UserJoinReqDto userJoinReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, userService.join(userJoinReqDto)));
@@ -93,7 +93,7 @@ public class UserController implements UserControllerDocs{
     /**
      * Update: 비밀번호 수정
      */
-    @PutMapping("/pwd")
+    @PutMapping("/password")
     public ResponseEntity<?> updatePassword(@Validated(ValidationSequence.class) @RequestBody UserUpdatePasswordReqDto userUpdatePasswordReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, userService.updatePassword(userUpdatePasswordReqDto)));

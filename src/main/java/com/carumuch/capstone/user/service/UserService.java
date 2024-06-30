@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -62,13 +64,15 @@ public class UserService {
     public Long join(UserJoinReqDto userJoinReqDto) {
         checkLoginIdDuplicate(userJoinReqDto.getLoginId()); // 아이디 중복 확인
         checkEmailDuplicate(userJoinReqDto.getEmail()); // 이메일 중복 확인
-        return userRepository.save(User.builder()
+        Long userId = userRepository.save(User.builder()
                 .loginId(userJoinReqDto.getLoginId())
                 .password(bCryptPasswordEncoder.encode(userJoinReqDto.getPassword()))
                 .email(userJoinReqDto.getEmail())
                 .name(userJoinReqDto.getName())
                 .role(Role.USER)
                 .build()).getId();
+        log.info(userJoinReqDto.getName() + " : " + "join" + "(" + new Date() + ")");
+        return userId;
     }
 
     /**

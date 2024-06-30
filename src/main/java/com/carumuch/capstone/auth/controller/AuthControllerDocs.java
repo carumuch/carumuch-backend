@@ -1,12 +1,19 @@
 package com.carumuch.capstone.auth.controller;
 
 import com.carumuch.capstone.auth.dto.LoginReqDto;
+import com.carumuch.capstone.auth.dto.ResetPasswordDto;
+import com.carumuch.capstone.auth.dto.VerificationCodeDto;
+import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
+import com.carumuch.capstone.global.validation.ValidationSequence;
+import com.carumuch.capstone.user.dto.UserUpdatePasswordReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth")
@@ -38,4 +45,27 @@ public interface AuthControllerDocs {
             @ApiResponse(responseCode = "401", description = "재발급 실패, 유효한 토큰이 아닙니다, 제 로그인이 필요합니다."),
     })
     ResponseEntity<?> reissue(HttpServletRequest request);
+
+    @Operation(summary = "1. 비밀번호 찾기 -> 인증 번호 발급", description = "**성공 데이터:** true," +
+            " 존재하는 아이디라면 해당 아이디의 이메일로 인증번호가 발급")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일로 인증번호 전송 성공"),
+            @ApiResponse(responseCode = "400", description = "찾을 수 없는 아이디 입니다."),
+    })
+    ResponseEntity<?> verificationLoginId(VerificationLoginIdDto VerificationLoginIdDto);
+
+    @Operation(summary = "2. 비밀번호 찾기 -> 인증 번호 인증", description = "**성공 데이터:** 임시 토큰 쿠키 ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증번호 인증 성공"),
+            @ApiResponse(responseCode = "400", description = "인증번호가 잘 못 되었습니다."),
+    })
+    ResponseEntity<?> verificationCode(VerificationCodeDto verificationCodeDto);
+
+    @Operation(summary = "3. 비밀번호 찾기 -> 새 비밀번호 업데이트", description = "**성공 데이터:** true , 임시 토큰 쿠키 초기화")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "새 비밀번호 업데이트 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효시간 초과, 다시 시도")
+    })
+    ResponseEntity<?> resetPassword(ResetPasswordDto resetPasswordDto, HttpServletRequest request);
 }

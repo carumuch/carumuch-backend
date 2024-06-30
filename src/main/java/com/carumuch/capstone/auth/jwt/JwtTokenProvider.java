@@ -31,6 +31,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "role";
     private static final String LOGIN_ID_KEY = "loginId";
+    private static final String EMAIL_KEY = "email";
     private static final String url = "https://localhost:8080";
 
     private final String secretKey;
@@ -85,6 +86,25 @@ public class JwtTokenProvider implements InitializingBean {
 
         return new TokenDto(accessToken, refreshToken);
     }
+
+    /* Create: 임시 토큰 생성 */
+    @Transactional
+    public String createTemporaryToken(String email){
+        Long now = System.currentTimeMillis();
+
+        long temporaryTokenValidityInMilliseconds = 600 * 1000; // 10분
+
+        return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("alg", "HS512")
+                .setExpiration(new Date(now + temporaryTokenValidityInMilliseconds))
+                .setSubject("temporary-token")
+                .claim(url, true)
+                .claim(EMAIL_KEY, email)
+                .signWith(signingKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
 
 
     /* 토큰 추출 */

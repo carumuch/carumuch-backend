@@ -39,7 +39,7 @@ public class UserController implements UserControllerDocs{
     /**
      * CREATE: 회원 가입
      */
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody UserJoinReqDto userJoinReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, userService.join(userJoinReqDto)));

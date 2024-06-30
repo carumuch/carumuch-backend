@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,17 +54,18 @@ public interface AuthControllerDocs {
     })
     ResponseEntity<?> verificationLoginId(VerificationLoginIdDto VerificationLoginIdDto);
 
-    @Operation(summary = "2. 비밀번호 찾기 -> 인증 번호 인증", description = "**성공 데이터:** 임시 토큰 ")
+    @Operation(summary = "2. 비밀번호 찾기 -> 인증 번호 인증", description = "**성공 데이터:** 임시 토큰 쿠키 ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증번호 인증 성공"),
             @ApiResponse(responseCode = "400", description = "인증번호가 잘 못 되었습니다."),
     })
     ResponseEntity<?> verificationCode(VerificationCodeDto verificationCodeDto);
 
-    @Operation(summary = "3. 비밀번호 찾기 -> 새 비밀번호 업데이트", description = "**성공 데이터:** true , 토큰 쿠키 초기화")
+    @Operation(summary = "3. 비밀번호 찾기 -> 새 비밀번호 업데이트", description = "**성공 데이터:** true , 임시 토큰 쿠키 초기화")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "새 비밀번호 업데이트 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효시간 초과, 다시 시도")
     })
     ResponseEntity<?> resetPassword(ResetPasswordDto resetPasswordDto, HttpServletRequest request);
 }

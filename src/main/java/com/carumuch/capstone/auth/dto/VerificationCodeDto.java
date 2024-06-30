@@ -21,14 +21,14 @@ public class VerificationCodeDto {
     private String loginId;
 
     @NotBlank(message = "인증번호가 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
-    @Pattern(regexp = "^\\d{4}$", message = "인증번호는 4자리 숫자여야 합니다.",
+    @Pattern(regexp = "^\\d{6}$", message = "인증번호는 4자리 숫자여야 합니다.",
             groups = ValidationGroups.PatternGroup.class)
-    @Schema(description = "인증번호는 4자리 숫자 입니다.",
-            example = "1234")
-    private int code;
+    @Schema(description = "인증번호는 6자리 숫자 입니다.",
+            example = "123456")
+    private String code;
 
     @Builder
-    public VerificationCodeDto(String loginId, int code) {
+    public VerificationCodeDto(String loginId, String code) {
         this.loginId = loginId;
         this.code = code;
     }

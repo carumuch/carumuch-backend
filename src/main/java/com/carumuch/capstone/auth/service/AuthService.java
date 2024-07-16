@@ -208,7 +208,7 @@ public class AuthService {
         redisService.setValuesWithTimeout("CODE(" + SERVER + "):" + email, code, codeValidityInMilliseconds);
         /* 이메일 발송 */
         mailService.sendVerificationCodeMail(name, email, code);
-        log.info(name + " : " + "sendCodeMail" + "(" + new Date() + ")");
+        log.info(user.getLoginId() + " : " + "sendCodeMail" + "(" + new Date() + ")");
     }
 
     /**
@@ -234,5 +234,20 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         user.updatePassword(encodePassword);
+    }
+
+    /**
+     * 아이디 찾기
+     */
+    public void findLoginId(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        String loginId = user.getLoginId();
+
+        // 난독화 진행 -> 2,3번 째 아이디 "*"로 변경
+        String obfuscationLoginId = loginId.charAt(0) + "**" + loginId.substring(3);
+
+        mailService.sendFindLoginIdMail(user.getName(), user.getEmail(), obfuscationLoginId);
+        log.info(user.getLoginId() + " : " + "sendFindLoginIdMail" + "(" + new Date() + ")");
     }
 }

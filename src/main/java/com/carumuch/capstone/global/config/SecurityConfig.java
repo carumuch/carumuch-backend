@@ -103,7 +103,8 @@ public class SecurityConfig {
                                 "/users/signup", // 회원가입
                                 "/users/check-email/**",
                                 "/users/check-login-id/**",
-                                "/password/reset/**" // 비밀번호 찾기
+                                "/password/reset/**", // 비밀번호 찾기
+                                "/find-id" // 아이디 찾기
                         ).permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()

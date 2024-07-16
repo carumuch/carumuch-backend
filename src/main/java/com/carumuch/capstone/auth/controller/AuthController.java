@@ -144,4 +144,13 @@ public class AuthController implements AuthControllerDocs {
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ResponseDto.success(OK, null));
     }
+
+    /**
+     * 아이디 찾기
+     */
+    @PostMapping("/find-id")
+    public ResponseEntity<?> findLoginId(@Validated(ValidationSequence.class) @RequestBody FindLoginIdDto findLoginIdDto) {
+        authService.findLoginId(findLoginIdDto.getEmail());
+        return ResponseEntity.status(CREATED).body(ResponseDto.success(OK, null));
+    }
 }

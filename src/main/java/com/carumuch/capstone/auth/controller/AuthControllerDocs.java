@@ -1,9 +1,6 @@
 package com.carumuch.capstone.auth.controller;
 
-import com.carumuch.capstone.auth.dto.LoginReqDto;
-import com.carumuch.capstone.auth.dto.ResetPasswordDto;
-import com.carumuch.capstone.auth.dto.VerificationCodeDto;
-import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
+import com.carumuch.capstone.auth.dto.*;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.user.dto.UserUpdatePasswordReqDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,4 +65,11 @@ public interface AuthControllerDocs {
             @ApiResponse(responseCode = "401", description = "유효시간 초과, 다시 시도")
     })
     ResponseEntity<?> resetPassword(ResetPasswordDto resetPasswordDto, HttpServletRequest request);
+
+    @Operation(summary = "아이디 찾기", description = "**성공 데이터:** true")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일 전송 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+    })
+    ResponseEntity<?> findLoginId(FindLoginIdDto findLoginIdDto);
 }

@@ -25,7 +25,7 @@ public class Vehicle {
     private Long id;
 
     @Column(name = "license_number")
-    private int licenseNumber; // 차량 번호
+    private String licenseNumber; // 차량 번호
 
     @Column(name = "type")
     private String type; // 차량 유형 -> 법인/리스, 개인
@@ -51,7 +51,7 @@ public class Vehicle {
     private User user;
 
     @Builder
-    public Vehicle(int licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
+    public Vehicle(String licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
         this.licenseNumber = licenseNumber;
         this.type = type;
         this.brand = brand;
@@ -67,7 +67,7 @@ public class Vehicle {
     }
 
     /* 차량 정보 수정 */
-    public void update(int licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
+    public void update(String licenseNumber, String type, String brand, Integer modelYear, String modelName, String ownerName) {
         this.licenseNumber = licenseNumber;
         this.type = type;
         this.brand = brand;

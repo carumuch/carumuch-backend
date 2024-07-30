@@ -1,6 +1,5 @@
 package com.carumuch.capstone.auth.service;
 
-import com.carumuch.capstone.auth.dto.ResetPasswordDto;
 import com.carumuch.capstone.auth.dto.TokenDto;
 import com.carumuch.capstone.auth.dto.VerificationCodeDto;
 import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
@@ -8,16 +7,12 @@ import com.carumuch.capstone.auth.jwt.JwtTokenProvider;
 import com.carumuch.capstone.global.common.ErrorCode;
 import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.domain.type.Role;
 import com.carumuch.capstone.user.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

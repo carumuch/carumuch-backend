@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -18,10 +20,17 @@ public class BoardController implements BoardControllerDocs{
 
     private final BoardService boardService;
 
+
     @PostMapping("/write")
     public ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto){
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> findAll(){
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,boardService.findAll()));
     }
 
     @GetMapping("/{id}")

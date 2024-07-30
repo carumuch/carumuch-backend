@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -29,5 +31,11 @@ public class BoardService {
                 .boardContent(boardReqDto.getBoardContent())
                 .boardHits(0)
                 .build()).getId();
+    }
+
+    @Transactional
+    public Board findById(Long id){
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        return optionalBoard.orElse(null);
     }
 }

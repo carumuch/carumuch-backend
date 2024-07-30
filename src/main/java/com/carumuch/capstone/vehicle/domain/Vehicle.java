@@ -1,5 +1,7 @@
 package com.carumuch.capstone.vehicle.domain;
 
+import com.carumuch.capstone.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "vehicle")
@@ -42,6 +45,11 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle", cascade = ALL)
     private List<Estimate> estimates = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
     public Vehicle(int licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
         this.licenseNumber = licenseNumber;
@@ -50,6 +58,12 @@ public class Vehicle {
         this.modelYear = modelYear;
         this.modelName = modelName;
         this.ownerName = ownerName;
+    }
+
+    /* 연관 관계 메서드 */
+    public void setUser(User user) {
+        this.user = user;
+        user.getVehicles().add(this);
     }
 
     /* 차량 정보 수정 */

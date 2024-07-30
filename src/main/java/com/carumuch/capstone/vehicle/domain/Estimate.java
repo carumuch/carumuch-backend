@@ -1,6 +1,7 @@
 package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.bodyshop.domain.Bid;
+import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -50,6 +51,11 @@ public class Estimate {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
     public Estimate(String description, String damageArea, String preferredRepairLocation, boolean pickupRequired, String imageName, String imagePath) {
         this.description = description;
@@ -58,6 +64,16 @@ public class Estimate {
         this.pickupRequired = pickupRequired;
         this.imageName = imageName;
         this.imagePath = imagePath;
+    }
+
+    /* 연관 관계 메서드 */
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+        vehicle.getEstimates().add(this);
+    }
+    public void setUser(User user) {
+        this.user = user;
+        user.getEstimates().add(this);
     }
 
     /* 견적 내용 수정 */

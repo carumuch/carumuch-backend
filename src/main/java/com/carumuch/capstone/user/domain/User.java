@@ -4,6 +4,8 @@ import com.carumuch.capstone.board.domain.Board;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.global.auditing.BaseTimeEntity;
 import com.carumuch.capstone.user.domain.type.Role;
+import com.carumuch.capstone.vehicle.domain.Estimate;
+import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -49,6 +51,12 @@ public class User extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "body_shop_id")
     private BodyShop bodyShop;
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Estimate> estimates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Vehicle> vehicles = new ArrayList<>();
 
     @Builder
     public User(String loginId, String password, String email, String name, Role role) {

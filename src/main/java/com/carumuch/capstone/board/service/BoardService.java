@@ -22,10 +22,14 @@ public class BoardService {
 
     @Transactional
     public Long write(BoardReqDto boardReqDto){
+
+        /*로그인한 유저정보 조회*/
         String currentUsername = userAuditorAware.getCurrentAuditor()
                 .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
+
         User user = userRepository.findByLoginId(currentUsername)
                 .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
+
         return boardRepository.save(Board.builder()
                         .user(user)
                 .boardTitle(boardReqDto.getBoardTitle())
@@ -43,5 +47,26 @@ public class BoardService {
     public Board findById(Long id){
         Optional<Board> optionalBoard = boardRepository.findById(id);
         return optionalBoard.orElse(null);
+    }
+
+    public void delete(Long id){
+        /* 게시글 조회 */
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다"));
+
+        /* 로그인한 유저정보 조회 */
+        String currentUsername = userAuditorAware.getCurrentAuditor()
+                .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
+
+        User currentUser = userRepository.findByLoginId(currentUsername)
+                .orElseThrow(()->new RuntimeException("로그인이 되어있지 않습니다"));
+
+        /* 게시글 작성자와 접속되어있는 유저 비교 */
+        if (!board.getUser().equals(currentUser)){
+            throw new RuntimeException("이 게시글을 삭제할 권한이 없습니다");
+        }
+
+        boardRepository.delete(board);
+
     }
 }

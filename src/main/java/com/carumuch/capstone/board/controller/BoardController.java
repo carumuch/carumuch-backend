@@ -1,6 +1,5 @@
 package com.carumuch.capstone.board.controller;
 
-import com.carumuch.capstone.board.domain.Board;
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import com.carumuch.capstone.board.service.BoardService;
 import com.carumuch.capstone.global.common.ResponseDto;
@@ -37,6 +36,13 @@ public class BoardController implements BoardControllerDocs{
     public ResponseEntity<?> findById(@PathVariable("id") Long id){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.findById(id)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+        boardService.delete(id);
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,null));
     }
     
 }

@@ -49,6 +49,30 @@ public class BoardService {
         return optionalBoard.orElse(null);
     }
 
+    @Transactional
+    public Long update(Long id,BoardReqDto boardReqDto){
+
+        /* 로그인한 유저정보 조회 */
+        String currentUsername = userAuditorAware.getCurrentAuditor()
+                .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
+
+        User currentUser = userRepository.findByLoginId(currentUsername)
+                .orElseThrow(()->new RuntimeException("로그인이 되어있지 않습니다"));
+
+        /*게시글 조회*/
+        Board savedBoard = boardRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("게시글이 존재하지 않습니다"));
+
+        if(!savedBoard.getUser().equals(currentUser)){
+            throw new RuntimeException("이 게시글을 수정할 권한이 없습니다");
+        }
+
+        savedBoard.updateBoard(boardReqDto.getBoardTitle(), boardReqDto.getBoardContent());
+
+        return id;
+    }
+
+
     public void delete(Long id){
         /* 게시글 조회 */
         Board board = boardRepository.findById(id)
@@ -69,4 +93,5 @@ public class BoardService {
         boardRepository.delete(board);
 
     }
+
 }

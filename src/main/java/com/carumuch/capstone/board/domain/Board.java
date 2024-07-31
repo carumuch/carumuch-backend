@@ -46,4 +46,10 @@ public class Board extends BaseCreateByEntity {
         this.boardHits = boardHits;
         user.getBoards().add(this);
     }
+
+    public void updateBoard(String boardTitle, String boardContent){
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+    }
+
 }

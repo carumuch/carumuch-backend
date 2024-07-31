@@ -38,11 +38,17 @@ public class BoardController implements BoardControllerDocs{
                 .body(ResponseDto.success(OK,boardService.findById(id)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> delete(@PathVariable("id") Long id){
         boardService.delete(id);
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,null));
+    }
+
+    @PutMapping("/{id}/update")
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@RequestBody BoardReqDto boardReqDto){
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,boardService.update(id,boardReqDto)));
     }
     
 }

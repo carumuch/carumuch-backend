@@ -1,5 +1,6 @@
 package com.carumuch.capstone.vehicle.domain;
 
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "vehicle")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Vehicle {
+public class Vehicle extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicle_id")

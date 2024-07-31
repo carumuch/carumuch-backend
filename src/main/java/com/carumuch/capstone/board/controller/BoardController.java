@@ -32,21 +32,21 @@ public class BoardController implements BoardControllerDocs{
                 .body(ResponseDto.success(OK,boardService.findAll()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Long id){
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> findById(@PathVariable("boardId") Long id){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.findById(id)));
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+    @DeleteMapping("/{boardId}/delete")
+    public ResponseEntity<?> delete(@PathVariable("boardId") Long id){
         boardService.delete(id);
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,null));
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<?> update(@PathVariable("id") Long id,@RequestBody BoardReqDto boardReqDto){
+    @PutMapping("/{boardId}/update")
+    public ResponseEntity<?> update(@PathVariable("boardId") Long id,@RequestBody BoardReqDto boardReqDto){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.update(id,boardReqDto)));
     }

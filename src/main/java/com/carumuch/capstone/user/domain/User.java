@@ -1,8 +1,12 @@
 package com.carumuch.capstone.user.domain;
 
 import com.carumuch.capstone.board.domain.Board;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.global.auditing.BaseTimeEntity;
 import com.carumuch.capstone.user.domain.type.Role;
+import com.carumuch.capstone.vehicle.domain.Estimate;
+import com.carumuch.capstone.vehicle.domain.Vehicle;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "user")
@@ -42,6 +47,17 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Board> boards = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "body_shop_id")
+    private BodyShop bodyShop;
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Estimate> estimates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Vehicle> vehicles = new ArrayList<>();
+
     @Builder
     public User(String loginId, String password, String email, String name, Role role) {
         this.loginId = loginId;
@@ -55,5 +71,22 @@ public class User extends BaseTimeEntity {
     public void updateOAuth2(String name,String email) {
         this.name = name;
         this.email = email;
+    }
+
+    /* 사용자 정보 수정 */
+    public void update(String name,String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    /* 사용자 비밀번호 수정 */
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    /* body shop 사용자 등록 */
+    public void setBodyShop(BodyShop bodyShop) {
+        this.bodyShop = bodyShop;
+        bodyShop.getUsers().add(this);
     }
 }

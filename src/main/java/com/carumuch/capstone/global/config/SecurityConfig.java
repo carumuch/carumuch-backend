@@ -96,13 +96,16 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login",
-                                "/api-docs/**" ,
+                        .requestMatchers("/api-docs/**" ,
                                 "/v3/**",
-                                "/swagger-ui/**",
-                                "/users",
+                                "/swagger-ui/**", // 스웨거
+                                "/login", // 로그인
+                                "/users/signup", // 회원가입
                                 "/users/check-email/**",
-                                "/users/check-login-id/**").permitAll()
+                                "/users/check-login-id/**",
+                                "/password/reset/**", // 비밀번호 찾기
+                                "/find-id" // 아이디 찾기
+                        ).permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());

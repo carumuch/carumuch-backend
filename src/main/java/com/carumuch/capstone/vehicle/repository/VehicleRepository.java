@@ -12,4 +12,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
      * 1. 차량 정보 수정
      */
     Optional<Vehicle> findByLicenseNumber(String licenseNumber);
+
+    /**
+     * 차량 번호 중복 확인
+     */
+    boolean existsByLicenseNumber(String licenseNumber);
 }

@@ -28,6 +28,7 @@ public class VehicleService {
      */
     @Transactional
     public Long register(VehicleRegistrationReqDto requestDto) {
+        checkLicenseNumberDuplicate(requestDto.getLicenseNumber());// 차량 번호 중복 확인
         User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
         Vehicle vehicle = vehicleRepository.save(
                 Vehicle.builder()
@@ -40,6 +41,13 @@ public class VehicleService {
                 .build());
         vehicle.setUser(user);
         return vehicle.getId();
+    }
+
+    /* 차량 번호 중복 */
+    public void checkLicenseNumberDuplicate(String licenseNumber) {
+        if (vehicleRepository.existsByLicenseNumber(licenseNumber)) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
     }
 
     /**

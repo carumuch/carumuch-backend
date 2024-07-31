@@ -4,15 +4,12 @@ import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -25,7 +22,7 @@ public class Vehicle extends BaseCreateByEntity {
     @Column(name = "vehicle_id")
     private Long id;
 
-    @Column(name = "license_number")
+    @Column(name = "license_number", unique = true)
     private String licenseNumber; // 차량 번호
 
     @Column(name = "type")
@@ -43,7 +40,7 @@ public class Vehicle extends BaseCreateByEntity {
     @Column(name = "owner_name")
     private String ownerName; // 차량 실 소유자 명
 
-    @OneToMany(mappedBy = "vehicle", cascade = ALL)
+    @OneToMany(mappedBy = "vehicle", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
     @JsonIgnore

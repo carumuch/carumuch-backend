@@ -2,6 +2,7 @@ package com.carumuch.capstone.vehicle.controller;
 
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
+import com.carumuch.capstone.vehicle.dto.VehicleDeleteReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
 import com.carumuch.capstone.vehicle.service.VehicleService;
@@ -35,5 +36,15 @@ public class VehicleController implements VehicleControllerDocs {
     public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, vehicleService.update(vehicleUpdateReqDto)));
+    }
+
+    /**
+     * DELETE: 차량 삭제 요청
+     */
+    @DeleteMapping
+    public ResponseEntity<?> delete(@Validated(ValidationSequence.class) @RequestBody VehicleDeleteReqDto vehicleDeleteReqDto) {
+        vehicleService.delete(vehicleDeleteReqDto);
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, null));
     }
 }

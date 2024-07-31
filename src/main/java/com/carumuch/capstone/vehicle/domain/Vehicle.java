@@ -52,13 +52,14 @@ public class Vehicle extends BaseCreateByEntity {
     private User user;
 
     @Builder
-    public Vehicle(String licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
+    public Vehicle(String licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName, User user) {
         this.licenseNumber = licenseNumber;
         this.type = type;
         this.brand = brand;
         this.modelYear = modelYear;
         this.modelName = modelName;
         this.ownerName = ownerName;
+        setUser(user);
     }
 
     /* 연관 관계 메서드 */

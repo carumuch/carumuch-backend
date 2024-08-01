@@ -274,5 +274,6 @@ application-local.yml
 application-dev.yml
 application-swagger.yml
 application-secret.yml
+application-mail.yml
 application-s3.yml
 

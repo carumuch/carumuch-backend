@@ -3,13 +3,16 @@ package com.carumuch.capstone.user.controller;
 import com.carumuch.capstone.auth.service.AuthService;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
-import com.carumuch.capstone.user.dto.JoinReqDto;
+import com.carumuch.capstone.user.dto.UserJoinReqDto;
+import com.carumuch.capstone.user.dto.UserUpdatePasswordReqDto;
+import com.carumuch.capstone.user.dto.UserUpdateReqDto;
 import com.carumuch.capstone.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +27,22 @@ public class UserController implements UserControllerDocs{
     private final AuthService authService;
 
     /**
+     * READ: 회원 정보
+     */
+    @GetMapping
+    public ResponseEntity<?> info() {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, userService.info(loginId)));
+    }
+
+    /**
      * CREATE: 회원 가입
      */
-    @PostMapping
-    public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody JoinReqDto joinReqDto) {
+    @PostMapping("/signup")
+    public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody UserJoinReqDto userJoinReqDto) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, userService.join(joinReqDto)));
+                .body(ResponseDto.success(CREATED, userService.join(userJoinReqDto)));
     }
 
     /**
@@ -66,5 +79,23 @@ public class UserController implements UserControllerDocs{
                 .status(OK)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(ResponseDto.success(OK,null));
+    }
+
+    /**
+     * Update: 회원 수정
+     */
+    @PutMapping
+    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody UserUpdateReqDto userUpdateReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, userService.update(userUpdateReqDto)));
+    }
+
+    /**
+     * Update: 비밀번호 수정
+     */
+    @PutMapping("/password")
+    public ResponseEntity<?> updatePassword(@Validated(ValidationSequence.class) @RequestBody UserUpdatePasswordReqDto userUpdatePasswordReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, userService.updatePassword(userUpdatePasswordReqDto)));
     }
 }

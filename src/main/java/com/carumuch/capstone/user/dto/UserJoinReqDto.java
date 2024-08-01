@@ -12,7 +12,7 @@ import static com.carumuch.capstone.global.validation.ValidationGroups.*;
 @Getter
 @NoArgsConstructor
 @Schema(name = "JoinReqDto: 회원가입 요청 Dto")
-public class JoinReqDto {
+public class UserJoinReqDto {
 
     @NotBlank(message = "아이디가 입력되지 않았습니다.", groups = NotBlankGroup.class)
     @Pattern(regexp = "^[a-z0-9]{4,20}$", message = "아이디는 영어 소문자와 숫자만 사용하여 4~20자리여야 합니다.",
@@ -43,7 +43,7 @@ public class JoinReqDto {
     private String name;
 
     @Builder
-    public JoinReqDto(String loginId, String password, String email, String name) {
+    public UserJoinReqDto(String loginId, String password, String email, String name) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;

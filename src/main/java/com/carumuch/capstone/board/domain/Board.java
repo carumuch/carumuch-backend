@@ -26,9 +26,30 @@ public class Board extends BaseCreateByEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "boardTitle")
+    private String boardTitle;
+
+    @Column(name  = "boardContent")
+    private String boardContent;
+
+    @Column(name = "boardHits")
+    private int boardHits;
+
+
+
+
     @Builder
-    public Board(User user) {
+    public Board(User user,String boardTitle,String boardContent,int boardHits) {
         this.user = user;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardHits = boardHits;
         user.getBoards().add(this);
     }
+
+    public void updateBoard(String boardTitle, String boardContent){
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+    }
+
 }

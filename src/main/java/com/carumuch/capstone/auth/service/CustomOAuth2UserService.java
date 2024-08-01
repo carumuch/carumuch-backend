@@ -1,6 +1,10 @@
 package com.carumuch.capstone.auth.service;
 
 import com.carumuch.capstone.auth.dto.*;
+import com.carumuch.capstone.auth.dto.oauth2.GoogleResponse;
+import com.carumuch.capstone.auth.dto.oauth2.KakaoResponse;
+import com.carumuch.capstone.auth.dto.oauth2.NaverResponse;
+import com.carumuch.capstone.auth.dto.oauth2.OAuth2Response;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.domain.type.Role;
 import com.carumuch.capstone.user.repository.UserRepository;

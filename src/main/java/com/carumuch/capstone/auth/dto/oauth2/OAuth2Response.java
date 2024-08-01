@@ -1,4 +1,4 @@
-package com.carumuch.capstone.auth.dto;
+package com.carumuch.capstone.auth.dto.oauth2;
 
 public interface OAuth2Response {
 

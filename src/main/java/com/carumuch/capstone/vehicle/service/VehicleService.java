@@ -15,6 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -85,7 +88,7 @@ public class VehicleService {
     }
 
     /**
-     * Selete: 차량 상세 조회
+     * Select: 차량 상세 조회
      */
     public VehicleInfoResDto findOne(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
@@ -99,5 +102,27 @@ public class VehicleService {
                 .modelName(vehicle.getModelName())
                 .ownerName(vehicle.getOwnerName())
                 .build();
+    }
+
+    /**
+     * Select: 차량 목록 조회
+     */
+    public List<VehicleInfoResDto> findAll() {
+        User user = userRepository
+                .findByLoginIdWithVehicle(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (user.getVehicles().isEmpty()) {
+            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
+        }
+        return user.getVehicles().stream().map(vehicle ->
+                        new VehicleInfoResDto(
+                                vehicle.getId(),
+                                vehicle.getLicenseNumber(),
+                                vehicle.getType(),
+                                vehicle.getBrand(),
+                                vehicle.getModelYear(),
+                                vehicle.getModelName(),
+                                vehicle.getOwnerName()
+                        )).collect(Collectors.toList());
     }
 }

@@ -49,11 +49,20 @@ public class VehicleController implements VehicleControllerDocs {
     }
 
     /**
-     * Select: 차량 상세 조회
+     * SELECT: 차량 상세 조회
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, vehicleService.findOne(id)));
+    }
+
+    /**
+     * SELECT: 차량 목록 조회
+     */
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, vehicleService.findAll()));
     }
 }

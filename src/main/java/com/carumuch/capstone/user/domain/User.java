@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -52,10 +52,10 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "body_shop_id")
     private BodyShop bodyShop;
 
-    @OneToMany(mappedBy = "user", cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
     private List<Vehicle> vehicles = new ArrayList<>();
 
     @Builder

@@ -1,5 +1,6 @@
 package com.carumuch.capstone.bodyshop.domain;
 
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 @Table(name = "body_shop")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BodyShop {
+public class BodyShop extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "body_shop_id")

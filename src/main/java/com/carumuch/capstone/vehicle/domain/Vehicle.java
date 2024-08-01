@@ -1,31 +1,29 @@
 package com.carumuch.capstone.vehicle.domain;
 
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "vehicle")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Vehicle {
+public class Vehicle extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicle_id")
     private Long id;
 
-    @Column(name = "license_number")
-    private int licenseNumber; // 차량 번호
+    @Column(name = "license_number", unique = true)
+    private String licenseNumber; // 차량 번호
 
     @Column(name = "type")
     private String type; // 차량 유형 -> 법인/리스, 개인
@@ -42,7 +40,7 @@ public class Vehicle {
     @Column(name = "owner_name")
     private String ownerName; // 차량 실 소유자 명
 
-    @OneToMany(mappedBy = "vehicle", cascade = ALL)
+    @OneToMany(mappedBy = "vehicle", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
     @JsonIgnore
@@ -51,13 +49,14 @@ public class Vehicle {
     private User user;
 
     @Builder
-    public Vehicle(int licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
+    public Vehicle(String licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName, User user) {
         this.licenseNumber = licenseNumber;
         this.type = type;
         this.brand = brand;
         this.modelYear = modelYear;
         this.modelName = modelName;
         this.ownerName = ownerName;
+        setUser(user);
     }
 
     /* 연관 관계 메서드 */
@@ -67,7 +66,7 @@ public class Vehicle {
     }
 
     /* 차량 정보 수정 */
-    public void update(int licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
+    public void update(String licenseNumber, String type, String brand, Integer modelYear, String modelName, String ownerName) {
         this.licenseNumber = licenseNumber;
         this.type = type;
         this.brand = brand;

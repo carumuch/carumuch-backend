@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Tag(name = "Image")
 public interface ImageControllerDocs {
 
@@ -20,7 +22,7 @@ public interface ImageControllerDocs {
             @ApiResponse(responseCode = "401", description = "이미지 업로드 실패"),
     })
     @PostMapping("/upload")
-    ResponseEntity<?> s3Upload(@RequestParam("image") MultipartFile image);
+    ResponseEntity<?> s3Upload(@RequestParam("image") MultipartFile image) throws IOException;
 
     /*이미지 로드 */
     @Operation(summary = "이미지 로드 요청", description = "**성공 응답 데이터:** ")

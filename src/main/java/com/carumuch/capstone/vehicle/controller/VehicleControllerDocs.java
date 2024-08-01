@@ -45,4 +45,14 @@ public interface VehicleControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> delete(Long id);
+
+    /* Selete: 차량 상세 조회 */
+    @Operation(summary = "차량 상세 조회 요청", description = "**성공 응답 데이터:** vehicle ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "차량 상세 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재 하지 않는 차량"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> findOne(Long id);
 }

@@ -5,6 +5,7 @@ import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
+import com.carumuch.capstone.vehicle.dto.VehicleInfoResDto;
 import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
 import com.carumuch.capstone.vehicle.repository.VehicleRepository;
@@ -81,5 +82,22 @@ public class VehicleService {
         } else {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Selete: 차량 상세 조회
+     */
+    public VehicleInfoResDto findOne(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        return VehicleInfoResDto.builder()
+                .id(vehicle.getId())
+                .licenseNumber(vehicle.getLicenseNumber())
+                .type(vehicle.getType())
+                .brand(vehicle.getBrand())
+                .modelYear(vehicle.getModelYear())
+                .modelName(vehicle.getModelName())
+                .ownerName(vehicle.getOwnerName())
+                .build();
     }
 }

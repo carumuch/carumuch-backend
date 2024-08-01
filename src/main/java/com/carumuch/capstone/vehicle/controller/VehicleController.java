@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/vehicle")
@@ -45,5 +46,14 @@ public class VehicleController implements VehicleControllerDocs {
         vehicleService.delete(id);
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, null));
+    }
+
+    /**
+     * Select: 차량 상세 조회
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findOne(@PathVariable Long id) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, vehicleService.findOne(id)));
     }
 }

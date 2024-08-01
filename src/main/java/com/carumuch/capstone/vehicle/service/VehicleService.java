@@ -115,14 +115,15 @@ public class VehicleService {
             throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
         }
         return user.getVehicles().stream().map(vehicle ->
-                        new VehicleInfoResDto(
-                                vehicle.getId(),
-                                vehicle.getLicenseNumber(),
-                                vehicle.getType(),
-                                vehicle.getBrand(),
-                                vehicle.getModelYear(),
-                                vehicle.getModelName(),
-                                vehicle.getOwnerName()
-                        )).collect(Collectors.toList());
+                VehicleInfoResDto.builder()
+                        .id(vehicle.getId())
+                        .licenseNumber(vehicle.getLicenseNumber())
+                        .brand(vehicle.getBrand())
+                        .type(vehicle.getType())
+                        .modelYear(vehicle.getModelYear())
+                        .modelName(vehicle.getModelName())
+                        .ownerName(vehicle.getOwnerName())
+                        .build()
+        ).collect(Collectors.toList());
     }
 }

@@ -5,7 +5,6 @@ import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
-import com.carumuch.capstone.vehicle.dto.VehicleDeleteReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
 import com.carumuch.capstone.vehicle.repository.VehicleRepository;
@@ -71,11 +70,10 @@ public class VehicleService {
      * Delete: 차량 삭제 요청
      */
     @Transactional
-    public void delete(VehicleDeleteReqDto vehicleDeleteReqDto) {
+    public void delete(Long id) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Vehicle vehicle = vehicleRepository
-                .findByLicenseNumberWithUser(vehicleDeleteReqDto.getLicenseNumber())
+        Vehicle vehicle = vehicleRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         if (vehicle.getUser().getLoginId().equals(loginId)) {

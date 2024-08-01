@@ -16,11 +16,11 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     Optional<Vehicle> findByLicenseNumber(String licenseNumber);
 
     /**
-     * select: 차량 번호로 유저와 차량 조회 (Lazy 초기화)
+     * select: 차량 아이디로 유저와 차량 조회 (Lazy 초기화)
      * 1. 차량 삭제
      */
-    @Query("select v from Vehicle v left join fetch v.user where v.licenseNumber = :licenseNumber")
-    Optional<Vehicle> findByLicenseNumberWithUser(@Param("licenseNumber") String licenseNumber);
+    @Query("select v from Vehicle v left join fetch v.user where v.id = :id")
+    Optional<Vehicle> findByIdWithUser(@Param("id") Long id);
 
     /**
      * 차량 번호 중복 확인

@@ -1,6 +1,5 @@
 package com.carumuch.capstone.vehicle.controller;
 
-import com.carumuch.capstone.vehicle.dto.VehicleDeleteReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +29,7 @@ public interface VehicleControllerDocs {
             @ApiResponse(responseCode = "201", description = "차량 정보 수정 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "404", description = "존재 하지 않는 차량"),
             @ApiResponse(responseCode = "409", description = "차량 번호 중복 입니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
@@ -40,8 +40,9 @@ public interface VehicleControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "차량 삭제 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "404", description = "존재 하지 않는 차량"),
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> delete(VehicleDeleteReqDto vehicleDeleteReqDto);
+    ResponseEntity<?> delete(Long id);
 }

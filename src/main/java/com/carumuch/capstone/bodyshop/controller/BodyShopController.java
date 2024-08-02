@@ -38,9 +38,9 @@ public class BodyShopController implements BodyShopControllerDocs{
     }
 
     /**
-     * UPDATE: 기존 공업사로 등록
+     * Create: 기존 공업사로 등록
      */
-    @PatchMapping("/{id}/join")
+    @PostMapping("/{id}/join")
     public ResponseEntity<?> join(@PathVariable Long id) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, bodyShopService.join(id)));
@@ -49,7 +49,7 @@ public class BodyShopController implements BodyShopControllerDocs{
     /**
      * UPDATE: 공업사 정보 수정
      */
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody BodyShopUpdateReqDto bodyShopUpdateReqDto,
                                     @PathVariable Long id) {
         return ResponseEntity.status(CREATED)

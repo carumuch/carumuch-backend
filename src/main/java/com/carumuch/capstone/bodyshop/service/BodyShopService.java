@@ -4,6 +4,8 @@ import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.dto.BodyShopPageResDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
 import com.carumuch.capstone.bodyshop.repository.BodyShopRepository;
+import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +56,20 @@ public class BodyShopService {
                         .pickupAvailability(bodyShop.isPickupAvailability())
                         .location(bodyShop.getLocation())
                         .build());
+    }
+
+    /**
+     * Update: 기존 공업사에 직원으로 가입
+     */
+    @Transactional
+    public Long join(Long id) {
+        BodyShop bodyShop = bodyShopRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        User user = userRepository
+                .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        user.registerMechanic(); // 사용자를 공업사 직원으로 등록
+        user.setBodyShop(bodyShop); // 해당 공업사로 등록
+        return user.getId();
     }
 }

@@ -33,4 +33,14 @@ public interface BodyShopControllerDocs {
     })
     ResponseEntity<?> searchKeyword(@Min(value = 1, message = "페이지는 0 이상이어야 합니다.") int id,
                                     @Pattern(regexp = ".{2,}", message = "검색어는 2개의 문자 이상이어야 합니다.") String keyword);
+
+    /* Update: 기존 공업사로 등록 */
+    @Operation(summary = "기존 공업사로 등록 요청", description = "**성공 응답 데이터:** 유저 `id` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "기존 공업사로 등록 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> join(Long id);
 }

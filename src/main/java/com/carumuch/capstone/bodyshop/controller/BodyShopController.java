@@ -35,4 +35,13 @@ public class BodyShopController implements BodyShopControllerDocs{
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, bodyShopService.searchKeyword(id,keyword)));
     }
+
+    /**
+     * UPDATE: 기존 공업사로 등록
+     */
+    @PatchMapping("/{id}/join")
+    public ResponseEntity<?> join(@PathVariable Long id) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, bodyShopService.join(id)));
+    }
 }

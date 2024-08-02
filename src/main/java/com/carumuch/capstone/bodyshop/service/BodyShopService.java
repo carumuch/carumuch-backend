@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bodyshop.service;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.bodyshop.dto.BodyShopInfoResDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopPageResDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
@@ -108,5 +109,23 @@ public class BodyShopService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         user.setBodyShop(bodyShop);
         return user.getId();
+    }
+
+    /**
+     * Select: 공업사 상세 조회
+     */
+    public BodyShopInfoResDto findOne(Long id) {
+        BodyShop bodyShop = bodyShopRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        return BodyShopInfoResDto.builder()
+                .id(bodyShop.getId())
+                .name(bodyShop.getName())
+                .description(bodyShop.getDescription())
+                .phoneNumber(bodyShop.getPhoneNumber())
+                .link(bodyShop.getLink())
+                .acceptCount(bodyShop.getAcceptCount())
+                .pickupAvailability(bodyShop.isPickupAvailability())
+                .location(bodyShop.getLocation())
+                .build();
     }
 }

@@ -41,6 +41,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "is_mechanic")
+    private boolean isMechanic;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -65,6 +68,7 @@ public class User extends BaseTimeEntity {
         this.email = email;
         this.name = name;
         this.role = role;
+        this.isMechanic = false; // 가입시 기본 회원
     }
 
     /* OAuth2 사용자 정보 업데이트 */
@@ -88,5 +92,10 @@ public class User extends BaseTimeEntity {
     public void setBodyShop(BodyShop bodyShop) {
         this.bodyShop = bodyShop;
         bodyShop.getUsers().add(this);
+    }
+
+    /* 공업사 직원으로 변경 */
+    public void registerMechanic() {
+        this.isMechanic = true;
     }
 }

@@ -32,7 +32,7 @@ public class VehicleController implements VehicleControllerDocs {
     /**
      * UPDATE: 차량 정보 수정
      */
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto,
                                     @PathVariable Long id) {
         return ResponseEntity.status(CREATED)

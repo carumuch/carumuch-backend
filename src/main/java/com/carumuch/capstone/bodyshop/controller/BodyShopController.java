@@ -55,4 +55,13 @@ public class BodyShopController implements BodyShopControllerDocs{
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, bodyShopService.update(id,bodyShopUpdateReqDto)));
     }
+
+    /**
+     * UPDATE: 다른 공업사로 변경
+     */
+    @PatchMapping("/{id}/transfer")
+    public ResponseEntity<?> transfer(@PathVariable  Long id) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, bodyShopService.transfer(id)));
+    }
 }

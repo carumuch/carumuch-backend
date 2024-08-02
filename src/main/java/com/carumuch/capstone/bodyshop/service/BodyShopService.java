@@ -96,4 +96,17 @@ public class BodyShopService {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
     }
+
+    /**
+     * Update: 다른 공업사로 변경
+     */
+    @Transactional
+    public Long transfer(Long id) {
+        User user = userRepository
+                .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        BodyShop bodyShop = bodyShopRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        user.setBodyShop(bodyShop);
+        return user.getId();
+    }
 }

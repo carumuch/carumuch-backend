@@ -54,4 +54,14 @@ public interface BodyShopControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> update(BodyShopUpdateReqDto bodyShopUpdateReqDto, Long id);
+
+    /* Update: 다른 공업사로 변경 */
+    @Operation(summary = "다른 공업사로 변경 요청", description = "**성공 응답 데이터:** 유저 `id` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "다른 공업사로 변경 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> transfer(Long id);
 }

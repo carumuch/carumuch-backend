@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/vehicle")
+@RequestMapping("/vehicles")
 @RequiredArgsConstructor
 public class VehicleController implements VehicleControllerDocs {
 
@@ -32,10 +32,11 @@ public class VehicleController implements VehicleControllerDocs {
     /**
      * UPDATE: 차량 정보 수정
      */
-    @PutMapping
-    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto,
+                                    @PathVariable Long id) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, vehicleService.update(vehicleUpdateReqDto)));
+                .body(ResponseDto.success(CREATED, vehicleService.update(id, vehicleUpdateReqDto)));
     }
 
     /**

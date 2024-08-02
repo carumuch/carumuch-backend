@@ -33,7 +33,7 @@ public interface VehicleControllerDocs {
             @ApiResponse(responseCode = "409", description = "차량 번호 중복 입니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> update(VehicleUpdateReqDto vehicleUpdateReqDto);
+    ResponseEntity<?> update(VehicleUpdateReqDto vehicleUpdateReqDto, Long id);
 
     /* Delete: 차량 삭제 */
     @Operation(summary = "차량 삭제 요청", description = "**성공 응답 데이터:** true ")

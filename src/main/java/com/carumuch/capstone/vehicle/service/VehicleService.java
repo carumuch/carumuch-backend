@@ -58,16 +58,23 @@ public class VehicleService {
      * Update: 차량 정보 수정
      */
     @Transactional
-    public Long update(VehicleUpdateReqDto requestDto) {
-        Vehicle vehicle = vehicleRepository.findByLicenseNumber(requestDto.getLicenseNumber())
+    public Long update(Long id, VehicleUpdateReqDto requestDto) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Vehicle vehicle = vehicleRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        vehicle.update(requestDto.getLicenseNumber(),
-                requestDto.getType(),
-                requestDto.getBrand(),
-                requestDto.getModelYear(),
-                requestDto.getModelName(),
-                requestDto.getOwnerName());
-        return vehicle.getId();
+
+        if (vehicle.getUser().getLoginId().equals(loginId)) {
+            vehicle.update(requestDto.getLicenseNumber(),
+                    requestDto.getType(),
+                    requestDto.getBrand(),
+                    requestDto.getModelYear(),
+                    requestDto.getModelName(),
+                    requestDto.getOwnerName());
+            return vehicle.getId();
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
     }
 
     /**
@@ -83,7 +90,7 @@ public class VehicleService {
         if (vehicle.getUser().getLoginId().equals(loginId)) {
             vehicleRepository.deleteById(vehicle.getId());
         } else {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
     }
 

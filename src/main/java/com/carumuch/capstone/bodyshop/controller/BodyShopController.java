@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bodyshop.controller;
 
 import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
+import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.service.BodyShopService;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
@@ -43,5 +44,15 @@ public class BodyShopController implements BodyShopControllerDocs{
     public ResponseEntity<?> join(@PathVariable Long id) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, bodyShopService.join(id)));
+    }
+
+    /**
+     * UPDATE: 공업사 정보 수정
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody BodyShopUpdateReqDto bodyShopUpdateReqDto,
+                                    @PathVariable Long id) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, bodyShopService.update(id,bodyShopUpdateReqDto)));
     }
 }

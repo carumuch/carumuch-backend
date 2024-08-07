@@ -44,16 +44,21 @@ public class BoardService {
                 .boardHits(0)
                 .build());
 
-        /*이미지 저장*/
-        for (MultipartFile image : boardReqDto.getBoardImage()){
-            String savedImagePath = imageService.uploadImage(image);
-            BoardImage boardImage = BoardImage.builder()
-                    .board(board)
-                    .originalImageName(image.getOriginalFilename())
-                    .savedImageName(savedImagePath)
-                    .build();
-            boardImageRepository.save(boardImage);
+        /*이미지 첨부 여부 확인 후 이미지  저장*/
+        if(boardReqDto.getBoardImage() != null){
+            /*이미지 저장*/
+            for (MultipartFile image : boardReqDto.getBoardImage()){
+                String savedImagePath = imageService.uploadImage(image);
+                BoardImage boardImage = BoardImage.builder()
+                        .board(board)
+                        .originalImageName(image.getOriginalFilename())
+                        .savedImageName(savedImagePath)
+                        .build();
+                boardImageRepository.save(boardImage);
+            }
+
         }
+
 
         return board.getId();
     }

@@ -40,4 +40,10 @@ public class ImageController implements ImageControllerDocs {
                 .body(ResponseDto.success(OK,imageUrl));
     }
 
+    @Override
+    public ResponseEntity<?> s3Delete(@RequestParam("imageKey") String imageKey){
+        imageService.deleteImage(imageKey);
+        return ResponseEntity.status(OK).body(ResponseDto.success(OK,null));
+    }
+
 }

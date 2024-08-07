@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,4 +33,13 @@ public interface ImageControllerDocs {
     })
     @GetMapping("/load")
     ResponseEntity<?> s3Load(@RequestParam("imageKey") String imageKey);
+
+    /*이미지 로드 */
+    @Operation(summary = "이미지 삭제 요청", description = "**성공 응답 데이터:** ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이미지 삭제 성공"),
+            @ApiResponse(responseCode = "401", description = "이미지 삭제 실패"),
+    })
+    @DeleteMapping("/delete")
+    ResponseEntity<?> s3Delete(@RequestParam("imageKey") String imageKey);
 }

@@ -81,4 +81,18 @@ public class ImageService {
 
         return s3Client.utilities().getUrl(getUrlRequest).toString();
     }
+
+    public void deleteImage(String imageKey){
+        String storePath = "C:/imgStore/";
+        String savePath = storePath + imageKey;
+        File checkImage = new File(savePath);
+        if(checkImage.exists()){
+            try {
+                checkImage.delete();
+            } catch(Exception e){
+                e.getStackTrace();
+            }
+        }
+
+    }
 }

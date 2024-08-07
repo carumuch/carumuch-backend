@@ -1,12 +1,15 @@
 package com.carumuch.capstone.board.controller;
 
+
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import com.carumuch.capstone.board.service.BoardService;
 import com.carumuch.capstone.global.common.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -20,32 +23,35 @@ public class BoardController implements BoardControllerDocs{
     private final BoardService boardService;
 
 
-    @PostMapping("/write")
-    public ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto){
+    @Override
+    public ResponseEntity<?> write(@ModelAttribute BoardReqDto boardReqDto) throws IOException {
+        System.out.println(boardReqDto.getBoardTitle());
+        System.out.println(boardReqDto.getBoardContent());
+        System.out.println(boardReqDto.getBoardImage());
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
     }
 
-    @GetMapping("/")
+    @Override
     public ResponseEntity<?> findAll(){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.findAll()));
     }
 
-    @GetMapping("/{boardId}")
+    @Override
     public ResponseEntity<?> findById(@PathVariable("boardId") Long id){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.findById(id)));
     }
 
-    @DeleteMapping("/{boardId}/delete")
+    @Override
     public ResponseEntity<?> delete(@PathVariable("boardId") Long id){
         boardService.delete(id);
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,null));
     }
 
-    @PutMapping("/{boardId}/update")
+    @Override
     public ResponseEntity<?> update(@PathVariable("boardId") Long id,@RequestBody BoardReqDto boardReqDto){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.update(id,boardReqDto)));

@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 
 @Tag(name = "Board")
@@ -19,7 +23,7 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "401", description = "게시글 작성 실패"),
     })
     @PostMapping("/write")
-    ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto);
+    ResponseEntity<?> write(@RequestPart BoardReqDto boardReqDto) throws IOException;
 
     /* Read: 게시글 조회 */
     @Operation(summary = "게시글 전체 조회 요청", description = "**성공 응답 데이터:** true")

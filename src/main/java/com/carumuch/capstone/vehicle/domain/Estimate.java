@@ -1,6 +1,7 @@
 package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.bodyshop.domain.Bid;
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "estimate")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Estimate {
+public class Estimate extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "estimate_id")
@@ -35,7 +36,7 @@ public class Estimate {
     private String preferredRepairLocation; // 수리 희망 지역
 
     @Column(name = "pickup_required")
-    private boolean pickupRequired;
+    private boolean pickupRequired; // 픽업 희망 여부
 
     @Column(name = "image_name", length = 255)
     private String imageName; // 사진 이름

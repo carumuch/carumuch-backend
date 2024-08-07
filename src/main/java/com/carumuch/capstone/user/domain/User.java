@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -41,6 +41,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "is_mechanic")
+    private boolean isMechanic;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -52,10 +55,10 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "body_shop_id")
     private BodyShop bodyShop;
 
-    @OneToMany(mappedBy = "user", cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
     private List<Vehicle> vehicles = new ArrayList<>();
 
     @Builder
@@ -65,6 +68,7 @@ public class User extends BaseTimeEntity {
         this.email = email;
         this.name = name;
         this.role = role;
+        this.isMechanic = false; // 가입시 기본 회원
     }
 
     /* OAuth2 사용자 정보 업데이트 */
@@ -88,5 +92,10 @@ public class User extends BaseTimeEntity {
     public void setBodyShop(BodyShop bodyShop) {
         this.bodyShop = bodyShop;
         bodyShop.getUsers().add(this);
+    }
+
+    /* 공업사 직원으로 변경 */
+    public void registerMechanic() {
+        this.isMechanic = true;
     }
 }

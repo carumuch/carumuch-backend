@@ -1,7 +1,10 @@
 package com.carumuch.capstone.user.repository;
 
 import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.vehicle.domain.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -41,5 +44,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * 1. OAuth2 유저 갱신 사용
      */
     User findOAuth2UserByLoginId(String loginId);
+
+    /**
+     * select: 아이디로 유저와 차량 조회 (Lazy 초기화)
+     * 1. 유저가 가지고 있는 차량 목록 조회
+     */
+    @Query("select u from User u left join fetch u.vehicles where u.loginId =:loginId")
+    User findByLoginIdWithVehicle(@Param("loginId") String loginId);
+
+    /**
+     * select: 아이디로 유저와 공업사 조회 (Lazy 초기화)
+     * 1. 공업사 정보 수정
+     */
+    @Query("select u from User u left join fetch u.bodyShop where u.loginId = :loginId")
+    User findByLoginIdWithBodyShop(@Param("loginId") String loginId);
 
 }

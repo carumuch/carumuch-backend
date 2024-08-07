@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bodyshop.domain;
 
 import com.carumuch.capstone.bodyshop.domain.type.BidStatus;
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "bid")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Bid {
+public class Bid extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bid_id")

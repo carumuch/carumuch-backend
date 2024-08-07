@@ -1,5 +1,6 @@
 package com.carumuch.capstone.bodyshop.domain;
 
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 @Table(name = "body_shop")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BodyShop {
+public class BodyShop extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "body_shop_id")
@@ -25,11 +26,17 @@ public class BodyShop {
     @Column(name = "name", length = 100)
     private String name; // 샵 이름
 
-    @Column(name = "location", length = 100)
-    private String location; // 샵 지역
+    @Embedded
+    private Location location; // 샵 지역
 
-    @Column(name = "description", length = 100)
+    @Column(name = "description", length = 200)
     private String description; // 샵 설명
+
+    @Column(name = "phone_number", length = 15)
+    private String phoneNumber; // 전화번호
+
+    @Column(name = "link", length = 200)
+    private String link; // 홈페이지
 
     @Column(name = "accept_count")
     private int acceptCount; // 수리 채결 count
@@ -44,19 +51,24 @@ public class BodyShop {
     private List<Bid> bids = new ArrayList<>();
 
     @Builder
-    public BodyShop(String name, String location, String description, int acceptCount, boolean pickupAvailability) {
+    public BodyShop(String name, Location location, String description, String link, String phoneNumber, User user, int acceptCount, boolean pickupAvailability) {
         this.name = name;
         this.location = location;
         this.description = description;
+        this.link = link;
+        this.phoneNumber = phoneNumber;
         this.acceptCount = acceptCount;
         this.pickupAvailability = pickupAvailability;
+        user.setBodyShop(this);
     }
 
     /* 공업사 정보 수정 */
-    public void update(String name, String location, String description, boolean pickupAvailability) {
+    public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
         this.name = name;
         this.location = location;
         this.description = description;
+        this.link = link;
+        this.phoneNumber = phoneNumber;
         this.pickupAvailability = pickupAvailability;
     }
 

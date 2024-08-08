@@ -21,10 +21,8 @@ public class SetImageKey {
         /*파일업로드시간*/
         String fileUploadTime = String.valueOf(System.currentTimeMillis());
 
-        /*버킷 내 저장 폴더 설정*/
-        String folder = "image/";
 
         /*파일업로드 시간 중간에 삽입하여 파일이름 재지정*/
-        return folder + fileName + "_" + fileUploadTime + fileExtension;
+        return fileName + "_" + fileUploadTime + fileExtension;
     }
 }

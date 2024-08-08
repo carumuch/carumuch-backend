@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -35,7 +38,8 @@ public class Board extends BaseCreateByEntity {
     @Column(name = "boardHits")
     private int boardHits;
 
-
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = LAZY)
+    private List<BoardImage> boardImageList = new ArrayList<>();
 
 
     @Builder
@@ -51,5 +55,6 @@ public class Board extends BaseCreateByEntity {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
     }
+
 
 }

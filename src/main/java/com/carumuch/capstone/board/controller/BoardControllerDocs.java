@@ -1,5 +1,6 @@
 package com.carumuch.capstone.board.controller;
 
+import com.carumuch.capstone.board.dto.BoardModifyReqDto;
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,8 +51,8 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "200", description = "게시글 수정 성공"),
             @ApiResponse(responseCode = "401", description = "게시글 수정 실패"),
     })
-    @PutMapping("/{boardId}/update")
-    ResponseEntity<?> update(@PathVariable("boardId") Long id,@RequestBody BoardReqDto boardReqDto);
+    @PutMapping("/{boardId}/modify")
+    ResponseEntity<?> modify(@PathVariable("boardId") Long id,@ModelAttribute BoardModifyReqDto boardModifyReqDto) throws IOException;
 
     /* Delete: 게시글 삭제 */
     @Operation(summary = "게시글 삭제 요청", description = "**성공 응답 데이터:** ")

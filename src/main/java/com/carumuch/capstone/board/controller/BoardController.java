@@ -1,6 +1,7 @@
 package com.carumuch.capstone.board.controller;
 
 
+import com.carumuch.capstone.board.dto.BoardModifyReqDto;
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import com.carumuch.capstone.board.service.BoardService;
 import com.carumuch.capstone.global.common.ResponseDto;
@@ -52,9 +53,9 @@ public class BoardController implements BoardControllerDocs{
     }
 
     @Override
-    public ResponseEntity<?> update(@PathVariable("boardId") Long id,@RequestBody BoardReqDto boardReqDto){
+    public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @ModelAttribute BoardModifyReqDto boardModifyReqDto) throws IOException {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK,boardService.update(id,boardReqDto)));
+                .body(ResponseDto.success(OK,boardService.modify(id,boardModifyReqDto)));
     }
     
 }

@@ -26,9 +26,6 @@ public class BoardController implements BoardControllerDocs{
 
     @Override
     public ResponseEntity<?> write(@ModelAttribute BoardReqDto boardReqDto) throws IOException {
-        System.out.println(boardReqDto.getBoardTitle());
-        System.out.println(boardReqDto.getBoardContent());
-        System.out.println(boardReqDto.getBoardImage());
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
     }

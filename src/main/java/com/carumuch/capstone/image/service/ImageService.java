@@ -11,7 +11,9 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Objects;
 @Slf4j
 @RequiredArgsConstructor
@@ -21,18 +23,23 @@ public class ImageService {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadImage(MultipartFile image){
+    public String uploadImage(MultipartFile image) throws IOException{
 
-        if (image.isEmpty()){
-            throw new IllegalArgumentException("이미지가 비어 있습니다.");
-        }
+        String filePath = Paths.get(
+                System.getProperty("user.dir"),
+                "src/main/resources/static").toString();
 
+
+        /*로컬 이미지 파일 업로드*/
         String imagePath = getImagePath(image);
+        String savePath = filePath + imagePath;
 
+        image.transferTo(new File(savePath));
 
+        return imagePath;
 
         /*S3에 이미지 파일 업로드*/
-        try {
+        /*try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucket)
                     .contentType(image.getContentType())
@@ -51,7 +58,7 @@ public class ImageService {
                 .key(imagePath)
                 .build();
 
-        return s3Client.utilities().getUrl(getUrlRequest).toString();
+        return s3Client.utilities().getUrl(getUrlRequest).toString();*/
 
     }
 
@@ -68,5 +75,21 @@ public class ImageService {
                 .build();
 
         return s3Client.utilities().getUrl(getUrlRequest).toString();
+    }
+
+    public void deleteImage(String imageKey){
+        String filePath = Paths.get(
+                System.getProperty("user.dir"),
+                "src/main/resources/static").toString();
+        String savePath = filePath + imageKey;
+        File checkImage = new File(savePath);
+        if(checkImage.exists()){
+            try {
+                checkImage.delete();
+            } catch(Exception e){
+                e.getStackTrace();
+            }
+        }
+
     }
 }

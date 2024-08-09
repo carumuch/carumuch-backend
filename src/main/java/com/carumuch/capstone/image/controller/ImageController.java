@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -23,7 +25,7 @@ public class ImageController implements ImageControllerDocs {
      *이미지 업로드
      */
     @Override
-    public ResponseEntity<?> s3Upload(@RequestParam("image") MultipartFile image){
+    public ResponseEntity<?> s3Upload(@RequestParam("image") MultipartFile image) throws IOException {
         String imageUrl = imageService.uploadImage(image);
         return ResponseEntity
                 .status(CREATED)
@@ -36,6 +38,12 @@ public class ImageController implements ImageControllerDocs {
         return ResponseEntity
                 .status(OK)
                 .body(ResponseDto.success(OK,imageUrl));
+    }
+
+    @Override
+    public ResponseEntity<?> s3Delete(@RequestParam("imageKey") String imageKey){
+        imageService.deleteImage(imageKey);
+        return ResponseEntity.status(OK).body(ResponseDto.success(OK,null));
     }
 
 }

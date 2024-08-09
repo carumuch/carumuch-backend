@@ -120,6 +120,8 @@ public class Estimate extends BaseCreateByEntity {
                                                String preferredRepairSido,
                                                String preferredRepairSigungu,
                                                boolean isPickupRequired,
+                                               String imageName,
+                                               String imagePath,
                                                User user,
                                                Vehicle vehicle) {
         Estimate estimate = Estimate.builder()
@@ -129,6 +131,8 @@ public class Estimate extends BaseCreateByEntity {
                 .preferredRepairSigungu(preferredRepairSigungu)
                 .isAIEstimate(false)
                 .isPickupRequired(isPickupRequired)
+                .imageName(imageName)
+                .imagePath(imagePath)
                 .build();
 
         estimate.setUser(user);
@@ -145,6 +149,8 @@ public class Estimate extends BaseCreateByEntity {
                                             String preferredRepairSigungu,
                                             Integer aiEstimatedRepairCost,
                                             boolean isPickupRequired,
+                                            String imageName,
+                                            String imagePath,
                                             User user,
                                             Vehicle vehicle) {
         Estimate estimate = Estimate.builder()
@@ -155,6 +161,8 @@ public class Estimate extends BaseCreateByEntity {
                 .aiEstimatedRepairCost(aiEstimatedRepairCost)
                 .isAIEstimate(true)
                 .isPickupRequired(isPickupRequired)
+                .imageName(imageName)
+                .imagePath(imagePath)
                 .build();
 
         estimate.setUser(user);

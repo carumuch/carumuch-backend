@@ -1,5 +1,6 @@
 package com.carumuch.capstone.board.domain;
 
+import com.carumuch.capstone.comment.domain.Comment;
 import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,7 +40,9 @@ public class Board extends BaseCreateByEntity {
     private int boardHits;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = LAZY)
-    private List<BoardImage> boardImageList = new ArrayList<>();
+    private List<BoardImage> boardImages = new ArrayList<>();
+
+
 
 
     @Builder

@@ -42,6 +42,8 @@ public class Board extends BaseCreateByEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = LAZY)
     private List<BoardImage> boardImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = LAZY)
+    private List<Comment> Comments = new ArrayList<>();
 
 
 

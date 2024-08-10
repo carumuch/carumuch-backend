@@ -1,6 +1,7 @@
 package com.carumuch.capstone.vehicle.controller;
 
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -8,8 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 
 @Tag(name = "Estimate")
@@ -38,10 +37,23 @@ public interface EstimateControllerDocs {
     /* 차량 Ai 분석 */
     @Operation(summary = "AI 분석 요청", description = "**성공 응답 데이터:** AI 분석 정보 ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "AI 견적 등록 완료"),
+            @ApiResponse(responseCode = "201", description = "AI 분석 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> Analysis(Long id, MultipartFile file);
+    ResponseEntity<?> analysis(Long id, MultipartFile file);
+
+    /**
+     * 견적서 수정
+     */
+    /*  Update: 견적 수정 */
+    @Operation(summary = "견적 수정 요청", description = "**성공 응답 데이터:** `estimate_id` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "견적 수정 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> update(Long id, EstimateUpdateReqDto estimateUpdateReqDto);
 }

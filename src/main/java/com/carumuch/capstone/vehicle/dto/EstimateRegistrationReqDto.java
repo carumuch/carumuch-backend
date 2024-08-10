@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Schema(name = "EstimateRegistrationReqDto: 일반 견적 등록 요청 Dto")
+@Schema(name = "EstimateRegistrationReqDto: 견적 등록 요청 Dto")
 public class EstimateRegistrationReqDto {
     @NotBlank(message = "견적 상세 설명이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "견적 상세 설명 입니다.", example = "주차 중 차량 앞 범퍼 스크레치 발생")

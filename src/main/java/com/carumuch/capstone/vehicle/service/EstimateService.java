@@ -5,11 +5,10 @@ import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.image.service.ImageService;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
-import com.carumuch.capstone.vehicle.controller.VehicleControllerDocs;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.repository.EstimateRepository;
 import com.carumuch.capstone.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -101,5 +98,20 @@ public class EstimateService {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         // TODO: AI API 요청 메서드 추가
+    }
+
+    /**
+     * Update: 견적 수정
+     */
+    @Transactional
+    public Long update(Long id, EstimateUpdateReqDto requestDto) {
+        Estimate estimate = estimateRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        estimate.update(requestDto.getDescription(),
+                requestDto.getDamageArea(),
+                requestDto.getPreferredRepairSido(),
+                requestDto.getPreferredRepairSigungu(),
+                requestDto.isPickupRequired());
+        return estimate.getId();
     }
 }

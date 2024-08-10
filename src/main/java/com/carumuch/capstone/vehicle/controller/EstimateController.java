@@ -3,6 +3,7 @@ package com.carumuch.capstone.vehicle.controller;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.service.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -11,8 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -48,10 +47,20 @@ public class EstimateController implements EstimateControllerDocs{
      * AI 분석 요청
      */
     @PostMapping(value = "/AI/analysis/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> Analysis(@PathVariable Long id,
+    public ResponseEntity<?> analysis(@PathVariable Long id,
                                       @RequestBody MultipartFile image) {
         estimateService.analysis(id, image);
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, null));
+    }
+
+    /**
+     * UPDATE: 견적 수정
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @Validated(ValidationSequence.class) @RequestBody EstimateUpdateReqDto estimateUpdateReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, estimateService.update(id, estimateUpdateReqDto)));
     }
 }

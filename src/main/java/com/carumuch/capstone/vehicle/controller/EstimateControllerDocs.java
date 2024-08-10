@@ -44,9 +44,6 @@ public interface EstimateControllerDocs {
     })
     ResponseEntity<?> analysis(Long id, MultipartFile file);
 
-    /**
-     * 견적서 수정
-     */
     /*  Update: 견적 수정 */
     @Operation(summary = "견적 수정 요청", description = "**성공 응답 데이터:** `estimate_id` ")
     @ApiResponses(value = {
@@ -56,4 +53,14 @@ public interface EstimateControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> update(Long id, EstimateUpdateReqDto estimateUpdateReqDto);
+
+    /*  Delete: 견적 삭제 */
+    @Operation(summary = "견적 삭제 요청", description = "**성공 응답 데이터:** true ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "견적 삭제 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> delete(Long id);
 }

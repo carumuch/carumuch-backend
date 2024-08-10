@@ -35,7 +35,7 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * CREATE: 차량 AI 견적 등록
      */
-    @PostMapping(value = "/AI/register/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/ai/register/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerAiEstimate(@PathVariable Long id,
                                                 @RequestPart("image") MultipartFile image,
                                                 @Validated(ValidationSequence.class) @RequestPart EstimateRegistrationReqDto estimateRegistrationReqDto) {
@@ -46,7 +46,7 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * AI 분석 요청
      */
-    @PostMapping(value = "/AI/analysis/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/ai/analysis/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> analysis(@PathVariable Long id,
                                       @RequestBody MultipartFile image) {
         estimateService.analysis(id, image);
@@ -62,5 +62,15 @@ public class EstimateController implements EstimateControllerDocs{
                                     @Validated(ValidationSequence.class) @RequestBody EstimateUpdateReqDto estimateUpdateReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, estimateService.update(id, estimateUpdateReqDto)));
+    }
+
+    /**
+     * DELETE: 견적 삭제
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        estimateService.delete(id);
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, null));
     }
 }

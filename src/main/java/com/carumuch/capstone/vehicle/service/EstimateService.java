@@ -105,13 +105,36 @@ public class EstimateService {
      */
     @Transactional
     public Long update(Long id, EstimateUpdateReqDto requestDto) {
-        Estimate estimate = estimateRepository.findById(id)
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Estimate estimate = estimateRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        estimate.update(requestDto.getDescription(),
-                requestDto.getDamageArea(),
-                requestDto.getPreferredRepairSido(),
-                requestDto.getPreferredRepairSigungu(),
-                requestDto.isPickupRequired());
-        return estimate.getId();
+
+        if (estimate.getUser().getLoginId().equals(loginId)) {
+            estimate.update(requestDto.getDescription(),
+                    requestDto.getDamageArea(),
+                    requestDto.getPreferredRepairSido(),
+                    requestDto.getPreferredRepairSigungu(),
+                    requestDto.isPickupRequired());
+            return estimate.getId();
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
+    }
+
+    /**
+     * Delete: 견적 삭제
+     */
+    @Transactional
+    public void delete(Long id) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Estimate estimate = estimateRepository.findByIdWithUser(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        if (estimate.getUser().getLoginId().equals(loginId)) {
+            estimateRepository.deleteById(id);
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
     }
 }

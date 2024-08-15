@@ -88,10 +88,20 @@ public interface EstimateControllerDocs {
     /* Update: 견적 공개 범위 수정 변경 */
     @Operation(summary = "견적 공개 범위 수정", description = "**성공 응답 데이터:** `estimate_id`, PRIVATE(비공개), PUBLIC(전체 공개) 입니다. ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "견적 공개 범위 변경 완료"),
+            @ApiResponse(responseCode = "201", description = "견적 공개 범위 변경 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> updateEstimateStatus(Long id, EstimateStatusUpdateReqDto estimateStatusUpdateReqDto);
+
+    /* Select: 견적 정보 상세 조회 */
+    @Operation(summary = "사용자 개인 견적 상세 조회", description = "**성공 응답 데이터:** `estimateDto`")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "견적 상세 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> detail(Long id);
 }

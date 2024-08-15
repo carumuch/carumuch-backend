@@ -10,6 +10,9 @@ import com.carumuch.capstone.global.common.ErrorCode;
 import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.vehicle.domain.Estimate;
+import com.carumuch.capstone.vehicle.dto.EstimateDetailResDto;
+import com.carumuch.capstone.vehicle.repository.EstimateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +29,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class BodyShopService {
     private final BodyShopRepository bodyShopRepository;
     private final UserRepository userRepository;
+    private final EstimateRepository estimateRepository;
 
+    /**
+     * 공업사 직업 여부
+     */
+    public void validateMechanicUser() {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!userRepository.findLoginUserByLoginId(loginId).isMechanic()) {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
+    }
+
+    /**
+     * 공업사 가입
+     */
     @Transactional
     public Long register(BodyShopRegistrationReqDto requestDto) {
         User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -103,6 +120,7 @@ public class BodyShopService {
      */
     @Transactional
     public Long transfer(Long id) {
+        validateMechanicUser();
         User user = userRepository
                 .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
         BodyShop bodyShop = bodyShopRepository.findById(id)
@@ -126,6 +144,22 @@ public class BodyShopService {
                 .acceptCount(bodyShop.getAcceptCount())
                 .pickupAvailability(bodyShop.isPickupAvailability())
                 .location(bodyShop.getLocation())
+                .build();
+    }
+
+    /**
+     * Select: 공업사 측 사용자 견적 상세 조회
+     */
+    public EstimateDetailResDto estimateDetail(Long id) {
+
+        /* 공업사 측인지 확인 */
+        validateMechanicUser();
+
+        Estimate estimate = estimateRepository.findByIdWithVehicle(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        return EstimateDetailResDto.builder()
+                .estimate(estimate)
                 .build();
     }
 }

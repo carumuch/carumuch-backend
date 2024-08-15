@@ -69,8 +69,17 @@ public class BodyShopController implements BodyShopControllerDocs{
      * SELECT: 공업사 상세 조회
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> findOne(@PathVariable Long id) {
+    public ResponseEntity<?> detail(@PathVariable Long id) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, bodyShopService.findOne(id)));
+    }
+
+    /**
+     * SELECT: 공업사 측 견적 상세 조회
+     */
+    @GetMapping("/estimate/{id}")
+    public ResponseEntity<?> estimateDetail(@PathVariable Long id) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, bodyShopService.estimateDetail(id)));
     }
 }

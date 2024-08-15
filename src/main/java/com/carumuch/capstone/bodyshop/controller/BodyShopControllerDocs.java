@@ -68,11 +68,22 @@ public interface BodyShopControllerDocs {
     /* Select: 공업사 상세 조회 */
     @Operation(summary = "공업사 상세 조회 요청", description = "**성공 응답 데이터:** `bodyShop` ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "공업사 상세 정보 조회"),
+            @ApiResponse(responseCode = "200", description = "공업사 상세 정보 조회 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
             @ApiResponse(responseCode = "400", description = "찾을 수 없는 공업사 입니다."),
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> findOne(Long id);
+    ResponseEntity<?> detail(Long id);
+
+    /* Select: 공업사 측 견적 상세 조회 */
+    @Operation(summary = "공업사 측 견적 상세 조회 요청", description = "**성공 응답 데이터:** `estimate` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "공업사 측 견적 상세 정보 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "400", description = "찾을 수 없는 공업사 입니다."),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> estimateDetail(Long id);
 }

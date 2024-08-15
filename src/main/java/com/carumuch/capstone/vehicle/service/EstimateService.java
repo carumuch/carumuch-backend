@@ -190,4 +190,22 @@ public class EstimateService {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
     }
+
+    /**
+     * Select: 나의 특정 견적 상세 조회
+     */
+    public EstimateDetailResDto detail(Long id) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Estimate estimate = estimateRepository.findByIdWithVehicle(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        // 나의 견적서인지 확인
+        if (estimate.getCreateBy().equals(loginId)) {
+            return EstimateDetailResDto.builder()
+                    .estimate(estimate)
+                    .build();
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
+    }
 }

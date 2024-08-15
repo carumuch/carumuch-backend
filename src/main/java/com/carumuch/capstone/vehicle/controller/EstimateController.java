@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/estimates")
@@ -80,8 +81,8 @@ public class EstimateController implements EstimateControllerDocs{
      */
     @GetMapping("/history/vehicle/{id}")
     public ResponseEntity<?> getEstimateHistoryByVehicleId(@RequestParam(defaultValue = "1") int page, @PathVariable Long id) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, estimateService.getEstimateHistoryByVehicleId(page, id)));
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, estimateService.getEstimateHistoryByVehicleId(page, id)));
     }
 
     /**
@@ -89,8 +90,8 @@ public class EstimateController implements EstimateControllerDocs{
      */
     @GetMapping("/history")
     public ResponseEntity<?> getEstimateHistory(@RequestParam(defaultValue = "1") int page) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, estimateService.getEstimateHistory(page)));
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, estimateService.getEstimateHistory(page)));
     }
 
     /**
@@ -101,5 +102,14 @@ public class EstimateController implements EstimateControllerDocs{
                                                   @Validated(ValidationSequence.class) @RequestBody EstimateStatusUpdateReqDto estimateStatusUpdateReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, estimateService.updateEstimateStatus(id, estimateStatusUpdateReqDto)));
+    }
+
+    /**
+     * SELECT: 사용자 개인 견적 상세 조회
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detail(@PathVariable Long id) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, estimateService.detail(id)));
     }
 }

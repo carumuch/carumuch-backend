@@ -1,6 +1,7 @@
 package com.carumuch.capstone.vehicle.controller;
 
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.EstimateStatusUpdateReqDto;
 import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public interface EstimateControllerDocs {
     /* Create: 차량 견적 생성 */
-    @Operation(summary = "견적 등록 요청", description = "**성공 응답 데이터:** 견적의 `estimate_id` ")
+    @Operation(summary = "견적 등록 요청", description = "**성공 응답 데이터:** 견적의 `estimate_id`," +
+            " 최초 견적 저장의 견적 공개 범위는 `비공개` 입니다. 공개 입찰을 받아보고 싶다면 공개 입찰 범위 수정 요청이 필요합니다. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "견적 등록 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
@@ -25,7 +27,8 @@ public interface EstimateControllerDocs {
     ResponseEntity<?> register(Long id, MultipartFile image, EstimateRegistrationReqDto estimateRegistrationReqDto);
 
     /* Create: 차량 Ai 견적 생성 */
-    @Operation(summary = "AI 견적 등록 요청", description = "**성공 응답 데이터:** AI 견적의 `estimate_id` ")
+    @Operation(summary = "AI 견적 등록 요청", description = "**성공 응답 데이터:** AI 견적의 `estimate_id`," +
+            " 최초 견적 저장의 견적 공개 범위는 `비공개` 입니다. 공개 입찰을 받아보고 싶다면 공개 입찰 범위 수정 요청이 필요합니다. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "AI 견적 등록 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
@@ -81,4 +84,14 @@ public interface EstimateControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> getEstimateHistory(int page);
+
+    /* Update: 견적 공개 범위 수정 변경 */
+    @Operation(summary = "견적 공개 범위 수정", description = "**성공 응답 데이터:** `estimate_id`, PRIVATE(비공개), PUBLIC(전체 공개) 입니다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "견적 공개 범위 변경 완료"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> updateEstimateStatus(Long id, EstimateStatusUpdateReqDto estimateStatusUpdateReqDto);
 }

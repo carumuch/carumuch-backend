@@ -7,10 +7,8 @@ import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
-import com.carumuch.capstone.vehicle.dto.EstimateByVehiclePageResDto;
-import com.carumuch.capstone.vehicle.dto.EstimateHistoryPageResDto;
-import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
+import com.carumuch.capstone.vehicle.domain.type.EstimateStatus;
+import com.carumuch.capstone.vehicle.dto.*;
 import com.carumuch.capstone.vehicle.repository.EstimateRepository;
 import com.carumuch.capstone.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -166,14 +164,30 @@ public class EstimateService {
     /**
      * Select: 유저 견적 이용 내역 조회
      */
-    public Page<EstimateHistoryPageResDto> getEstimateHistory(int page) {
+    public Page<EstimatePageResDto> getEstimateHistory(int page) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Page<Estimate> estimatePage = estimateRepository
                 .findPageByCreateByWithVehicle(loginId, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createDate")));
-        return estimatePage.map(estimate -> EstimateHistoryPageResDto.builder()
+        return estimatePage.map(estimate -> EstimatePageResDto.builder()
                 .estimate(estimate)
                 .build());
+    }
 
+    /**
+     * Update: 견적 공개 범위 수정
+     */
+    @Transactional
+    public Long updateEstimateStatus(Long id, EstimateStatusUpdateReqDto estimateStatusUpdateReqDto) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Estimate estimate = estimateRepository.findByIdWithUser(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        if (estimate.getUser().getLoginId().equals(loginId)) {
+            estimate.update(EstimateStatus.valueOf(estimateStatusUpdateReqDto.getStatus()));
+            return estimate.getId();
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
     }
 }

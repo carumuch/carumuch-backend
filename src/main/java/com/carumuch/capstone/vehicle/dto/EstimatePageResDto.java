@@ -2,15 +2,14 @@ package com.carumuch.capstone.vehicle.dto;
 
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Schema(name = "EstimateHistoryPageResDto: 유저 견적 이용 내역 Dto")
-public class EstimateHistoryPageResDto {
+@Schema(name = "EstimatePageResDto: 견적 목록 Dto")
+public class EstimatePageResDto {
     @Schema(description = "견적 식별자", example = "1")
     private final Long id;
 
@@ -51,7 +50,7 @@ public class EstimateHistoryPageResDto {
     private final String ownerName;
 
     @Builder
-    public EstimateHistoryPageResDto(Estimate estimate) {
+    public EstimatePageResDto(Estimate estimate) {
         this.id = estimate.getId();
         this.damageArea = estimate.getDamageArea();
         this.preferredRepairSido = estimate.getPreferredRepairSido();

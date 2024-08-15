@@ -3,6 +3,7 @@ package com.carumuch.capstone.vehicle.controller;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.EstimateStatusUpdateReqDto;
 import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.service.EstimateService;
 import lombok.RequiredArgsConstructor;
@@ -90,5 +91,15 @@ public class EstimateController implements EstimateControllerDocs{
     public ResponseEntity<?> getEstimateHistory(@RequestParam(defaultValue = "1") int page) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, estimateService.getEstimateHistory(page)));
+    }
+
+    /**
+     * UPDATE: 견적 공개 범위 수정
+     */
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateEstimateStatus(@PathVariable Long id,
+                                                  @Validated(ValidationSequence.class) @RequestBody EstimateStatusUpdateReqDto estimateStatusUpdateReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, estimateService.updateEstimateStatus(id, estimateStatusUpdateReqDto)));
     }
 }

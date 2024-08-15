@@ -1,9 +1,11 @@
 package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.bodyshop.domain.Bid;
+import com.carumuch.capstone.bodyshop.domain.type.BidStatus;
 import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.global.validation.ValidationGroups;
 import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.vehicle.domain.type.EstimateStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -56,6 +58,10 @@ public class Estimate extends BaseCreateByEntity {
     @Column(name = "image_path", length = 500)
     private String imagePath; // 사진 경로
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private EstimateStatus estimateStatus; // 견적 공개 상태
+
     @OneToMany(mappedBy = "estimate", cascade = PERSIST)
     private List<Bid> bids = new ArrayList<>();
 
@@ -71,14 +77,15 @@ public class Estimate extends BaseCreateByEntity {
 
     @Builder
     private Estimate(String description,
-                    String damageArea,
-                    String preferredRepairSido,
-                    String preferredRepairSigungu,
-                    Integer aiEstimatedRepairCost,
-                    boolean isAIEstimate,
-                    boolean isPickupRequired,
-                    String imageName,
-                    String imagePath) {
+                     String damageArea,
+                     String preferredRepairSido,
+                     String preferredRepairSigungu,
+                     Integer aiEstimatedRepairCost,
+                     boolean isAIEstimate,
+                     boolean isPickupRequired,
+                     String imageName,
+                     String imagePath,
+                     EstimateStatus estimateStatus) {
         this.description = description;
         this.damageArea = damageArea;
         this.preferredRepairSido = preferredRepairSido;
@@ -88,6 +95,7 @@ public class Estimate extends BaseCreateByEntity {
         this.isPickupRequired = isPickupRequired;
         this.imageName = imageName;
         this.imagePath = imagePath;
+        this.estimateStatus = estimateStatus;
     }
 
     /* 연관 관계 메서드 */
@@ -114,7 +122,6 @@ public class Estimate extends BaseCreateByEntity {
     }
 
     /* 기본 견적서 생성 */
-    // TODO: 이미지 관련 파라미터 추가
     public static Estimate createBasicEstimate(String description,
                                                String damageArea,
                                                String preferredRepairSido,
@@ -133,6 +140,7 @@ public class Estimate extends BaseCreateByEntity {
                 .isPickupRequired(isPickupRequired)
                 .imageName(imageName)
                 .imagePath(imagePath)
+                .estimateStatus(EstimateStatus.PRIVATE)
                 .build();
 
         estimate.setUser(user);
@@ -142,7 +150,6 @@ public class Estimate extends BaseCreateByEntity {
     }
 
     /* AI 견적서 생성*/
-    // TODO: 이미지 관련 파라미터 추가
     public static Estimate createAIEstimate(String description,
                                             String damageArea,
                                             String preferredRepairSido,
@@ -163,11 +170,17 @@ public class Estimate extends BaseCreateByEntity {
                 .isPickupRequired(isPickupRequired)
                 .imageName(imageName)
                 .imagePath(imagePath)
+                .estimateStatus(EstimateStatus.PRIVATE)
                 .build();
 
         estimate.setUser(user);
         estimate.setVehicle(vehicle);
 
         return estimate;
+    }
+
+    /* 견적 공개 상태 변경 */
+    public void update(EstimateStatus estimateStatus) {
+        this.estimateStatus = estimateStatus;
     }
 }

@@ -7,12 +7,16 @@ import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
+import com.carumuch.capstone.vehicle.dto.EstimateByVehiclePageResDto;
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.repository.EstimateRepository;
 import com.carumuch.capstone.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,6 +137,31 @@ public class EstimateService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         if (estimate.getUser().getLoginId().equals(loginId)) {
             estimateRepository.deleteById(id);
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
+    }
+
+    /**
+     * Select: 견적 히스토리 차량별 조회
+     */
+    public Page<EstimateByVehiclePageResDto> getEstimateHistoryByVehicleId(int page, Long id) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Estimate estimate = estimateRepository.findByIdWithUser(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        if (estimate.getUser().getLoginId().equals(loginId)) {
+            Page<Estimate> estimatePage = estimateRepository
+                    .findPageByVehicleId(id, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
+            return estimatePage.map(e -> EstimateByVehiclePageResDto.builder()
+                    .id(e.getId())
+                    .damageArea(e.getDamageArea())
+                    .preferredRepairSido(e.getPreferredRepairSido())
+                    .preferredRepairSigungu(e.getPreferredRepairSigungu())
+                    .isAIEstimate(e.isAIEstimate())
+                    .aiEstimatedRepairCost(e.getAiEstimatedRepairCost())
+                    .createDate(e.getCreateDate())
+                    .build());
         } else {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }

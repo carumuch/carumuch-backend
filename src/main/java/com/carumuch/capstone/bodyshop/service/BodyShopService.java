@@ -48,10 +48,10 @@ public class BodyShopService {
      * Select: 공업사 키워드 검색
      * 공업사 가입 전 해당 공업사 검색
      */
-    public Page<BodyShopPageResDto> searchKeyword(int id, String keyword) {
-        Page<BodyShop> page = bodyShopRepository
-                .findPageByNameLikeKeyword(keyword, PageRequest.of(id - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
-        return page.map(bodyShop -> BodyShopPageResDto.builder()
+    public Page<BodyShopPageResDto> searchKeyword(int page, String keyword) {
+        Page<BodyShop> bodyShopPage = bodyShopRepository
+                .findPageByNameLikeKeyword(keyword, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
+        return bodyShopPage.map(bodyShop -> BodyShopPageResDto.builder()
                         .id(bodyShop.getId())
                         .name(bodyShop.getName())
                         .acceptCount(bodyShop.getAcceptCount())

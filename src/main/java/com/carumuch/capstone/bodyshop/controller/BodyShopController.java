@@ -31,10 +31,10 @@ public class BodyShopController implements BodyShopControllerDocs{
     /**
      * SELECT: 공업사 키워드 검색
      */
-    @GetMapping("/{id}/search")
-    public ResponseEntity<?> searchKeyword(@PathVariable int id, @RequestParam String keyword) {
+    @GetMapping("/search")
+    public ResponseEntity<?> searchKeyword(@RequestParam(defaultValue = "1") int page, @RequestParam String keyword) {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.searchKeyword(id,keyword)));
+                .body(ResponseDto.success(OK, bodyShopService.searchKeyword(page,keyword)));
     }
 
     /**

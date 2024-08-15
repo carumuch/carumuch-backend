@@ -73,4 +73,14 @@ public class EstimateController implements EstimateControllerDocs{
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, null));
     }
+
+    /**
+     * SELECT: 견적 히스토리 리스트 차량별 조회
+     */
+    @GetMapping("/history/vehicle/{id}")
+    public ResponseEntity<?> getEstimateHistoryByVehicleId(@RequestParam(defaultValue = "1") int page,
+                                                           @PathVariable Long id) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, estimateService.getEstimateHistoryByVehicleId(page, id)));
+    }
 }

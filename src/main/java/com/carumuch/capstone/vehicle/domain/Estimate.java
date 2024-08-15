@@ -62,6 +62,9 @@ public class Estimate extends BaseCreateByEntity {
     @Column(name = "status")
     private EstimateStatus estimateStatus; // 견적 공개 상태
 
+    @Column(name = "applicant_count")
+    private int applicantCount; // 신청자 수
+
     @OneToMany(mappedBy = "estimate", cascade = PERSIST)
     private List<Bid> bids = new ArrayList<>();
 
@@ -182,5 +185,10 @@ public class Estimate extends BaseCreateByEntity {
     /* 견적 공개 상태 변경 */
     public void update(EstimateStatus estimateStatus) {
         this.estimateStatus = estimateStatus;
+    }
+
+    /* 해당 견적에 입찰 신청 수 증가*/
+    public void increaseApplicant() {
+        this.applicantCount += 1;
     }
 }

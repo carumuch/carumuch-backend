@@ -2,15 +2,15 @@ package com.carumuch.capstone.vehicle.dto;
 
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Schema(name = "EstimatePageResDto: 견적 차량 별 히스토리 목록 응답 Dto")
-public class EstimateByVehiclePageResDto {
-
+@Schema(name = "EstimateHistoryPageResDto: 유저 견적 이용 내역 Dto")
+public class EstimateHistoryPageResDto {
     @Schema(description = "견적 식별자", example = "1")
     private final Long id;
 
@@ -32,8 +32,26 @@ public class EstimateByVehiclePageResDto {
     @Schema(description = "견적서 생성 날짜")
     private final LocalDateTime createDate;
 
+    @Schema(description = "차량 번호", example = "00무0000")
+    private final String licenseNumber;
+
+    @Schema(description = "차량 유형", example = "개인")
+    private final String type;
+
+    @Schema(description = "브랜드", example = "기아")
+    private final String brand;
+
+    @Schema(description = "차량 연형", example = "2011")
+    private final int modelYear;
+
+    @Schema(description = "차량 모델", example = "K5")
+    private final String modelName;
+
+    @Schema(description = "차량 실 소유자 명", example = "차박고")
+    private final String ownerName;
+
     @Builder
-    public EstimateByVehiclePageResDto(Estimate estimate) {
+    public EstimateHistoryPageResDto(Estimate estimate) {
         this.id = estimate.getId();
         this.damageArea = estimate.getDamageArea();
         this.preferredRepairSido = estimate.getPreferredRepairSido();
@@ -41,5 +59,11 @@ public class EstimateByVehiclePageResDto {
         this.aiEstimatedRepairCost = estimate.getAiEstimatedRepairCost();
         this.isAIEstimate = estimate.isAIEstimate();
         this.createDate = estimate.getCreateDate();
+        this.licenseNumber = estimate.getVehicle().getLicenseNumber();
+        this.type = estimate.getVehicle().getType();
+        this.brand = estimate.getVehicle().getBrand();
+        this.modelYear = estimate.getVehicle().getModelYear();
+        this.modelName = estimate.getVehicle().getModelName();
+        this.ownerName = estimate.getVehicle().getOwnerName();
     }
 }

@@ -8,6 +8,7 @@ import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.vehicle.dto.EstimateByVehiclePageResDto;
+import com.carumuch.capstone.vehicle.dto.EstimateHistoryPageResDto;
 import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.repository.EstimateRepository;
@@ -148,22 +149,31 @@ public class EstimateService {
     public Page<EstimateByVehiclePageResDto> getEstimateHistoryByVehicleId(int page, Long id) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Estimate estimate = estimateRepository.findByIdWithUser(id)
+        Vehicle vehicle = vehicleRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        if (estimate.getUser().getLoginId().equals(loginId)) {
+
+        if (vehicle.getUser().getLoginId().equals(loginId)) {
             Page<Estimate> estimatePage = estimateRepository
                     .findPageByVehicleId(id, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
-            return estimatePage.map(e -> EstimateByVehiclePageResDto.builder()
-                    .id(e.getId())
-                    .damageArea(e.getDamageArea())
-                    .preferredRepairSido(e.getPreferredRepairSido())
-                    .preferredRepairSigungu(e.getPreferredRepairSigungu())
-                    .isAIEstimate(e.isAIEstimate())
-                    .aiEstimatedRepairCost(e.getAiEstimatedRepairCost())
-                    .createDate(e.getCreateDate())
+            return estimatePage.map(estimate -> EstimateByVehiclePageResDto.builder()
+                    .estimate(estimate)
                     .build());
         } else {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
+    }
+
+    /**
+     * Select: 유저 견적 이용 내역 조회
+     */
+    public Page<EstimateHistoryPageResDto> getEstimateHistory(int page) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Page<Estimate> estimatePage = estimateRepository
+                .findPageByCreateByWithVehicle(loginId, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createDate")));
+        return estimatePage.map(estimate -> EstimateHistoryPageResDto.builder()
+                .estimate(estimate)
+                .build());
+
     }
 }

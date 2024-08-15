@@ -26,4 +26,10 @@ public interface EstimateRepository extends JpaRepository<Estimate, Long> {
      */
     @Query("select e from Estimate e left join fetch e.vehicle where e.vehicle.id = :vehicleId")
     Page<Estimate> findPageByVehicleId(@Param("vehicleId") Long id, Pageable pageable);
+
+    /**
+     * select: 유저 견적 이용 내역 조회
+     */
+    @Query("select e from Estimate e left join fetch e.vehicle where e.createBy = :loginId")
+    Page<Estimate> findPageByCreateByWithVehicle(@Param("loginId") String loginId, Pageable pageable);
 }

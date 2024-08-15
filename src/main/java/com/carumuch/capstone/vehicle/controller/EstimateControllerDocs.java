@@ -73,4 +73,12 @@ public interface EstimateControllerDocs {
     })
     ResponseEntity<?> getEstimateHistoryByVehicleId(int page, Long id);
 
+    /* Select: 유저 견적 이용 내역 리스트 조회 */
+    @Operation(summary = "유저 견적 이용 내역 조회", description = "**성공 응답 데이터:** EstimatePageList ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 견적 이용 내역 리스트 조회 완료"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> getEstimateHistory(int page);
 }

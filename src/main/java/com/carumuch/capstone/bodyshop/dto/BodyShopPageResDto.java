@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Schema(name = "BodyShopInfoResDto: 검색 공업사 목록 응답 Dto")
+@Schema(name = "BodyShopPageResDto: 검색 공업사 목록 응답 Dto")
 public class BodyShopPageResDto {
     @Schema(description = "공업사 식별자", example = "1")
     private final Long id;

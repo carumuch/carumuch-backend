@@ -1,5 +1,7 @@
 package com.carumuch.capstone.image.service;
 
+import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.image.common.SetImageKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,20 +25,25 @@ public class ImageService {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadImage(MultipartFile image) throws IOException{
+    public String uploadImage(MultipartFile image){
 
-        String filePath = Paths.get(
-                System.getProperty("user.dir"),
-                "src/main/resources/static").toString();
+        try {
+            String filePath = Paths.get(
+                    System.getProperty("user.dir"),
+                    "src/main/resources/static").toString();
 
 
-        /*로컬 이미지 파일 업로드*/
-        String imagePath = getImagePath(image);
-        String savePath = filePath + imagePath;
+            /*로컬 이미지 파일 업로드*/
+            String imagePath = getImagePath(image);
+            String savePath = filePath + imagePath;
 
-        image.transferTo(new File(savePath));
+            image.transferTo(new File(savePath));
 
-        return imagePath;
+            return imagePath;
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
 
         /*S3에 이미지 파일 업로드*/
         /*try {

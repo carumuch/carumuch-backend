@@ -3,6 +3,7 @@ package com.carumuch.capstone.vehicle.dto;
 import com.carumuch.capstone.global.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,16 +19,17 @@ public class EstimateRegistrationReqDto {
     @Schema(description = "차량 손상 부위 입니다.", example = "범퍼")
     private String damageArea;
     @NotBlank(message = "수리 희망 시/도 가 입력 되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
-    @Schema(description = "수리 희망 시/도", example = "서울")
+    @Schema(description = "수리 희망 시/도", example = "서울시")
     private String preferredRepairSido;
     @NotBlank(message = "수리 희망 시군구 가 입력 되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "차량 희망 시군구", example = "송파구")
     private String preferredRepairSigungu;
+    @NotNull(message = "차량 픽업 희망 여부가 체크되지 않았습니다.", groups = ValidationGroups.NotNullGroup.class)
     @Schema(description = "차량 픽업 희망 여부", example = "true")
-    private boolean isPickupRequired;
+    private Boolean isPickupRequired;
 
     @Builder
-    public EstimateRegistrationReqDto(String description, String damageArea, String preferredRepairSido, String preferredRepairSigungu, boolean isPickupRequired) {
+    public EstimateRegistrationReqDto(String description, String damageArea, String preferredRepairSido, String preferredRepairSigungu, Boolean isPickupRequired) {
         this.description = description;
         this.damageArea = damageArea;
         this.preferredRepairSido = preferredRepairSido;

@@ -52,7 +52,7 @@ public class EstimateService {
                requestDto.getDamageArea(),
                requestDto.getPreferredRepairSido(),
                requestDto.getPreferredRepairSigungu(),
-               requestDto.isPickupRequired(),
+               requestDto.getIsPickupRequired(),
                image.getOriginalFilename(),
                imagePath,
                user,
@@ -84,7 +84,7 @@ public class EstimateService {
                 requestDto.getPreferredRepairSido(),
                 requestDto.getPreferredRepairSigungu(),
                 50000, // TODO: AI 연동 후 삭제
-                requestDto.isPickupRequired(),
+                requestDto.getIsPickupRequired(),
                 image.getOriginalFilename(),
                 imagePath,
                 user,

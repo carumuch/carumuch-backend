@@ -12,7 +12,10 @@ import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.dto.EstimateDetailResDto;
+import com.carumuch.capstone.vehicle.dto.EstimateSearchReqDto;
+import com.carumuch.capstone.vehicle.dto.EstimateSearchResDto;
 import com.carumuch.capstone.vehicle.repository.EstimateRepository;
+import com.carumuch.capstone.vehicle.repository.custom.EstimateRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,7 @@ public class BodyShopService {
     private final BodyShopRepository bodyShopRepository;
     private final UserRepository userRepository;
     private final EstimateRepository estimateRepository;
+    private final EstimateRepositoryCustom estimateRepositoryCustom;
 
     /**
      * 공업사 직업 여부
@@ -161,5 +165,16 @@ public class BodyShopService {
         return EstimateDetailResDto.builder()
                 .estimate(estimate)
                 .build();
+    }
+
+    /**
+     * Select: 공업사 측 사용자 견적 목록 상세 조회
+     */
+    public Page<EstimateSearchResDto> searchEstimateList(EstimateSearchReqDto estimateSearchReqDto) {
+        /* 공업사 측인지 확인 */
+        validateMechanicUser();
+
+        return estimateRepositoryCustom.searchPage(estimateSearchReqDto,
+                PageRequest.of(estimateSearchReqDto.getPage() != null ? estimateSearchReqDto.getPage() - 1 : 0, 10)); // 1페이지를 위한 -1 수행
     }
 }

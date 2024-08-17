@@ -19,13 +19,13 @@ public class EstimateSearchReqDto {
     @Schema(description = "차량 식별자", example = "강남구")
     private String preferredRepairSigungu;
 
-    @Schema(description = "AI 예상 수리 가격", example = "50000")
+    @Schema(description = "AI 예상 수리 가격이 지정된 값 이하인 견적서 조회를 위한 AI 견적서의 최대 가격", example = "50000")
     private Integer aiEstimatedRepairCost;
 
-    @Schema(description = "AI 를 통한 견적서 확인 여부", example = "true")
+    @Schema(description = "AI 를 통한 견적서를 모아보기 위한 값", example = "true")
     private Boolean isAIEstimate;
 
-    @Schema(description = "차량 픽업 유뮤", example = "true")
+    @Schema(description = "차량 픽업 희망 유무", example = "true")
     private Boolean isPickupRequired;
 
     @Schema(description = "브랜드", example = "기아")

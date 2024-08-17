@@ -63,7 +63,7 @@ public class EstimateRepositoryCustomImpl implements EstimateRepositoryCustom {
                         modelNameEq(estimateSearchReqDto.getModelName()),
                         isPickupRequiredEq(estimateSearchReqDto.getIsPickupRequired()),
                         isAIEstimateEq(estimateSearchReqDto.getIsAIEstimate()),
-                        aiEstimatedRepairCostEq(estimateSearchReqDto.getAiEstimatedRepairCost()),
+                        aiEstimatedRepairCostLoe(estimateSearchReqDto.getAiEstimatedRepairCost()),
                         vehicle.isNotNull()
                 )
                 .orderBy(getOrderSpecifier(estimateSearchReqDto.getOrder()))
@@ -86,7 +86,7 @@ public class EstimateRepositoryCustomImpl implements EstimateRepositoryCustom {
                         modelNameEq(estimateSearchReqDto.getModelName()),
                         isPickupRequiredEq(estimateSearchReqDto.getIsPickupRequired()),
                         isAIEstimateEq(estimateSearchReqDto.getIsAIEstimate()),
-                        aiEstimatedRepairCostEq(estimateSearchReqDto.getAiEstimatedRepairCost()),
+                        aiEstimatedRepairCostLoe(estimateSearchReqDto.getAiEstimatedRepairCost()),
                         vehicle.isNotNull()
                 );
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
@@ -144,8 +144,8 @@ public class EstimateRepositoryCustomImpl implements EstimateRepositoryCustom {
         return isAIEstimate != null ? estimate.isAIEstimate.eq(isAIEstimate) : null;
     }
 
-    /* AI 기반 견적 가격 */
-    private BooleanExpression aiEstimatedRepairCostEq(Integer aiEstimatedRepairCost) {
-        return aiEstimatedRepairCost != null ? estimate.aiEstimatedRepairCost.eq(aiEstimatedRepairCost) : null;
+    /* AI 기반 견적 가격 보다 낮은 */
+    private BooleanExpression aiEstimatedRepairCostLoe(Integer aiEstimatedRepairCost) {
+        return aiEstimatedRepairCost != null ? estimate.aiEstimatedRepairCost.loe(aiEstimatedRepairCost) : null;
     }
 }

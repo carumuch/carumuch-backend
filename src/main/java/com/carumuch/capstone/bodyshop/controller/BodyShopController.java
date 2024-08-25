@@ -1,5 +1,7 @@
 package com.carumuch.capstone.bodyshop.controller;
 
+import com.carumuch.capstone.bodyshop.dto.BodyShopBidCreateReqDto;
+import com.carumuch.capstone.bodyshop.dto.BodyShopBidUpdateReqDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.service.BodyShopService;
@@ -91,5 +93,44 @@ public class BodyShopController implements BodyShopControllerDocs{
     public ResponseEntity<?> estimateSearch(EstimateSearchReqDto estimateSearchReqDto) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, bodyShopService.searchEstimateList(estimateSearchReqDto)));
+    }
+
+    /**
+     * CREATE: 공업사 측 특정 견적서에 대해 입찰 신청
+     */
+    @PostMapping("/bids/{estimateId}")
+    public ResponseEntity<?> createBid(@Validated(ValidationSequence.class) @RequestBody BodyShopBidCreateReqDto bodyShopBidCreateReqDto,
+                                       @PathVariable Long estimateId) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, bodyShopService.createBid(estimateId, bodyShopBidCreateReqDto)));
+    }
+
+    /**
+     * SELECT: 공업사 측 입찰 상세 조회
+     */
+    @GetMapping("/bids/{bidId}")
+    public ResponseEntity<?> bodyShopBidDetail(@PathVariable Long bidId) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, bodyShopService.bidDetail(bidId)));
+    }
+
+    /**
+     * UPDATE: 공업사 측 입찰 정보 수정
+     */
+    @PutMapping("/bids/{bidId}")
+    public ResponseEntity<?> updateBid(@Validated(ValidationSequence.class) @RequestBody BodyShopBidUpdateReqDto bodyShopBidUpdateReqDto,
+                                       @PathVariable Long bidId) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, bodyShopService.updateBid(bidId, bodyShopBidUpdateReqDto)));
+    }
+
+    /**
+     * DELETE: 공업사 측 입찰 취소
+     */
+    @DeleteMapping("/bids/{bidId}")
+    public ResponseEntity<?> cancelBid(@PathVariable Long bidId) {
+        bodyShopService.cancelBid(bidId);
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, true));
     }
 }

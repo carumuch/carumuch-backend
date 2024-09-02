@@ -142,10 +142,10 @@ public class BoardService {
         if (!board.getUser().equals(currentUser)){
             throw new RuntimeException("이 게시글을 삭제할 권한이 없습니다");
         }
-        if(board.getBoardImageList() != null){
+        if(board.getBoardImages() != null){
             /*이미지 삭제*/
 
-            for (BoardImage boardImage : board.getBoardImageList()){
+            for (BoardImage boardImage : board.getBoardImages()){
                 String savedImageName = boardImage.getSavedImageName();
                 imageService.deleteImage(savedImageName);
             }

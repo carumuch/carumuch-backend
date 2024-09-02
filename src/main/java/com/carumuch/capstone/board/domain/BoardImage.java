@@ -37,6 +37,6 @@ public class BoardImage extends BaseCreateByEntity {
         this.board = board;
         this.originalImageName = originalImageName;
         this.savedImageName = savedImageName;
-        board.getBoardImageList().add(this);
+        board.getBoardImages().add(this);
     }
 }

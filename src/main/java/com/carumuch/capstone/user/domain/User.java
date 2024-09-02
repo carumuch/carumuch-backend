@@ -2,6 +2,7 @@ package com.carumuch.capstone.user.domain;
 
 import com.carumuch.capstone.board.domain.Board;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.comment.domain.Comment;
 import com.carumuch.capstone.global.auditing.BaseTimeEntity;
 import com.carumuch.capstone.user.domain.type.Role;
 import com.carumuch.capstone.vehicle.domain.Estimate;
@@ -49,6 +50,9 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)

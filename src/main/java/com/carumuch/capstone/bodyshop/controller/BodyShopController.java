@@ -5,6 +5,7 @@ import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.service.BodyShopService;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
+import com.carumuch.capstone.vehicle.dto.EstimateSearchReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,10 +32,10 @@ public class BodyShopController implements BodyShopControllerDocs{
     /**
      * SELECT: 공업사 키워드 검색
      */
-    @GetMapping("/{id}/search")
-    public ResponseEntity<?> searchKeyword(@PathVariable int id, @RequestParam String keyword) {
+    @GetMapping("/search")
+    public ResponseEntity<?> searchKeyword(@RequestParam(defaultValue = "1") int page, @RequestParam String keyword) {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.searchKeyword(id,keyword)));
+                .body(ResponseDto.success(OK, bodyShopService.searchKeyword(page,keyword)));
     }
 
     /**
@@ -69,8 +70,26 @@ public class BodyShopController implements BodyShopControllerDocs{
      * SELECT: 공업사 상세 조회
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> findOne(@PathVariable Long id) {
+    public ResponseEntity<?> detail(@PathVariable Long id) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, bodyShopService.findOne(id)));
+    }
+
+    /**
+     * SELECT: 공업사 측 견적 상세 조회
+     */
+    @GetMapping("/estimates/{id}")
+    public ResponseEntity<?> estimateDetail(@PathVariable Long id) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, bodyShopService.estimateDetail(id)));
+    }
+
+    /**
+     * SELECT: 공업사 측 견적 목록 상세 검색
+     */
+    @GetMapping("/estimates")
+    public ResponseEntity<?> estimateSearch(EstimateSearchReqDto estimateSearchReqDto) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, bodyShopService.searchEstimateList(estimateSearchReqDto)));
     }
 }

@@ -32,4 +32,11 @@ public class CommentController implements CommentControllerDocs{
                 .body(ResponseDto.success(OK, commentService.modifyComment(id,commentModifyReqDto)));
     }
 
+    @Override
+    public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long id){
+        commentService.deleteComment(id);
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, null));
+    }
+
 }

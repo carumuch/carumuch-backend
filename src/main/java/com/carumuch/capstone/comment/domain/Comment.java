@@ -1,6 +1,7 @@
 package com.carumuch.capstone.comment.domain;
 
 import com.carumuch.capstone.board.domain.Board;
+import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment")
 @Getter
-public class Comment {
+public class Comment extends BaseCreateByEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -41,6 +42,9 @@ public class Comment {
         this.commentContent = commentContent;
         user.getComments().add(this);
         board.getComments().add(this);
+    }
+    public void updateComment(String commentContent){
+        this.commentContent = commentContent;
     }
 
 

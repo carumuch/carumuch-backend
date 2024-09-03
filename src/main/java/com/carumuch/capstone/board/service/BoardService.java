@@ -28,6 +28,9 @@ public class BoardService {
     private final UserAuditorAware userAuditorAware;
     private final ImageService imageService;
 
+    /**
+     * Create: 게시글 작성
+     */
     @Transactional
     public Long write(BoardReqDto boardReqDto) throws IOException {
 
@@ -64,17 +67,24 @@ public class BoardService {
         return board.getId();
     }
 
-    @Transactional
+    /**
+     * Select: 전체 게시글 조회
+     */
     public List<Board> findAll(){
         return boardRepository.findAll();
     }
 
-    @Transactional
+    /**
+     * Select: 게시글 상세 조회
+     */
     public Board findById(Long id){
         Optional<Board> optionalBoard = boardRepository.findById(id);
         return optionalBoard.orElse(null);
     }
 
+    /**
+     * Update: 게시글 수정
+     */
     @Transactional
     public Long modify(Long id, BoardModifyReqDto boardModifyReqDto) throws IOException {
 
@@ -125,7 +135,9 @@ public class BoardService {
         return id;
     }
 
-
+    /**
+     * Delete: 게시글 삭제
+     */
     public void delete(Long id){
         /* 게시글 조회 */
         Board board = boardRepository.findById(id)
@@ -155,6 +167,9 @@ public class BoardService {
 
     }
 
+    /**
+     * Update: 게시글 조회시 조회수 증가
+     */
     @Transactional
     public  void updateBoardHits(Long id){
         /* 게시글 조회 */

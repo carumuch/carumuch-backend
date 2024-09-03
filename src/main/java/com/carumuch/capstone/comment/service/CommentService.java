@@ -21,6 +21,9 @@ public class CommentService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
+    /**
+     * Create: 댓글 작성
+     */
     public Long writeComment(CommentReqDto commentReqDto){
         /*로그인한 유저정보 조회*/
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -39,6 +42,10 @@ public class CommentService {
         return comment.getId();
 
     }
+
+    /**
+     * Update: 댓글 수정
+     */
     @Transactional
     public Long modifyComment(Long id, CommentModifyReqDto commentModifyReqDto){
         /*로그인한 유저정보 조회*/
@@ -59,6 +66,9 @@ public class CommentService {
 
     }
 
+    /**
+     * Delete: 댓글 삭제
+     */
     @Transactional
     public void deleteComment(Long id){
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();

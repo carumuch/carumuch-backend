@@ -23,19 +23,27 @@ public class BoardController implements BoardControllerDocs{
 
     private final BoardService boardService;
 
-
+    /**
+     * Create: 게시글 작성
+     */
     @Override
     public ResponseEntity<?> write(@ModelAttribute BoardReqDto boardReqDto) throws IOException {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
     }
 
+    /**
+     * Select: 전체 게시글 조회
+     */
     @Override
     public ResponseEntity<?> findAll(){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.findAll()));
     }
 
+    /**
+     * Select: 게시글 상세 조회
+     */
     @Override
     public ResponseEntity<?> findById(@PathVariable("boardId") Long id){
         boardService.updateBoardHits(id);
@@ -43,6 +51,9 @@ public class BoardController implements BoardControllerDocs{
                 .body(ResponseDto.success(OK,boardService.findById(id)));
     }
 
+    /**
+     * Delete: 게시글 삭제
+     */
     @Override
     public ResponseEntity<?> delete(@PathVariable("boardId") Long id){
         boardService.delete(id);
@@ -50,6 +61,9 @@ public class BoardController implements BoardControllerDocs{
                 .body(ResponseDto.success(OK,null));
     }
 
+    /**
+     * Update: 게시글 수정
+     */
     @Override
     public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @ModelAttribute BoardModifyReqDto boardModifyReqDto) throws IOException {
         return ResponseEntity.status(OK)

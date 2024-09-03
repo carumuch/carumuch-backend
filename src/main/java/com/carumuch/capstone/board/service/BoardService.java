@@ -155,4 +155,13 @@ public class BoardService {
 
     }
 
+    @Transactional
+    public  void updateBoardHits(Long id){
+        /* 게시글 조회 */
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다"));
+        int boardHits = board.getBoardHits();
+        board.updateBoardHits(boardHits + 1);
+    }
+
 }

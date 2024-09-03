@@ -38,6 +38,7 @@ public class BoardController implements BoardControllerDocs{
 
     @Override
     public ResponseEntity<?> findById(@PathVariable("boardId") Long id){
+        boardService.updateBoardHits(id);
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.findById(id)));
     }

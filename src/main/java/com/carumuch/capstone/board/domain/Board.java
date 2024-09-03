@@ -61,5 +61,9 @@ public class Board extends BaseCreateByEntity {
         this.boardContent = boardContent;
     }
 
+    public void updateBoardHits(int boardHits){
+        this.boardHits = boardHits;
+    }
+
 
 }

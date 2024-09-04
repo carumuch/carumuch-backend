@@ -109,6 +109,7 @@ public interface BodyShopControllerDocs {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
             @ApiResponse(responseCode = "404", description = "찾을 수 없는 공업사 입니다."),
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "401", description = "이미 신청 이력이 있습니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> createBid(BodyShopBidCreateReqDto bodyShopBidCreateReqDto, Long estimateId);
@@ -144,4 +145,13 @@ public interface BodyShopControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> cancelBid(Long bidId);
+
+    /* Select: 공업사 입찰 신청 리스트 */
+    @Operation(summary = "공업사 측 입찰 신청 리스트 입니다.", description = "**성공 응답 데이터:** `BidPage` ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "공업사 입찰 리스트 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+    })
+    ResponseEntity<?> bidList(int page, Long bodyShopId);
 }

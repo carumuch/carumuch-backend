@@ -43,47 +43,47 @@ public class BodyShopController implements BodyShopControllerDocs{
     /**
      * Create: 기존 공업사로 등록
      */
-    @PostMapping("/{id}/join")
-    public ResponseEntity<?> join(@PathVariable Long id) {
+    @PostMapping("/{bodyShopId}/join")
+    public ResponseEntity<?> join(@PathVariable Long bodyShopId) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.join(id)));
+                .body(ResponseDto.success(CREATED, bodyShopService.join(bodyShopId)));
     }
 
     /**
      * UPDATE: 공업사 정보 수정
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{bodyShopId}")
     public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody BodyShopUpdateReqDto bodyShopUpdateReqDto,
-                                    @PathVariable Long id) {
+                                    @PathVariable Long bodyShopId) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.update(id,bodyShopUpdateReqDto)));
+                .body(ResponseDto.success(CREATED, bodyShopService.update(bodyShopId,bodyShopUpdateReqDto)));
     }
 
     /**
      * UPDATE: 다른 공업사로 변경
      */
-    @PatchMapping("/{id}/transfer")
-    public ResponseEntity<?> transfer(@PathVariable  Long id) {
+    @PatchMapping("/{bodyShopId}/transfer")
+    public ResponseEntity<?> transfer(@PathVariable Long bodyShopId) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.transfer(id)));
+                .body(ResponseDto.success(CREATED, bodyShopService.transfer(bodyShopId)));
     }
 
     /**
      * SELECT: 공업사 상세 조회
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id) {
+    @GetMapping("/{bodyShopId}")
+    public ResponseEntity<?> detail(@PathVariable Long bodyShopId) {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.findOne(id)));
+                .body(ResponseDto.success(OK, bodyShopService.findOne(bodyShopId)));
     }
 
     /**
      * SELECT: 공업사 측 견적 상세 조회
      */
-    @GetMapping("/estimates/{id}")
-    public ResponseEntity<?> estimateDetail(@PathVariable Long id) {
+    @GetMapping("/estimates/{estimateId}")
+    public ResponseEntity<?> estimateDetail(@PathVariable Long estimateId) {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.estimateDetail(id)));
+                .body(ResponseDto.success(OK, bodyShopService.estimateDetail(estimateId)));
     }
 
     /**
@@ -132,5 +132,15 @@ public class BodyShopController implements BodyShopControllerDocs{
         bodyShopService.cancelBid(bidId);
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, true));
+    }
+
+    /**
+     * SELECT: 공업사 측 입찰 리스트 조회
+     */
+    @GetMapping("/{bodyShopId}/history/bids")
+    public ResponseEntity<?> bidList(@RequestParam(defaultValue = "1") int page,
+                                     @PathVariable Long bodyShopId) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, bodyShopService.bidList(page, bodyShopId)));
     }
 }

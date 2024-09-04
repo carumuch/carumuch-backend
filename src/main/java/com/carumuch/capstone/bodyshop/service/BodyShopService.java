@@ -201,6 +201,11 @@ public class BodyShopService {
         User user = userRepository
                 .findByLoginIdWithBodyShop(SecurityContextHolder.getContext().getAuthentication().getName());
 
+        /* 이미 입찰을 신청했을 경우  */
+        if (bidRepository.existsByEstimateId(user.getBodyShop().getId(), estimateId)) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+
         Estimate estimate = estimateRepository.findById(estimateId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
@@ -260,5 +265,23 @@ public class BodyShopService {
         validationBodyShopBid(bid.getBodyShop().getId());
 
         bidRepository.deleteById(bid.getId());
+    }
+
+    /**
+     * 입찰 리스트 비드와 견적서 같이 조회 해서 견적주와 비드정보 살짝
+     */
+    public Page<BodyShopBidPageResDto> bidList(int page, Long id) {
+
+        /* 해당 공업사의 입찰 내역들 인지*/
+        validationBodyShopBid(id);
+
+        Page<Bid> bidPage = bidRepository.findPageByBodyShopId(id, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createDate")));
+        return bidPage.map(bid -> BodyShopBidPageResDto.builder()
+                .id(bid.getId())
+                .client(bid.getEstimate().getCreateBy())
+                .damageArea(bid.getEstimate().getDamageArea())
+                .bidStatus(bid.getBidStatus().getKey())
+                .createDate(bid.getCreateDate())
+                .build());
     }
 }

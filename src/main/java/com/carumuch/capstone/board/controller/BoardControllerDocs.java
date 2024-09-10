@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
-import java.util.List;
+
 
 
 @Tag(name = "Board")
@@ -33,7 +35,7 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "401", description = "게시글 전체 조회 실패"),
     })
     @GetMapping("/")
-    ResponseEntity<?> findAll();
+    ResponseEntity<?> findAll(@PageableDefault(page = 1) Pageable pageable);
 
     @Operation(summary = "게시글 상세 조회 요청", description = "**성공 응답 데이터:** true")
     @Parameter(name = "boardId", description = "조회할 게시글의 번호", example = "1")

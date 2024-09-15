@@ -44,7 +44,7 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "401", description = "게시글 상세 조회 실패"),
     })
     @GetMapping("/{boardId}")
-    ResponseEntity<?> findById(@PathVariable("boardId") Long id);
+    ResponseEntity<?> findById(@PathVariable("boardId") Long id,Pageable pageable);
 
     /* Update: 게시글 수정 */
     @Operation(summary = "게시글 수정 요청", description = "**성공 응답 데이터:** 게시글의 `board_id`")

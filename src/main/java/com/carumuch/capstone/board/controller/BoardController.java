@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -54,10 +57,20 @@ public class BoardController implements BoardControllerDocs{
      * Select: 게시글 상세 조회
      */
     @Override
-    public ResponseEntity<?> findById(@PathVariable("boardId") Long id){
+    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, Pageable pageable){
+        /*조회수 업데이트*/
         boardService.updateBoardHits(id);
+        /*게시글 조회시 넘어온 페이지 넘버*/
+        int pageNumber = pageable.getPageNumber();
+
+        Map<String, Object> boardDetailResponse = new HashMap<>();
+        Board board = boardService.findById(id);
+
+        boardDetailResponse.put("board",board);
+        boardDetailResponse.put("pageNumber",pageNumber);
+
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK,boardService.findById(id)));
+                .body(ResponseDto.success(OK,boardDetailResponse));
     }
 
     /**

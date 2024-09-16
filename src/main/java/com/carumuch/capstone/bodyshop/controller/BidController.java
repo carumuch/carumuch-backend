@@ -1,0 +1,33 @@
+package com.carumuch.capstone.bodyshop.controller;
+
+import com.carumuch.capstone.bodyshop.service.BidService;
+import com.carumuch.capstone.global.common.ResponseDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.*;
+
+@RestController
+@RequestMapping("/bids")
+@RequiredArgsConstructor
+public class BidController implements BidControllerDocs{
+    private final BidService bidService;
+
+    @GetMapping("history/{estimateId}")
+    public ResponseEntity<?> bidPage(@RequestParam(defaultValue = "1") int page,
+                                     @PathVariable("estimateId") Long id) {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, bidService.findPageByEstimateId(page, id)));
+    }
+
+    @GetMapping("/{bidId}")
+    public ResponseEntity<?> bidDetail(Long id) {
+        return ResponseEntity.status(OK).body(ResponseDto.success(OK, bidService.detailBid(id)));
+    }
+
+    @PatchMapping("/{bidId}")
+    public ResponseEntity<?> bidStatusUpdate(Long id, String status) {
+        return ResponseEntity.status(CREATED).body(ResponseDto.success(CREATED, bidService.updateBisStatus(id, status)));
+    }
+}

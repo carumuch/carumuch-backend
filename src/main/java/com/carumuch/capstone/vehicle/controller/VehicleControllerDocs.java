@@ -1,7 +1,7 @@
 package com.carumuch.capstone.vehicle.controller;
 
-import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
+import com.carumuch.capstone.vehicle.dto.vehicle.VehicleRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.vehicle.VehicleUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

@@ -1,13 +1,13 @@
 package com.carumuch.capstone.bodyshop.controller;
 
-import com.carumuch.capstone.bodyshop.dto.BodyShopBidCreateReqDto;
-import com.carumuch.capstone.bodyshop.dto.BodyShopBidUpdateReqDto;
-import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
-import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
+import com.carumuch.capstone.bodyshop.dto.bid.BodyShopBidCreateReqDto;
+import com.carumuch.capstone.bodyshop.dto.bid.BodyShopBidUpdateReqDto;
+import com.carumuch.capstone.bodyshop.dto.bodyShop.BodyShopRegistrationReqDto;
+import com.carumuch.capstone.bodyshop.dto.bodyShop.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.service.BodyShopService;
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
-import com.carumuch.capstone.vehicle.dto.EstimateSearchReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateSearchReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

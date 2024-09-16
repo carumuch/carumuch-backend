@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bodyshop.dto;
+package com.carumuch.capstone.bodyshop.dto.bid;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

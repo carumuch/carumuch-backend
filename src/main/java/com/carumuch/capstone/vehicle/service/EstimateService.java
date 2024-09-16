@@ -8,7 +8,7 @@ import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.vehicle.domain.type.EstimateStatus;
-import com.carumuch.capstone.vehicle.dto.*;
+import com.carumuch.capstone.vehicle.dto.estimate.*;
 import com.carumuch.capstone.vehicle.repository.EstimateRepository;
 import com.carumuch.capstone.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class EstimateService {
      * Create: 견적 등록
      */
     @Transactional
-    public Long register(Long id, MultipartFile image,EstimateRegistrationReqDto requestDto) {
+    public Long register(Long id, MultipartFile image, EstimateRegistrationReqDto requestDto) {
         // 유저/차량 정보 조회
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 

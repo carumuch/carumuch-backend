@@ -47,8 +47,7 @@ public class Bid extends BaseCreateByEntity {
         this.cost = cost;
         this.repairMethod = repairMethod;
         this.bidStatus = bidStatus;
-        this.bodyShop = bodyShop;
-        this.estimate = estimate;
+        apply(bodyShop, estimate);
     }
 
     /* 연관 관계 메서드 */
@@ -67,8 +66,14 @@ public class Bid extends BaseCreateByEntity {
         setEstimate(estimate);
     }
 
+    /* 입찰 정보 수정 */
+    public void update(int cost, String repairMethod) {
+        this.cost = cost;
+        this.repairMethod = repairMethod;
+    }
+
     /* 입찰 상태 변경 */
-    public void update(BidStatus bidStatus) {
+    public void updateStatus(BidStatus bidStatus) {
         this.bidStatus = bidStatus;
     }
 }

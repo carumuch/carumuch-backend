@@ -1,4 +1,4 @@
-package com.carumuch.capstone.vehicle.dto;
+package com.carumuch.capstone.vehicle.dto.vehicle;
 
 import com.carumuch.capstone.global.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Schema(name = "VehicleUpdateReqDto: 차량 정보 수정 요청 Dto")
-public class VehicleUpdateReqDto {
+@Schema(name = "VehicleRegistrationReqDto: 차량 등록 요청 Dto")
+public class VehicleRegistrationReqDto {
 
     @NotBlank(message = "차량 번호가 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "차량 번호 입니다.",
@@ -20,22 +20,22 @@ public class VehicleUpdateReqDto {
 
     @NotBlank(message = "차량 유형이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "차량 유형입니다.(개인 or 법인/리스)",
-            example = "개인")
+            example = "법인/리스")
     private String type;
 
     @NotBlank(message = "차량 브렌드가 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "차량 브렌드입니다.",
-            example = "기아")
+            example = "아우디")
     private String brand;
 
     @NotNull(message = "차량 연식이 입력되지 않았습니다.", groups = ValidationGroups.NotNullGroup.class)
     @Schema(description = "차량 연식입니다.",
-            example = "2024")
+            example = "2011")
     private int modelYear;
 
     @NotBlank(message = "차량 모델명이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "차량 모델명 입니다.",
-            example = "레이")
+            example = "A6")
     private String modelName;
 
     @NotBlank(message = "차량 실소유자 이름이 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
@@ -44,7 +44,7 @@ public class VehicleUpdateReqDto {
     private String ownerName;
 
     @Builder
-    public VehicleUpdateReqDto(String licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
+    public VehicleRegistrationReqDto(String licenseNumber, String type, String brand, int modelYear, String modelName, String ownerName) {
         this.licenseNumber = licenseNumber;
         this.type = type;
         this.brand = brand;

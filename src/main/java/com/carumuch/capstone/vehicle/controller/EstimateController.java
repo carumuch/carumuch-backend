@@ -2,9 +2,9 @@ package com.carumuch.capstone.vehicle.controller;
 
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
-import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.EstimateStatusUpdateReqDto;
-import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateStatusUpdateReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.service.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

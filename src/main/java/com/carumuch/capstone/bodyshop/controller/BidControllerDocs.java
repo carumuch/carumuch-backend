@@ -1,5 +1,6 @@
 package com.carumuch.capstone.bodyshop.controller;
 
+import com.carumuch.capstone.bodyshop.dto.bid.BidStatusUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -41,6 +42,6 @@ public interface BidControllerDocs {
             @ApiResponse(responseCode = "409", description = "이미 체결된 이력이 존재합니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> bidStatusUpdate(Long id, String status);
+    ResponseEntity<?> bidStatusUpdate(Long id, BidStatusUpdateReqDto bidStatusUpdateReqDto);
 
 }

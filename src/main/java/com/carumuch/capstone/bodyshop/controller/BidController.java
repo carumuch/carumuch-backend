@@ -1,9 +1,12 @@
 package com.carumuch.capstone.bodyshop.controller;
 
+import com.carumuch.capstone.bodyshop.dto.bid.BidStatusUpdateReqDto;
 import com.carumuch.capstone.bodyshop.service.BidService;
 import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.validation.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -22,12 +25,14 @@ public class BidController implements BidControllerDocs{
     }
 
     @GetMapping("/{bidId}")
-    public ResponseEntity<?> bidDetail(Long id) {
+    public ResponseEntity<?> bidDetail(@PathVariable("bidId") Long id) {
         return ResponseEntity.status(OK).body(ResponseDto.success(OK, bidService.detailBid(id)));
     }
 
     @PatchMapping("/{bidId}")
-    public ResponseEntity<?> bidStatusUpdate(Long id, String status) {
-        return ResponseEntity.status(CREATED).body(ResponseDto.success(CREATED, bidService.updateBisStatus(id, status)));
+    public ResponseEntity<?> bidStatusUpdate(@PathVariable("bidId") Long id,
+                                             @Validated(ValidationSequence.class) @RequestBody BidStatusUpdateReqDto bidStatusUpdateReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, bidService.updateBisStatus(id, bidStatusUpdateReqDto.getStatus())));
     }
 }

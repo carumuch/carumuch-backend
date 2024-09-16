@@ -26,9 +26,9 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     Page<Bid> findPageByEstimateId(@Param("estimateId") Long estimateId, Pageable pageable);
 
     @Query("""
-            select b from Bid b left join fetch b.estimate where b.id = :id
+            select b from Bid b left join fetch b.estimate where b.id = :id and b.createBy = :createBy
             """)
-    Optional<Bid> findByIdWithEstimate(@Param("id") Long id);
+    Optional<Bid> findByIdAndCreateByWithEstimate(@Param("id") Long id, @Param("createBy") String createBy);
 
     @Query("""
         select (count(b) > 0) from Bid b where b.estimate.id = :estimateId and b.bidStatus = :bidStatus

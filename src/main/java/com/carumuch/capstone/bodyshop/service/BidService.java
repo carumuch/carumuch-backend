@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,8 @@ public class BidService {
 
     @Transactional
     public Long updateBisStatus(Long id, String status) {
-        Bid bid = bidRepository.findByIdWithEstimate(id)
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Bid bid = bidRepository.findByIdAndCreateByWithEstimate(id, loginId)
                 .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND));
         // 이미 매칭 된 견적인지
         if (bidRepository.existsBidByEstimateId(bid.getEstimate().getId(), BidStatus.ACCEPTED)) {

@@ -6,6 +6,9 @@ import com.carumuch.capstone.board.dto.BoardModifyReqDto;
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import com.carumuch.capstone.board.service.BoardService;
 import com.carumuch.capstone.global.common.ResponseDto;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,6 +30,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/board")
 public class BoardController implements BoardControllerDocs{
 
+    private final int COOKIE_EXPIRATION = 60 * 60 * 24;
     private final BoardService boardService;
 
     /**
@@ -57,9 +61,8 @@ public class BoardController implements BoardControllerDocs{
      * Select: 게시글 상세 조회
      */
     @Override
-    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, Pageable pageable){
-        /*조회수 업데이트*/
-        boardService.updateBoardHits(id);
+    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, Pageable pageable, HttpServletRequest request, HttpServletResponse response){
+
         /*게시글 조회시 넘어온 페이지 넘버*/
         int pageNumber = pageable.getPageNumber();
 
@@ -68,6 +71,31 @@ public class BoardController implements BoardControllerDocs{
 
         boardDetailResponse.put("board",board);
         boardDetailResponse.put("pageNumber",pageNumber);
+
+        /*쿠키값 추출*/
+        Cookie oldBoardToken = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("board-token")) {
+                oldBoardToken = cookie;
+            }
+        }
+        /*조회수 업데이트*/
+        if (oldBoardToken != null) {
+            if (!oldBoardToken.getValue().contains("["+ id +"]")) {
+                boardService.updateBoardHits(id);
+                oldBoardToken.setValue(oldBoardToken.getValue() + "[" + id + "]");
+            }
+        } else {
+            boardService.updateBoardHits(id);
+            oldBoardToken = new Cookie("board-token", "[" + id + "]");
+
+        }
+        oldBoardToken.setPath("/");
+        oldBoardToken.setMaxAge(COOKIE_EXPIRATION);
+        response.addCookie(oldBoardToken);
+
+
 
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardDetailResponse));

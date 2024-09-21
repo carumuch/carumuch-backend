@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,7 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "401", description = "게시글 상세 조회 실패"),
     })
     @GetMapping("/{boardId}")
-    ResponseEntity<?> findById(@PathVariable("boardId") Long id,Pageable pageable);
+    ResponseEntity<?> findById(@PathVariable("boardId") Long id,Pageable pageable, HttpServletRequest request, HttpServletResponse response);
 
     /* Update: 게시글 수정 */
     @Operation(summary = "게시글 수정 요청", description = "**성공 응답 데이터:** 게시글의 `board_id`")

@@ -1,4 +1,4 @@
-package com.carumuch.capstone.vehicle.dto;
+package com.carumuch.capstone.vehicle.dto.vehicle;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

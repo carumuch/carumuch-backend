@@ -1,8 +1,8 @@
 package com.carumuch.capstone.vehicle.controller;
 
-import com.carumuch.capstone.vehicle.dto.EstimateRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.EstimateStatusUpdateReqDto;
-import com.carumuch.capstone.vehicle.dto.EstimateUpdateReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateRegistrationReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateStatusUpdateReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

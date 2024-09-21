@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bodyshop.dto;
+package com.carumuch.capstone.bodyshop.dto.bodyShop;
 
 import com.carumuch.capstone.bodyshop.domain.Location;
 import com.carumuch.capstone.global.validation.ValidationGroups;

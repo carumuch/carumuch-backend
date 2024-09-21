@@ -3,9 +3,9 @@ package com.carumuch.capstone.vehicle.repository.custom;
 
 import com.carumuch.capstone.vehicle.domain.Estimate;
 import com.carumuch.capstone.vehicle.domain.type.EstimateStatus;
-import com.carumuch.capstone.vehicle.dto.EstimateSearchReqDto;
-import com.carumuch.capstone.vehicle.dto.EstimateSearchResDto;
-import com.carumuch.capstone.vehicle.dto.QEstimateSearchResDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateSearchReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateSearchResDto;
+import com.carumuch.capstone.vehicle.dto.estimate.QEstimateSearchResDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;

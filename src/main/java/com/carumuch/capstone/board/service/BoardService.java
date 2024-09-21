@@ -11,12 +11,16 @@ import com.carumuch.capstone.image.service.ImageService;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -28,6 +32,9 @@ public class BoardService {
     private final UserAuditorAware userAuditorAware;
     private final ImageService imageService;
 
+    /**
+     * Create: 게시글 작성
+     */
     @Transactional
     public Long write(BoardReqDto boardReqDto) throws IOException {
 
@@ -64,17 +71,27 @@ public class BoardService {
         return board.getId();
     }
 
-    @Transactional
-    public List<Board> findAll(){
-        return boardRepository.findAll();
+    /**
+     * Select: 전체 게시글 조회
+     */
+    public Page<Board> findAll(Pageable pageable){
+        int page = pageable.getPageNumber() - 1;
+        /*한 페이지 당 글 개수*/
+        int pageLimit = 20;
+        return boardRepository.findAll(PageRequest.of(page,pageLimit, Sort.by(Sort.Direction.DESC,"id")));
     }
 
-    @Transactional
+    /**
+     * Select: 게시글 상세 조회
+     */
     public Board findById(Long id){
         Optional<Board> optionalBoard = boardRepository.findById(id);
         return optionalBoard.orElse(null);
     }
 
+    /**
+     * Update: 게시글 수정
+     */
     @Transactional
     public Long modify(Long id, BoardModifyReqDto boardModifyReqDto) throws IOException {
 
@@ -125,7 +142,9 @@ public class BoardService {
         return id;
     }
 
-
+    /**
+     * Delete: 게시글 삭제
+     */
     public void delete(Long id){
         /* 게시글 조회 */
         Board board = boardRepository.findById(id)
@@ -153,6 +172,18 @@ public class BoardService {
         }
         boardRepository.delete(board);
 
+    }
+
+    /**
+     * Update: 게시글 조회시 조회수 증가
+     */
+    @Transactional
+    public  void updateBoardHits(Long id){
+        /* 게시글 조회 */
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다"));
+        int boardHits = board.getBoardHits();
+        board.updateBoardHits(boardHits + 1);
     }
 
 }

@@ -20,18 +20,26 @@ import static org.springframework.http.HttpStatus.OK;
 public class CommentController implements CommentControllerDocs{
 
     private final CommentService commentService;
-
+    /**
+     * Create: 댓글 작성
+     */
     @Override
     public ResponseEntity<?> writeComment(@RequestBody CommentReqDto commentReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, commentService.writeComment(commentReqDto)));
     }
+    /**
+     * Update: 댓글 수정
+     */
     @Override
     public ResponseEntity<?> modifyComment(@PathVariable("commentId") Long id, @RequestBody CommentModifyReqDto commentModifyReqDto) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, commentService.modifyComment(id,commentModifyReqDto)));
     }
 
+    /**
+     * Delete: 게시글 삭제
+     */
     @Override
     public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long id){
         commentService.deleteComment(id);

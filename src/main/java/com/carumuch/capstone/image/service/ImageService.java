@@ -26,14 +26,15 @@ public class ImageService {
     private String bucket;
 
     public String uploadImage(MultipartFile image){
-
+        /*로컬 이미지 파일 업로드*/
+        /*
         try {
             String filePath = Paths.get(
                     System.getProperty("user.dir"),
                     "src/main/resources/static").toString();
 
 
-            /*로컬 이미지 파일 업로드*/
+
             String imagePath = getImagePath(image);
             String savePath = filePath + imagePath;
 
@@ -43,10 +44,12 @@ public class ImageService {
         } catch (IOException e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
+        */
 
         /*S3에 이미지 파일 업로드*/
-        /*try {
+        String imagePath = getImagePath(image);
+        try {
+
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucket)
                     .contentType(image.getContentType())
@@ -56,8 +59,7 @@ public class ImageService {
             RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
             s3Client.putObject(putObjectRequest, requestBody);
         } catch (IOException e) {
-            System.out.println("cannot upload image" + e);
-            throw new RuntimeException(e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()
@@ -65,7 +67,7 @@ public class ImageService {
                 .key(imagePath)
                 .build();
 
-        return s3Client.utilities().getUrl(getUrlRequest).toString();*/
+        return s3Client.utilities().getUrl(getUrlRequest).toString();
 
     }
 

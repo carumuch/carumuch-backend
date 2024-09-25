@@ -41,8 +41,8 @@ public class ImageController implements ImageControllerDocs {
     }
 
     @Override
-    public ResponseEntity<?> s3Delete(@RequestParam("imageKey") String imageKey){
-        imageService.deleteImage(imageKey);
+    public ResponseEntity<?> s3Delete(@RequestParam("imagePath") String imagePath){
+        imageService.deleteImage(imagePath);
         return ResponseEntity.status(OK).body(ResponseDto.success(OK,null));
     }
 

@@ -41,5 +41,5 @@ public interface ImageControllerDocs {
             @ApiResponse(responseCode = "401", description = "이미지 삭제 실패"),
     })
     @DeleteMapping("/delete")
-    ResponseEntity<?> s3Delete(@RequestParam("imageKey") String imageKey);
+    ResponseEntity<?> s3Delete(@RequestParam("imagePath") String imagePath);
 }

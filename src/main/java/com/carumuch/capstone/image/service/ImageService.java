@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +88,9 @@ public class ImageService {
         return s3Client.utilities().getUrl(getUrlRequest).toString();
     }
 
-    public void deleteImage(String imageKey){
+    public void deleteImage(String imagePath) {
+        //로컬저장소에서 이미지 삭제
+        /*
         String filePath = Paths.get(
                 System.getProperty("user.dir"),
                 "src/main/resources/static").toString();
@@ -99,6 +103,17 @@ public class ImageService {
                 e.getStackTrace();
             }
         }
-
+         */
+        // S3에서 이미지 삭제
+        String imageKey = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+        System.out.println(imageKey);
+        try {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                            .bucket(bucket)
+                                    .key(imageKey).build();
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch (S3Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 }

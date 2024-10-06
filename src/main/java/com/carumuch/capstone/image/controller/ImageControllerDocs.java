@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public interface ImageControllerDocs {
             @ApiResponse(responseCode = "201", description = "이미지 업로드 성공"),
             @ApiResponse(responseCode = "401", description = "이미지 업로드 실패"),
     })
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> s3Upload(@RequestParam("image") MultipartFile image) throws IOException;
 
     /*이미지 로드 */
@@ -41,5 +42,5 @@ public interface ImageControllerDocs {
             @ApiResponse(responseCode = "401", description = "이미지 삭제 실패"),
     })
     @DeleteMapping("/delete")
-    ResponseEntity<?> s3Delete(@RequestParam("imageKey") String imageKey);
+    ResponseEntity<?> s3Delete(@RequestParam("imagePath") String imagePath);
 }

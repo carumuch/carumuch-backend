@@ -26,6 +26,8 @@ public class ImageService {
     private final S3Client s3Client;
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
+    @Value("${spring.cloud.aws.cloudfront.domainName}")
+    private String domainName;
 
     public String uploadImage(MultipartFile image){
         /*로컬 이미지 파일 업로드*/
@@ -63,13 +65,14 @@ public class ImageService {
         } catch (IOException e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
+        /*
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                 .bucket(bucket)
                 .key(imagePath)
                 .build();
-
-        return s3Client.utilities().getUrl(getUrlRequest).toString();
+         */
+        String imageUrl = getImage(imagePath);
+        return imageUrl;
 
     }
 
@@ -80,12 +83,14 @@ public class ImageService {
 
     /*이미지 로드*/
     public String getImage(String imageKey){
+        /*
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                 .bucket(bucket)
                 .key(imageKey)
                 .build();
-
-        return s3Client.utilities().getUrl(getUrlRequest).toString();
+         */
+        String imageUrl = "https://" + domainName + "/" + imageKey;
+        return imageUrl;
     }
 
     public void deleteImage(String imagePath) {

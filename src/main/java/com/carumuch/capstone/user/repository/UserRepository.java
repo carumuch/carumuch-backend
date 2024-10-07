@@ -48,9 +48,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * select: 아이디로 유저와 차량 조회 (Lazy 초기화)
      * 1. 유저가 가지고 있는 차량 목록 조회
+     * info: 요구사항 변경 -> 차량 2대 이상에서 1대만 가지는것으로 변경 되었습니다.
+     * Date: 2024.10.07
      */
-    @Query("select u from User u left join fetch u.vehicles where u.loginId =:loginId")
-    User findByLoginIdWithVehicle(@Param("loginId") String loginId);
+//    @Query("select u from User u left join fetch u.vehicles where u.loginId =:loginId")
+//    User findByLoginIdWithVehicle(@Param("loginId") String loginId);
 
     /**
      * select: 아이디로 유저와 공업사 조회 (Lazy 초기화)

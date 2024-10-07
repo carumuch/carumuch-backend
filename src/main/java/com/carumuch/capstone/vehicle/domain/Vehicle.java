@@ -2,7 +2,6 @@ package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,9 +42,7 @@ public class Vehicle extends BaseCreateByEntity {
     @OneToMany(mappedBy = "vehicle", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
-    @JsonIgnore
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = LAZY, mappedBy = "vehicle")
     private User user;
 
     @Builder
@@ -59,10 +56,9 @@ public class Vehicle extends BaseCreateByEntity {
         setUser(user);
     }
 
-    /* 연관 관계 메서드 */
     public void setUser(User user) {
         this.user = user;
-        user.getVehicles().add(this);
+        user.setVehicle(this);
     }
 
     /* 차량 정보 수정 */

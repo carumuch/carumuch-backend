@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -47,7 +48,7 @@ public class BoardController implements BoardControllerDocs{
      */
     @Override
     //기본 페이지 1
-    public ResponseEntity<?> findAll(@PageableDefault(page = 1) Pageable pageable){
+    public ResponseEntity<?> findAll(@ParameterObject @PageableDefault(page = 1) Pageable pageable){
         Page<Board> boards = boardService.findAll(pageable);
         int blockLimit = 5;
         int startPage =  (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;

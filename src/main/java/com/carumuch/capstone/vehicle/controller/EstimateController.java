@@ -2,16 +2,15 @@ package com.carumuch.capstone.vehicle.controller;
 
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateAnalysisReqDto;
 import com.carumuch.capstone.vehicle.dto.estimate.EstimateRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.estimate.EstimateStatusUpdateReqDto;
 import com.carumuch.capstone.vehicle.dto.estimate.EstimateUpdateReqDto;
 import com.carumuch.capstone.vehicle.service.EstimateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -26,32 +25,30 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * CREATE: 차량 견적 등록
      */
-    @PostMapping(value = "/register/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> register(@PathVariable Long id,
-                                      @RequestPart("image") MultipartFile image,
-                                      @Validated(ValidationSequence.class) @RequestPart EstimateRegistrationReqDto estimateRegistrationReqDto) {
+    @PostMapping("/register/vehicle/{vehicleId}")
+    public ResponseEntity<?> register(@PathVariable("vehicleId") Long id,
+                                      @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, estimateService.register(id, image, estimateRegistrationReqDto)));
+                .body(ResponseDto.success(CREATED, estimateService.register(id, estimateRegistrationReqDto)));
     }
 
     /**
      * CREATE: 차량 AI 견적 등록
      */
-    @PostMapping(value = "/ai/register/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> registerAiEstimate(@PathVariable Long id,
-                                                @RequestPart("image") MultipartFile image,
-                                                @Validated(ValidationSequence.class) @RequestPart EstimateRegistrationReqDto estimateRegistrationReqDto) {
+    @PostMapping("/ai/register/vehicle/{vehicleId}")
+    public ResponseEntity<?> registerAiEstimate(@PathVariable("vehicleId") Long id,
+                                                @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, estimateService.registerAIEstimate(id, image, estimateRegistrationReqDto)));
+                .body(ResponseDto.success(CREATED, estimateService.registerAIEstimate(id, estimateRegistrationReqDto)));
     }
 
     /**
      * AI 분석 요청
      */
-    @PostMapping(value = "/ai/analysis/vehicle/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> analysis(@PathVariable Long id,
-                                      @RequestBody MultipartFile image) {
-        estimateService.analysis(id, image);
+    @PostMapping("/ai/analysis/vehicle/{vehicleId}")
+    public ResponseEntity<?> analysis(@PathVariable("vehicleId") Long id,
+                                      @RequestBody EstimateAnalysisReqDto estimateAnalysisReqDto) {
+        estimateService.analysis(id, estimateAnalysisReqDto.getImagePath());
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, null));
     }
@@ -59,8 +56,8 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * UPDATE: 견적 수정
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,
+    @PutMapping("/{estimateId}")
+    public ResponseEntity<?> update(@PathVariable("estimateId") Long id,
                                     @Validated(ValidationSequence.class) @RequestBody EstimateUpdateReqDto estimateUpdateReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, estimateService.update(id, estimateUpdateReqDto)));
@@ -69,8 +66,8 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * DELETE: 견적 삭제
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @DeleteMapping("/{estimateId}")
+    public ResponseEntity<?> delete(@PathVariable("estimateId") Long id) {
         estimateService.delete(id);
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, null));
@@ -79,8 +76,8 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * SELECT: 견적 히스토리 리스트 차량별 조회
      */
-    @GetMapping("/history/vehicle/{id}")
-    public ResponseEntity<?> getEstimateHistoryByVehicleId(@RequestParam(defaultValue = "1") int page, @PathVariable Long id) {
+    @GetMapping("/history/vehicle/{vehicleId}")
+    public ResponseEntity<?> getEstimateHistoryByVehicleId(@RequestParam(defaultValue = "1") int page, @PathVariable("vehicleId") Long id) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, estimateService.getEstimateHistoryByVehicleId(page, id)));
     }
@@ -97,8 +94,8 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * UPDATE: 견적 공개 범위 수정
      */
-    @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateEstimateStatus(@PathVariable Long id,
+    @PutMapping("/{estimateId}/status")
+    public ResponseEntity<?> updateEstimateStatus(@PathVariable("estimateId") Long id,
                                                   @Validated(ValidationSequence.class) @RequestBody EstimateStatusUpdateReqDto estimateStatusUpdateReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, estimateService.updateEstimateStatus(id, estimateStatusUpdateReqDto)));

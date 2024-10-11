@@ -1,5 +1,6 @@
 package com.carumuch.capstone.vehicle.controller;
 
+import com.carumuch.capstone.vehicle.dto.estimate.EstimateAnalysisReqDto;
 import com.carumuch.capstone.vehicle.dto.estimate.EstimateRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.estimate.EstimateStatusUpdateReqDto;
 import com.carumuch.capstone.vehicle.dto.estimate.EstimateUpdateReqDto;
@@ -24,7 +25,7 @@ public interface EstimateControllerDocs {
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> register(Long id, MultipartFile image, EstimateRegistrationReqDto estimateRegistrationReqDto);
+    ResponseEntity<?> register(Long id, EstimateRegistrationReqDto estimateRegistrationReqDto);
 
     /* Create: 차량 Ai 견적 생성 */
     @Operation(summary = "AI 견적 등록 요청", description = "**성공 응답 데이터:** AI 견적의 `estimate_id`," +
@@ -35,7 +36,7 @@ public interface EstimateControllerDocs {
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> registerAiEstimate(Long id, MultipartFile file, EstimateRegistrationReqDto estimateRegistrationReqDto);
+    ResponseEntity<?> registerAiEstimate(Long id, EstimateRegistrationReqDto estimateRegistrationReqDto);
 
     /* 차량 Ai 분석 */
     @Operation(summary = "AI 분석 요청", description = "**성공 응답 데이터:** AI 분석 정보 ")
@@ -45,7 +46,7 @@ public interface EstimateControllerDocs {
             @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
-    ResponseEntity<?> analysis(Long id, MultipartFile file);
+    ResponseEntity<?> analysis(Long id, EstimateAnalysisReqDto estimateAnalysisReqDto);
 
     /*  Update: 견적 수정 */
     @Operation(summary = "견적 수정 요청", description = "**성공 응답 데이터:** `estimate_id` ")

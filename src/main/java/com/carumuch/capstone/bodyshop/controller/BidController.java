@@ -33,6 +33,6 @@ public class BidController implements BidControllerDocs{
     public ResponseEntity<?> bidStatusUpdate(@PathVariable("bidId") Long id,
                                              @Validated(ValidationSequence.class) @RequestBody BidStatusUpdateReqDto bidStatusUpdateReqDto) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bidService.updateBisStatus(id, bidStatusUpdateReqDto.getStatus())));
+                .body(ResponseDto.success(CREATED, bidService.updateBidStatus(id, bidStatusUpdateReqDto.getStatus())));
     }
 }

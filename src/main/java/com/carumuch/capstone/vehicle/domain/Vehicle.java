@@ -39,7 +39,7 @@ public class Vehicle extends BaseCreateByEntity {
     @Column(name = "owner_name")
     private String ownerName; // 차량 실 소유자 명
 
-    @OneToMany(mappedBy = "vehicle", cascade = {PERSIST, REMOVE})
+    @OneToMany(mappedBy = "vehicle", cascade = ALL)
     private List<Estimate> estimates = new ArrayList<>();
 
     @OneToOne(fetch = LAZY, mappedBy = "vehicle")

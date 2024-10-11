@@ -51,8 +51,8 @@ public class VehicleController implements VehicleControllerDocs {
     /**
      * SELECT: 차량 상세 조회
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
+    @GetMapping("/{vehicleId}")
+    public ResponseEntity<?> findById(@PathVariable("vehicleId") Long id) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, vehicleService.findById(id)));
     }

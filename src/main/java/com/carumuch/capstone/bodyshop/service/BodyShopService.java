@@ -216,6 +216,9 @@ public class BodyShopService {
         Estimate estimate = estimateRepository.findById(estimateId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
+        /* 견적서 입찰 신청 수 증가 */
+        estimate.increaseApplicant();
+
         return bidRepository.save(Bid.builder()
                         .bidStatus(BidStatus.WAITING)
                         .cost(bodyShopBidCreateReqDto.getCost())

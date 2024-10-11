@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bodyshop.service;
 
 import com.carumuch.capstone.bodyshop.domain.Bid;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.type.BidStatus;
 import com.carumuch.capstone.bodyshop.dto.bid.BidPageResDto;
 import com.carumuch.capstone.bodyshop.dto.bid.BidResDto;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,17 +43,21 @@ public class BidService {
     }
 
     @Transactional
-    public Long updateBisStatus(Long id, String status) {
-        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-        Bid bid = bidRepository.findByIdAndCreateByWithEstimate(id, loginId)
+    public Long updateBidStatus(Long id, String status) {
+        Bid bid = bidRepository.findByIdWithEstimate(id)
                 .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND));
         // 이미 매칭 된 견적인지
         if (bidRepository.existsBidByEstimateId(bid.getEstimate().getId(), BidStatus.ACCEPTED)) {
-            throw new CustomException(DUPLICATE_RESOURCE);
+            throw new CustomException(BID_ALREADY_COMPLETED);
         };
 
         // 상태 업데이트
         bid.updateStatus(BidStatus.valueOf(status));
+
+        // 체결 공업사 입찰 횟수 증가
+        BodyShop bodyShop = bidRepository.findByIdWithBodyShop(id)
+                .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND)).getBodyShop();
+        bodyShop.acceptCount();
 
         // 견적서를 공개에서 비공개로 전환
         Estimate estimate = estimateRepository.findById(bid.getEstimate().getId())

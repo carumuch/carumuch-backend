@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "CommentReqDto: 댓글 작성 요청 Dto ")
 public class CommentReqDto {
+    @Schema(description = "댓글 내용", example = "commentContent")
     private String commentContent;
+    @Schema(description = "댓글 달 boardId", example = "1")
     private Long boardId;
 
     @Builder

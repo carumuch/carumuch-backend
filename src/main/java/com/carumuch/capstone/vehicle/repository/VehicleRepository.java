@@ -18,7 +18,18 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     Optional<Vehicle> findByIdWithUser(@Param("id") Long id);
 
     /**
+     * select: 내 차량 정보 조회
+     */
+    @Query("select v from Vehicle v left join fetch v.user where v.createBy = :createBy")
+    Optional<Vehicle> findByCreateBy(@Param("createBy") String createBy);
+
+    /**
      * 차량 번호 중복 확인
      */
     boolean existsByLicenseNumber(String licenseNumber);
+
+    /**
+     * 차량 소유 상태 확인
+     */
+    boolean existsByCreateBy(String loginId);
 }

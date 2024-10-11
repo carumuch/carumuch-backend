@@ -1,8 +1,9 @@
 package com.carumuch.capstone.vehicle.service;
 
+import com.carumuch.capstone.bodyshop.domain.type.BidStatus;
+import com.carumuch.capstone.bodyshop.repository.BidRepository;
 import com.carumuch.capstone.global.common.ErrorCode;
 import com.carumuch.capstone.global.common.exception.CustomException;
-import com.carumuch.capstone.image.service.ImageService;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.domain.Estimate;
@@ -19,7 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
+import static com.carumuch.capstone.global.common.ErrorCode.BID_ALREADY_COMPLETED;
 
 
 @Service
@@ -30,13 +32,13 @@ public class EstimateService {
     private final EstimateRepository estimateRepository;
     private final VehicleRepository vehicleRepository;
     private final UserRepository userRepository;
-    private final ImageService imageService;
+    private final BidRepository bidRepository;
 
     /**
      * Create: 견적 등록
      */
     @Transactional
-    public Long register(Long id, MultipartFile image, EstimateRegistrationReqDto requestDto) {
+    public Long register(Long id, EstimateRegistrationReqDto requestDto) {
         // 유저/차량 정보 조회
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -44,17 +46,13 @@ public class EstimateService {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
-        // 이미지 저장
-        String imagePath = imageService.uploadImage(image);
-
         Estimate estimate = Estimate.createBasicEstimate(
                requestDto.getDescription(),
                requestDto.getDamageArea(),
                requestDto.getPreferredRepairSido(),
                requestDto.getPreferredRepairSigungu(),
                requestDto.getIsPickupRequired(),
-               image.getOriginalFilename(),
-               imagePath,
+               requestDto.getImagePath(),
                user,
                vehicle);
 
@@ -65,16 +63,13 @@ public class EstimateService {
      * Create: AI 견적 등록
      */
     @Transactional
-    public Long registerAIEstimate(Long id, MultipartFile image, EstimateRegistrationReqDto requestDto) {
+    public Long registerAIEstimate(Long id, EstimateRegistrationReqDto requestDto) {
         // 유저/차량 정보 조회
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findLoginUserByLoginId(loginId);
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        // 이미지 저장
-        String imagePath = imageService.uploadImage(image);
 
         // TODO: AI API 요청 메서드 추가
 
@@ -85,8 +80,7 @@ public class EstimateService {
                 requestDto.getPreferredRepairSigungu(),
                 50000, // TODO: AI 연동 후 삭제
                 requestDto.getIsPickupRequired(),
-                image.getOriginalFilename(),
-                imagePath,
+                requestDto.getImagePath(),
                 user,
                 vehicle
         );
@@ -97,7 +91,7 @@ public class EstimateService {
      * AI 분석
      */
     // TODO: AI 반환 값으로 변경
-    public void analysis(Long id, MultipartFile image) {
+    public void analysis(Long id, String imagePath) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         // TODO: AI API 요청 메서드 추가
@@ -112,6 +106,11 @@ public class EstimateService {
 
         Estimate estimate = estimateRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        // 이미 매칭 된 견적인지
+        if (bidRepository.existsBidByEstimateId(id, BidStatus.ACCEPTED)) {
+            throw new CustomException(BID_ALREADY_COMPLETED);
+        };
 
         if (estimate.getUser().getLoginId().equals(loginId)) {
             estimate.update(requestDto.getDescription(),
@@ -134,6 +133,12 @@ public class EstimateService {
 
         Estimate estimate = estimateRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        // 이미 매칭 된 견적인지
+        if (bidRepository.existsBidByEstimateId(id, BidStatus.ACCEPTED)) {
+            throw new CustomException(BID_ALREADY_COMPLETED);
+        };
+
         if (estimate.getUser().getLoginId().equals(loginId)) {
             estimateRepository.deleteById(id);
         } else {
@@ -180,6 +185,10 @@ public class EstimateService {
     @Transactional
     public Long updateEstimateStatus(Long id, EstimateStatusUpdateReqDto estimateStatusUpdateReqDto) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 이미 매칭 된 견적인지
+        if (bidRepository.existsBidByEstimateId(id, BidStatus.ACCEPTED)) {
+            throw new CustomException(BID_ALREADY_COMPLETED);
+        };
 
         Estimate estimate = estimateRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));

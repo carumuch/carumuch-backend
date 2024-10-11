@@ -52,7 +52,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         /* 응답 설정 */
         response.addCookie(createCookie("refresh-token", tokenDto.getRefreshToken()));
         response.addCookie(createCookie("authorization", tokenDto.getAccessToken()));
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("http://localhost:3000/main");
     }
 
     private Cookie createCookie(String key, String value) {

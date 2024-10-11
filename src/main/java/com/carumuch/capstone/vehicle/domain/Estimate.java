@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -52,9 +53,6 @@ public class Estimate extends BaseCreateByEntity {
     @Column(name = "is_pickup_required")
     private boolean isPickupRequired; // 픽업 희망 여부
 
-    @Column(name = "image_name", length = 255)
-    private String imageName; // 사진 이름
-
     @Column(name = "image_path", length = 500)
     private String imagePath; // 사진 경로
 
@@ -65,7 +63,7 @@ public class Estimate extends BaseCreateByEntity {
     @Column(name = "applicant_count")
     private int applicantCount; // 신청자 수
 
-    @OneToMany(mappedBy = "estimate", cascade = PERSIST)
+    @OneToMany(mappedBy = "estimate", cascade = ALL)
     private List<Bid> bids = new ArrayList<>();
 
     @JsonIgnore
@@ -86,7 +84,6 @@ public class Estimate extends BaseCreateByEntity {
                      Integer aiEstimatedRepairCost,
                      boolean isAIEstimate,
                      boolean isPickupRequired,
-                     String imageName,
                      String imagePath,
                      EstimateStatus estimateStatus) {
         this.description = description;
@@ -96,7 +93,6 @@ public class Estimate extends BaseCreateByEntity {
         this.aiEstimatedRepairCost = aiEstimatedRepairCost;
         this.isAIEstimate = isAIEstimate;
         this.isPickupRequired = isPickupRequired;
-        this.imageName = imageName;
         this.imagePath = imagePath;
         this.estimateStatus = estimateStatus;
     }
@@ -130,7 +126,6 @@ public class Estimate extends BaseCreateByEntity {
                                                String preferredRepairSido,
                                                String preferredRepairSigungu,
                                                boolean isPickupRequired,
-                                               String imageName,
                                                String imagePath,
                                                User user,
                                                Vehicle vehicle) {
@@ -141,7 +136,6 @@ public class Estimate extends BaseCreateByEntity {
                 .preferredRepairSigungu(preferredRepairSigungu)
                 .isAIEstimate(false)
                 .isPickupRequired(isPickupRequired)
-                .imageName(imageName)
                 .imagePath(imagePath)
                 .estimateStatus(EstimateStatus.PRIVATE)
                 .build();
@@ -159,7 +153,6 @@ public class Estimate extends BaseCreateByEntity {
                                             String preferredRepairSigungu,
                                             Integer aiEstimatedRepairCost,
                                             boolean isPickupRequired,
-                                            String imageName,
                                             String imagePath,
                                             User user,
                                             Vehicle vehicle) {
@@ -171,7 +164,6 @@ public class Estimate extends BaseCreateByEntity {
                 .aiEstimatedRepairCost(aiEstimatedRepairCost)
                 .isAIEstimate(true)
                 .isPickupRequired(isPickupRequired)
-                .imageName(imageName)
                 .imagePath(imagePath)
                 .estimateStatus(EstimateStatus.PRIVATE)
                 .build();

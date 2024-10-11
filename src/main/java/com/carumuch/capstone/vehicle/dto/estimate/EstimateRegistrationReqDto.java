@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "EstimateRegistrationReqDto: 견적 등록 요청 Dto")
 public class EstimateRegistrationReqDto {
+    @NotBlank(message = "견적 이미지 주소", groups = ValidationGroups.NotBlankGroup.class)
+    @Schema(description = "S3에 저장된 이미지 주소 입니다.", example = "https://images")
+    private String imagePath;
     @NotBlank(message = "견적 상세 설명이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "견적 상세 설명 입니다.", example = "주차 중 차량 앞 범퍼 스크레치 발생")
     private String description;
@@ -29,7 +32,8 @@ public class EstimateRegistrationReqDto {
     private Boolean isPickupRequired;
 
     @Builder
-    public EstimateRegistrationReqDto(String description, String damageArea, String preferredRepairSido, String preferredRepairSigungu, Boolean isPickupRequired) {
+    public EstimateRegistrationReqDto(String imagePath, String description, String damageArea, String preferredRepairSido, String preferredRepairSigungu, Boolean isPickupRequired) {
+        this.imagePath = imagePath;
         this.description = description;
         this.damageArea = damageArea;
         this.preferredRepairSido = preferredRepairSido;

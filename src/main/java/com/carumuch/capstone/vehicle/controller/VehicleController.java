@@ -32,19 +32,18 @@ public class VehicleController implements VehicleControllerDocs {
     /**
      * UPDATE: 차량 정보 수정
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto,
-                                    @PathVariable Long id) {
+    @PutMapping
+    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, vehicleService.update(id, vehicleUpdateReqDto)));
+                .body(ResponseDto.success(CREATED, vehicleService.update(vehicleUpdateReqDto)));
     }
 
     /**
      * DELETE: 차량 삭제 요청
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        vehicleService.delete(id);
+    @DeleteMapping
+    public ResponseEntity<?> delete() {
+        vehicleService.delete();
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, null));
     }
@@ -52,18 +51,52 @@ public class VehicleController implements VehicleControllerDocs {
     /**
      * SELECT: 차량 상세 조회
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findOne(@PathVariable Long id) {
+    @GetMapping("/{vehicleId}")
+    public ResponseEntity<?> findById(@PathVariable("vehicleId") Long id) {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, vehicleService.findOne(id)));
+                .body(ResponseDto.success(OK, vehicleService.findById(id)));
     }
+
+    /**
+     * SELECT: 내 차량 정보 조회
+     */
+    @GetMapping
+    public ResponseEntity<?> vehicleInfo() {
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK, vehicleService.info()));
+    }
+
+    /**
+     * info: 요구사항 변경 -> 차량 2대 이상에서 1대만 가지는것으로 변경 되었습니다.
+     * Date: 2024.10.07
+     */
 
     /**
      * SELECT: 차량 목록 조회
      */
-    @GetMapping
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, vehicleService.findAll()));
-    }
+//    @GetMapping
+//    public ResponseEntity<?> findAll() {
+//        return ResponseEntity.status(OK)
+//                .body(ResponseDto.success(OK, vehicleService.findAll()));
+//    }
+
+    /**
+     * DELETE: 차량 삭제 요청
+     */
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> delete(@PathVariable Long id) {
+//        vehicleService.delete(id);
+//        return ResponseEntity.status(CREATED)
+//                .body(ResponseDto.success(CREATED, null));
+//    }
+
+    /**
+     * UPDATE: 차량 정보 수정
+     */
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto,
+//                                    @PathVariable Long id) {
+//        return ResponseEntity.status(CREATED)
+//                .body(ResponseDto.success(CREATED, vehicleService.update(id, vehicleUpdateReqDto)));
+//    }
 }

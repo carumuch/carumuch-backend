@@ -62,8 +62,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
-    private List<Vehicle> vehicles = new ArrayList<>();
+    @OneToOne(fetch = LAZY, orphanRemoval = true)
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
 
     @Builder
     public User(String loginId, String password, String email, String name, Role role) {
@@ -101,5 +102,10 @@ public class User extends BaseTimeEntity {
     /* 공업사 직원으로 변경 */
     public void registerMechanic() {
         this.isMechanic = true;
+    }
+
+    /* 연관관계 설정을 위한 메서드*/
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 }

@@ -11,9 +11,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Schema(name = "BoardReqDto: 게시글 작성 요청 Dto ")
+@Schema(name = "BoardReqDto: 게시글 작성 요청 Dto")
 public class BoardReqDto {
+    @Schema(description = "게시글 제목 입력", example = "boardTitle")
     private String boardTitle;
+    @Schema(description = "게시글 내용 입력", example = "boardContent")
     private String boardContent;
     private List<MultipartFile> boardImage;
 

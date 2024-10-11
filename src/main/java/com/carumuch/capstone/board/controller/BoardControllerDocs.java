@@ -4,6 +4,7 @@ import com.carumuch.capstone.board.dto.BoardModifyReqDto;
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +25,14 @@ import java.io.IOException;
 @Tag(name = "Board")
 public interface BoardControllerDocs {
     /* Create: 게시글 작성 */
-    @Operation(summary = "게시글 작성 요청", description = "**성공 응답 데이터:** 게시글의 `board_id` ")
+    @Operation(summary = "게시글 작성 요청", description = "**성공 응답 데이터:** 게시글의 `board_id`,"+
+    "swagger에서 테스트 시 `boardImage` 지우고 테스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시글 작성 성공"),
             @ApiResponse(responseCode = "401", description = "게시글 작성 실패"),
     })
     @PostMapping("/write")
-    ResponseEntity<?> write(@RequestPart BoardReqDto boardReqDto) throws IOException;
+    ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto) throws IOException;
 
     /* Read: 게시글 조회 */
     @Operation(summary = "게시글 전체 조회 요청", description = "**성공 응답 데이터:** true")

@@ -146,34 +146,6 @@ public class Estimate extends BaseCreateByEntity {
         return estimate;
     }
 
-    /* AI 견적서 생성*/
-    public static Estimate createAIEstimate(String description,
-                                            String damageArea,
-                                            String preferredRepairSido,
-                                            String preferredRepairSigungu,
-                                            Integer aiEstimatedRepairCost,
-                                            boolean isPickupRequired,
-                                            String imagePath,
-                                            User user,
-                                            Vehicle vehicle) {
-        Estimate estimate = Estimate.builder()
-                .description(description)
-                .damageArea(damageArea)
-                .preferredRepairSido(preferredRepairSido)
-                .preferredRepairSigungu(preferredRepairSigungu)
-                .aiEstimatedRepairCost(aiEstimatedRepairCost)
-                .isAIEstimate(true)
-                .isPickupRequired(isPickupRequired)
-                .imagePath(imagePath)
-                .estimateStatus(EstimateStatus.PRIVATE)
-                .build();
-
-        estimate.setUser(user);
-        estimate.setVehicle(vehicle);
-
-        return estimate;
-    }
-
     /* 견적 공개 상태 변경 */
     public void update(EstimateStatus estimateStatus) {
         this.estimateStatus = estimateStatus;
@@ -183,4 +155,36 @@ public class Estimate extends BaseCreateByEntity {
     public void increaseApplicant() {
         this.applicantCount += 1;
     }
+
+    /**
+     * info: 요구사항 변경 -> AI 통신을 server to server 로 수행하지 않는 것 으로 변경되었습니다.
+     * Date: 2024.10.12
+     */
+    /* AI 견적서 생성*/
+//    public static Estimate createAIEstimate(String description,
+//                                            String damageArea,
+//                                            String preferredRepairSido,
+//                                            String preferredRepairSigungu,
+//                                            Integer aiEstimatedRepairCost,
+//                                            boolean isPickupRequired,
+//                                            String imagePath,
+//                                            User user,
+//                                            Vehicle vehicle) {
+//        Estimate estimate = Estimate.builder()
+//                .description(description)
+//                .damageArea(damageArea)
+//                .preferredRepairSido(preferredRepairSido)
+//                .preferredRepairSigungu(preferredRepairSigungu)
+//                .aiEstimatedRepairCost(aiEstimatedRepairCost)
+//                .isAIEstimate(true)
+//                .isPickupRequired(isPickupRequired)
+//                .imagePath(imagePath)
+//                .estimateStatus(EstimateStatus.PRIVATE)
+//                .build();
+//
+//        estimate.setUser(user);
+//        estimate.setVehicle(vehicle);
+//
+//        return estimate;
+//    }
 }

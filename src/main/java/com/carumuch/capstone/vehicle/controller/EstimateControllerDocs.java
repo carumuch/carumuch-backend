@@ -27,27 +27,6 @@ public interface EstimateControllerDocs {
     })
     ResponseEntity<?> register(Long id, EstimateRegistrationReqDto estimateRegistrationReqDto);
 
-    /* Create: 차량 Ai 견적 생성 */
-    @Operation(summary = "AI 견적 등록 요청", description = "**성공 응답 데이터:** AI 견적의 `estimate_id`," +
-            " 최초 견적 저장의 견적 공개 범위는 `비공개` 입니다. 공개 입찰을 받아보고 싶다면 공개 입찰 범위 수정 요청이 필요합니다. ")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "AI 견적 등록 완료"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
-            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
-            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
-    })
-    ResponseEntity<?> registerAiEstimate(Long id, EstimateRegistrationReqDto estimateRegistrationReqDto);
-
-    /* 차량 Ai 분석 */
-    @Operation(summary = "AI 분석 요청", description = "**성공 응답 데이터:** AI 분석 정보 ")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "AI 분석 완료"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
-            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
-            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
-    })
-    ResponseEntity<?> analysis(Long id, EstimateAnalysisReqDto estimateAnalysisReqDto);
-
     /*  Update: 견적 수정 */
     @Operation(summary = "견적 수정 요청", description = "**성공 응답 데이터:** `estimate_id` ")
     @ApiResponses(value = {
@@ -105,4 +84,25 @@ public interface EstimateControllerDocs {
             @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
     })
     ResponseEntity<?> detail(Long id);
+
+    /* Create: 차량 Ai 견적 생성 */
+//    @Operation(summary = "AI 견적 등록 요청", description = "**성공 응답 데이터:** AI 견적의 `estimate_id`," +
+//            " 최초 견적 저장의 견적 공개 범위는 `비공개` 입니다. 공개 입찰을 받아보고 싶다면 공개 입찰 범위 수정 요청이 필요합니다. ")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "AI 견적 등록 완료"),
+//            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+//            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+//            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+//    })
+//    ResponseEntity<?> registerAiEstimate(Long id, EstimateRegistrationReqDto estimateRegistrationReqDto);
+
+    /* 차량 Ai 분석 */
+//    @Operation(summary = "AI 분석 요청", description = "**성공 응답 데이터:** AI 분석 정보 ")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "AI 분석 완료"),
+//            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),
+//            @ApiResponse(responseCode = "401", description = "유효한 토큰이 아닙니다."),
+//            @ApiResponse(responseCode = "500", description = "서버 측 오류 발생"),
+//    })
+//    ResponseEntity<?> analysis(Long id, EstimateAnalysisReqDto estimateAnalysisReqDto);
 }

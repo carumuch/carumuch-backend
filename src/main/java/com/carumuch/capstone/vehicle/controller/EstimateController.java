@@ -33,27 +33,6 @@ public class EstimateController implements EstimateControllerDocs{
     }
 
     /**
-     * CREATE: 차량 AI 견적 등록
-     */
-    @PostMapping("/ai/register/vehicle/{vehicleId}")
-    public ResponseEntity<?> registerAiEstimate(@PathVariable("vehicleId") Long id,
-                                                @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, estimateService.registerAIEstimate(id, estimateRegistrationReqDto)));
-    }
-
-    /**
-     * AI 분석 요청
-     */
-    @PostMapping("/ai/analysis/vehicle/{vehicleId}")
-    public ResponseEntity<?> analysis(@PathVariable("vehicleId") Long id,
-                                      @RequestBody EstimateAnalysisReqDto estimateAnalysisReqDto) {
-        estimateService.analysis(id, estimateAnalysisReqDto.getImagePath());
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, null));
-    }
-
-    /**
      * UPDATE: 견적 수정
      */
     @PutMapping("/{estimateId}")
@@ -109,4 +88,30 @@ public class EstimateController implements EstimateControllerDocs{
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, estimateService.detail(id)));
     }
+
+    /**
+     * info: 요구사항 변경 -> AI 통신을 server to server 로 수행하지 않는 것 으로 변경되었습니다.
+     * Date: 2024.10.12
+     */
+
+    /**
+     * CREATE: 차량 AI 견적 등록
+     */
+//    @PostMapping("/ai/register/vehicle/{vehicleId}")
+//    public ResponseEntity<?> registerAiEstimate(@PathVariable("vehicleId") Long id,
+//                                                @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
+//        return ResponseEntity.status(CREATED)
+//                .body(ResponseDto.success(CREATED, estimateService.registerAIEstimate(id, estimateRegistrationReqDto)));
+//    }
+
+    /**
+     * AI 분석 요청
+     */
+//    @PostMapping("/ai/analysis/vehicle/{vehicleId}")
+//    public ResponseEntity<?> analysis(@PathVariable("vehicleId") Long id,
+//                                      @RequestBody EstimateAnalysisReqDto estimateAnalysisReqDto) {
+//        estimateService.analysis(id, estimateAnalysisReqDto.getImagePath());
+//        return ResponseEntity.status(CREATED)
+//                .body(ResponseDto.success(CREATED, null));
+//    }
 }

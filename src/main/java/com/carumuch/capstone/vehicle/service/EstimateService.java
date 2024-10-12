@@ -60,44 +60,6 @@ public class EstimateService {
     }
 
     /**
-     * Create: AI 견적 등록
-     */
-    @Transactional
-    public Long registerAIEstimate(Long id, EstimateRegistrationReqDto requestDto) {
-        // 유저/차량 정보 조회
-        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User user = userRepository.findLoginUserByLoginId(loginId);
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        // TODO: AI API 요청 메서드 추가
-
-        Estimate aiEstimate = Estimate.createAIEstimate(
-                requestDto.getDescription(),
-                requestDto.getDamageArea(),
-                requestDto.getPreferredRepairSido(),
-                requestDto.getPreferredRepairSigungu(),
-                50000, // TODO: AI 연동 후 삭제
-                requestDto.getIsPickupRequired(),
-                requestDto.getImagePath(),
-                user,
-                vehicle
-        );
-        return estimateRepository.save(aiEstimate).getId();
-    }
-
-    /**
-     * AI 분석
-     */
-    // TODO: AI 반환 값으로 변경
-    public void analysis(Long id, String imagePath) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        // TODO: AI API 요청 메서드 추가
-    }
-
-    /**
      * Update: 견적 수정
      */
     @Transactional
@@ -217,4 +179,48 @@ public class EstimateService {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
     }
+
+
+    /**
+     * info: 요구사항 변경 -> AI 통신을 server to server 로 수행하지 않는 것 으로 변경되었습니다.
+     * Date: 2024.10.12
+     */
+
+    /**
+     * Create: AI 견적 등록
+     */
+//    @Transactional
+//    public Long registerAIEstimate(Long id, EstimateRegistrationReqDto requestDto) {
+//        // 유저/차량 정보 조회
+//        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        User user = userRepository.findLoginUserByLoginId(loginId);
+//        Vehicle vehicle = vehicleRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+//
+//        // TODO: AI API 요청 메서드 추가
+//
+//        Estimate aiEstimate = Estimate.createAIEstimate(
+//                requestDto.getDescription(),
+//                requestDto.getDamageArea(),
+//                requestDto.getPreferredRepairSido(),
+//                requestDto.getPreferredRepairSigungu(),
+//                50000, // TODO: AI 연동 후 삭제
+//                requestDto.getIsPickupRequired(),
+//                requestDto.getImagePath(),
+//                user,
+//                vehicle
+//        );
+//        return estimateRepository.save(aiEstimate).getId();
+//    }
+
+    /**
+     * AI 분석
+     */
+//    // TODO: AI 반환 값으로 변경
+//    public void analysis(Long id, String imagePath) {
+//        Vehicle vehicle = vehicleRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+//        // TODO: AI API 요청 메서드 추가
+//    }
 }

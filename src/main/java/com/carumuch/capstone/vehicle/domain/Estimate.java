@@ -1,15 +1,11 @@
 package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.bodyshop.domain.Bid;
-import com.carumuch.capstone.bodyshop.domain.type.BidStatus;
 import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
-import com.carumuch.capstone.global.validation.ValidationGroups;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.vehicle.domain.type.EstimateStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -144,6 +139,12 @@ public class Estimate extends BaseCreateByEntity {
         estimate.setVehicle(vehicle);
 
         return estimate;
+    }
+
+    /* AI 비용 산정 업데이트*/
+    public void updateAIEstimatedRepairCost(int aiEstimatedRepairCost) {
+        this.aiEstimatedRepairCost = aiEstimatedRepairCost; // AI 분석 금액
+        this.isAIEstimate = true; // 최종 AI 견적서로 확정
     }
 
     /* 견적 공개 상태 변경 */

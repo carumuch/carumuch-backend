@@ -180,6 +180,24 @@ public class EstimateService {
         }
     }
 
+    /**
+     * Update: Ai 비용 산정 반영 업데이트
+     */
+    @Transactional
+    public Long updateAICost(Long id, EstimateAIRepairCostReqDto estimateAIRepairCostReqDto) {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Estimate estimate = estimateRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        // 나의 견적서인지 확인
+        if (estimate.getCreateBy().equals(loginId)) {
+            estimate.updateAIEstimatedRepairCost(estimateAIRepairCostReqDto.getAiRepairCost());
+            return estimate.getId();
+        } else {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
+    }
+
 
     /**
      * info: 요구사항 변경 -> AI 통신을 server to server 로 수행하지 않는 것 으로 변경되었습니다.

@@ -137,7 +137,7 @@ public class Estimate extends BaseCreateByEntity {
                 .isAIEstimate(false)
                 .isPickupRequired(isPickupRequired)
                 .imagePath(imagePath)
-                .estimateStatus(EstimateStatus.PRIVATE)
+                .estimateStatus(EstimateStatus.PUBLIC)
                 .build();
 
         estimate.setUser(user);

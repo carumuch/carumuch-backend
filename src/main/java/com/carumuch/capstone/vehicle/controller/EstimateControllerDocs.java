@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface EstimateControllerDocs {
     /* Create: 차량 견적 생성 */
     @Operation(summary = "견적 등록 요청", description = "**성공 응답 데이터:** 견적의 `estimate_id`," +
-            " 최초 견적 저장의 견적 공개 범위는 `비공개` 입니다. 공개 입찰을 받아보고 싶다면 공개 입찰 범위 수정 요청이 필요합니다. ")
+            " 최초 견적 저장의 견적 공개 범위는 `공개` 입니다. 공개 입찰을 받지 않고 싶다면 공개 입찰 범위 수정 요청이 필요합니다. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "견적 등록 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "401", description = "게시글 상세 조회 실패"),
     })
     @GetMapping("/{boardId}")
-    ResponseEntity<?> findById(@PathVariable("boardId") Long id,Pageable pageable, HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity<?> findById(@PathVariable("boardId") Long id, @ParameterObject @PageableDefault(size=1, sort="id", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request, HttpServletResponse response);
 
     /* Update: 게시글 수정 */
     @Operation(summary = "게시글 수정 요청", description = "**성공 응답 데이터:** 게시글의 `board_id`")

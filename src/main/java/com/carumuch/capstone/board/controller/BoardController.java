@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,7 @@ public class BoardController implements BoardControllerDocs{
      * Select: 게시글 상세 조회
      */
     @Override
-    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, Pageable pageable, HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, @ParameterObject @PageableDefault(size=1, sort="id", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request, HttpServletResponse response){
 
         /*게시글 조회시 넘어온 페이지 넘버*/
         int pageNumber = pageable.getPageNumber();

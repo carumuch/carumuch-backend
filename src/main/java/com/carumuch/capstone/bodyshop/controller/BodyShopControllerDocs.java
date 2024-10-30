@@ -99,7 +99,7 @@ public interface BodyShopControllerDocs {
 
     /* Select: 공업사 측 견적 목록 상세 검색 요청 */
     @Tag(name = "BodyShop")
-    @Operation(summary = "공업사 측 견적 목록 상세 검색 요청", description = "**성공 응답 데이터:** `estimatePage` ")
+    @Operation(summary = "공업사 측 견적 목록 상세 검색 요청, 동적 쿼리 파라미터 요청, 요청필드 aiEstimatedRepairCost 값 이하인 견적서만 조회", description = "**성공 응답 데이터:** `estimatePage` ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "공업사 측 견적 목록 상세 검색 요청 완료"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터"),

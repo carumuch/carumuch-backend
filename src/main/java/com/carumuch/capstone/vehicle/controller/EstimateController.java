@@ -2,10 +2,7 @@ package com.carumuch.capstone.vehicle.controller;
 
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
-import com.carumuch.capstone.vehicle.dto.estimate.EstimateAnalysisReqDto;
-import com.carumuch.capstone.vehicle.dto.estimate.EstimateRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.estimate.EstimateStatusUpdateReqDto;
-import com.carumuch.capstone.vehicle.dto.estimate.EstimateUpdateReqDto;
+import com.carumuch.capstone.vehicle.dto.estimate.*;
 import com.carumuch.capstone.vehicle.service.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,27 +27,6 @@ public class EstimateController implements EstimateControllerDocs{
                                       @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, estimateService.register(id, estimateRegistrationReqDto)));
-    }
-
-    /**
-     * CREATE: 차량 AI 견적 등록
-     */
-    @PostMapping("/ai/register/vehicle/{vehicleId}")
-    public ResponseEntity<?> registerAiEstimate(@PathVariable("vehicleId") Long id,
-                                                @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, estimateService.registerAIEstimate(id, estimateRegistrationReqDto)));
-    }
-
-    /**
-     * AI 분석 요청
-     */
-    @PostMapping("/ai/analysis/vehicle/{vehicleId}")
-    public ResponseEntity<?> analysis(@PathVariable("vehicleId") Long id,
-                                      @RequestBody EstimateAnalysisReqDto estimateAnalysisReqDto) {
-        estimateService.analysis(id, estimateAnalysisReqDto.getImagePath());
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, null));
     }
 
     /**
@@ -104,9 +80,45 @@ public class EstimateController implements EstimateControllerDocs{
     /**
      * SELECT: 사용자 개인 견적 상세 조회
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id) {
+    @GetMapping("/{estimateId}")
+    public ResponseEntity<?> detail(@PathVariable("estimateId") Long id) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, estimateService.detail(id)));
     }
+
+    /**
+     * UPDATE: AI 분석 결과 금액 반영 요청
+     */
+    @PutMapping("/{estimateId}/ai-repair-cost")
+    public ResponseEntity<?> updateAIRepairCost(@PathVariable("estimateId") Long id,
+                                                @RequestBody EstimateAIRepairCostReqDto estimateAIRepairCostReqDto) {
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, estimateService.updateAICost(id, estimateAIRepairCostReqDto)));
+    }
+
+    /**
+     * info: 요구사항 변경 -> AI 통신을 server to server 로 수행하지 않는 것 으로 변경되었습니다.
+     * Date: 2024.10.12
+     */
+
+    /**
+     * CREATE: 차량 AI 견적 등록
+     */
+//    @PostMapping("/ai/register/vehicle/{vehicleId}")
+//    public ResponseEntity<?> registerAiEstimate(@PathVariable("vehicleId") Long id,
+//                                                @Validated(ValidationSequence.class) @RequestBody EstimateRegistrationReqDto estimateRegistrationReqDto) {
+//        return ResponseEntity.status(CREATED)
+//                .body(ResponseDto.success(CREATED, estimateService.registerAIEstimate(id, estimateRegistrationReqDto)));
+//    }
+
+    /**
+     * AI 분석 요청
+     */
+//    @PostMapping("/ai/analysis/vehicle/{vehicleId}")
+//    public ResponseEntity<?> analysis(@PathVariable("vehicleId") Long id,
+//                                      @RequestBody EstimateAnalysisReqDto estimateAnalysisReqDto) {
+//        estimateService.analysis(id, estimateAnalysisReqDto.getImagePath());
+//        return ResponseEntity.status(CREATED)
+//                .body(ResponseDto.success(CREATED, null));
+//    }
 }

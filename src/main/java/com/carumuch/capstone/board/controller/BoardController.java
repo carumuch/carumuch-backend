@@ -117,7 +117,7 @@ public class BoardController implements BoardControllerDocs{
      * Update: 게시글 수정
      */
     @Override
-    public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @ModelAttribute BoardModifyReqDto boardModifyReqDto) throws IOException {
+    public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @RequestBody BoardModifyReqDto boardModifyReqDto) throws IOException {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.modify(id,boardModifyReqDto)));
     }

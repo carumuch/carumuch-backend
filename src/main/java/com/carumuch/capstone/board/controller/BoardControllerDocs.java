@@ -61,10 +61,11 @@ public interface BoardControllerDocs {
             @ApiResponse(responseCode = "401", description = "게시글 수정 실패"),
     })
     @PutMapping("/{boardId}/modify")
-    ResponseEntity<?> modify(@PathVariable("boardId") Long id,@ModelAttribute BoardModifyReqDto boardModifyReqDto) throws IOException;
+    ResponseEntity<?> modify(@PathVariable("boardId") Long id,@RequestBody BoardModifyReqDto boardModifyReqDto) throws IOException;
 
     /* Delete: 게시글 삭제 */
-    @Operation(summary = "게시글 삭제 요청", description = "**성공 응답 데이터:** ")
+    @Operation(summary = "게시글 삭제 요청", description =  "**성공 응답 데이터:** 게시글의 `board_id`,"+
+            "swagger에서 테스트 시 `boardImage`,`deleteImage` 지우고 테스트")
     @Parameter(name = "boardId", description = "삭제할 게시글의 번호", example = "1")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 삭제 성공"),

@@ -54,16 +54,12 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         log.info(loginId + " : " + "login" + "(" + new Date() + ")");
         /* 응답 설정 */
-        response.addCookie(createCookie("refresh-token", tokenDto.getRefreshToken()));
-        response.addCookie(createCookie("authorization", tokenDto.getAccessToken()));
+        response.addHeader("Set-Cookie", createCookie("refresh-token", tokenDto.getRefreshToken()));
+        response.addHeader("Set-Cookie", createCookie("authorization", tokenDto.getAccessToken()));
         response.sendRedirect(ALLOWED_ORIGINS + "/main");
     }
 
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(7776000);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        return cookie;
+    private String createCookie(String key, String value) {
+        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
     }
 }

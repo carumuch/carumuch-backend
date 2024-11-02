@@ -6,7 +6,8 @@ import com.carumuch.capstone.board.dto.BoardModifyReqDto;
 import com.carumuch.capstone.board.dto.BoardReqDto;
 import com.carumuch.capstone.board.repository.BoardImageRepository;
 import com.carumuch.capstone.board.repository.BoardRepository;
-import com.carumuch.capstone.global.auditing.UserAuditorAware;
+import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.image.service.ImageService;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
@@ -15,13 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,21 +29,16 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardImageRepository boardImageRepository;
     private final UserRepository userRepository;
-    private final UserAuditorAware userAuditorAware;
     private final ImageService imageService;
 
     /**
      * Create: 게시글 작성
      */
     @Transactional
-    public Long write(BoardReqDto boardReqDto) throws IOException {
+    public Long write(BoardReqDto boardReqDto){
 
         /*로그인한 유저정보 조회*/
-        String currentUsername = userAuditorAware.getCurrentAuditor()
-                .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
-
-        User user = userRepository.findByLoginId(currentUsername)
-                .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
+        User user =  userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Board board = boardRepository.save(Board.builder()
                         .user(user)
@@ -85,29 +80,27 @@ public class BoardService {
      * Select: 게시글 상세 조회
      */
     public Board findById(Long id){
-        Optional<Board> optionalBoard = boardRepository.findById(id);
-        return optionalBoard.orElse(null);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        return board;
     }
 
     /**
      * Update: 게시글 수정
      */
     @Transactional
-    public Long modify(Long id, BoardModifyReqDto boardModifyReqDto) throws IOException {
+    public Long modify(Long id, BoardModifyReqDto boardModifyReqDto) {
 
         /* 로그인한 유저정보 조회 */
-        String currentUsername = userAuditorAware.getCurrentAuditor()
-                .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
-
-        User currentUser = userRepository.findByLoginId(currentUsername)
-                .orElseThrow(()->new RuntimeException("로그인이 되어있지 않습니다"));
+        User user =  userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         /*게시글 조회*/
         Board savedBoard = boardRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("게시글이 존재하지 않습니다"));
+                .orElseThrow(()-> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
-        if(!savedBoard.getUser().equals(currentUser)){
-            throw new RuntimeException("이 게시글을 수정할 권한이 없습니다");
+        if(!savedBoard.getUser().equals(user)){
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
 
         /*이미지 첨부 여부 확인 후 이미지  저장*/
@@ -128,7 +121,7 @@ public class BoardService {
             /*이미지 삭제*/
             for(Long image_id : boardModifyReqDto.getDeleteImage() ){
                 BoardImage deleteBoardImage = boardImageRepository.findById(image_id)
-                        .orElseThrow(()-> new RuntimeException("이미지가 존재하지 않습니다"));
+                        .orElseThrow(()-> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
                 String savedImageName = deleteBoardImage.getSavedImageName();
                 imageService.deleteImage(savedImageName);
@@ -148,18 +141,14 @@ public class BoardService {
     public void delete(Long id){
         /* 게시글 조회 */
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다"));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         /* 로그인한 유저정보 조회 */
-        String currentUsername = userAuditorAware.getCurrentAuditor()
-                .orElseThrow(() -> new RuntimeException("로그인이 되어있지 않습니다"));
-
-        User currentUser = userRepository.findByLoginId(currentUsername)
-                .orElseThrow(()->new RuntimeException("로그인이 되어있지 않습니다"));
+        User user =  userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         /* 게시글 작성자와 접속되어있는 유저 비교 */
-        if (!board.getUser().equals(currentUser)){
-            throw new RuntimeException("이 게시글을 삭제할 권한이 없습니다");
+        if (!board.getUser().equals(user)){
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
         if(board.getBoardImages() != null){
             /*이미지 삭제*/
@@ -181,7 +170,7 @@ public class BoardService {
     public  void updateBoardHits(Long id){
         /* 게시글 조회 */
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다"));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         int boardHits = board.getBoardHits();
         board.updateBoardHits(boardHits + 1);
     }

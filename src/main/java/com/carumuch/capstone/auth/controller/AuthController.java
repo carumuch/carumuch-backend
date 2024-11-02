@@ -53,7 +53,7 @@ public class AuthController implements AuthControllerDocs {
                 requestRefreshToken = cookie.getValue();
             }
             if (cookie.getName().equals("authorization")) {
-                requestAccessToken = cookie.getValue();
+                requestAccessToken = "Bearer " + cookie.getValue();
             }
         }
         /* Access Token 추출 -> Refresh token 키 값에 사용 */

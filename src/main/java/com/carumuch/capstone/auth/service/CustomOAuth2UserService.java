@@ -60,10 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         String loginId = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
 
-        if (userRepository.existsByEmail(oAuth2Response.getEmail())) {
-            throw new OAuth2AuthenticationException("중복 소셜 회원 가입");
-        }
         if (!userRepository.existsByLoginId(loginId)) {
+            if (userRepository.existsByEmail(oAuth2Response.getEmail())) {
+                throw new OAuth2AuthenticationException("중복 소셜 회원 가입");
+            }
             /* 유저 저장 */
             userRepository.save(User.builder()
                     .loginId(loginId)

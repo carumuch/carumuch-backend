@@ -5,6 +5,7 @@ import com.carumuch.capstone.auth.service.AuthService;
 import com.carumuch.capstone.auth.service.CustomOAuth2UserService;
 import com.carumuch.capstone.global.common.exception.CustomAccessDeniedHandler;
 import com.carumuch.capstone.global.common.exception.CustomAuthenticationEntryPoint;
+import com.carumuch.capstone.global.common.exception.CustomOAuth2AuthenticationFailureHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomOAuth2AuthenticationFailureHandler customOAuth2AuthenticationFailureHandler;
 
     private final String ALLOWED_ORIGINS;
 
@@ -48,6 +50,7 @@ public class SecurityConfig {
                           CustomAccessDeniedHandler customAccessDeniedHandler,
                           CustomOAuth2UserService customOAuth2UserService,
                           CustomOAuth2SuccessHandler customOAuth2SuccessHandler,
+                          CustomOAuth2AuthenticationFailureHandler customOAuth2AuthenticationFailureHandler,
                           @Value("${cors.allow.origins}") String ALLOWED_ORIGINS) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -57,6 +60,7 @@ public class SecurityConfig {
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.customOAuth2UserService = customOAuth2UserService;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
+        this.customOAuth2AuthenticationFailureHandler = customOAuth2AuthenticationFailureHandler;
         this.ALLOWED_ORIGINS = ALLOWED_ORIGINS;
     }
 
@@ -123,7 +127,8 @@ public class SecurityConfig {
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService)))
-                        .successHandler(customOAuth2SuccessHandler));
+                        .successHandler(customOAuth2SuccessHandler)
+                        .failureHandler(customOAuth2AuthenticationFailureHandler));
         /* 로그인 필터 */
         http
                 .addFilterAt(new CustomUsernamePasswordAuthenticationFilter(

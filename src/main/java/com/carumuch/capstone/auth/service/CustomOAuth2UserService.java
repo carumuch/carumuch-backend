@@ -5,6 +5,8 @@ import com.carumuch.capstone.auth.dto.oauth2.GoogleResponse;
 import com.carumuch.capstone.auth.dto.oauth2.KakaoResponse;
 import com.carumuch.capstone.auth.dto.oauth2.NaverResponse;
 import com.carumuch.capstone.auth.dto.oauth2.OAuth2Response;
+import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.domain.type.Role;
 import com.carumuch.capstone.user.repository.UserRepository;
@@ -13,6 +15,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import static com.carumuch.capstone.global.common.ErrorCode.*;
 
 
 @Service
@@ -56,8 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         String loginId = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
 
+        if (userRepository.existsByEmail(oAuth2Response.getEmail())) {
+            throw new OAuth2AuthenticationException("중복 소셜 회원 가입");
+        }
         if (!userRepository.existsByLoginId(loginId)) {
-
             /* 유저 저장 */
             userRepository.save(User.builder()
                     .loginId(loginId)

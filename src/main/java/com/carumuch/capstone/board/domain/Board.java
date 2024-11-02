@@ -33,7 +33,7 @@ public class Board extends BaseCreateByEntity {
     @Column(name = "boardTitle")
     private String boardTitle;
 
-    @Column(name  = "boardContent")
+    @Column(name  = "boardContent",columnDefinition = "TEXT")
     private String boardContent;
 
     @Column(name = "boardHits")

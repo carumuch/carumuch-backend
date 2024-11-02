@@ -59,16 +59,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         authService.logout(accessToken);
 
         /* 응답 설정 */
-        Cookie cookie = new Cookie("refresh-token", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-
-        response.addCookie(cookie);
+        response.addHeader("Set-Cookie", createCookie("refresh-token", null));
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         response.getWriter().write(objectMapper.writeValueAsString(
                 ResponseDto.success(HttpStatus.OK,null)));
+    }
+
+    private String createCookie(String key, String value) {
+        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
     }
 }

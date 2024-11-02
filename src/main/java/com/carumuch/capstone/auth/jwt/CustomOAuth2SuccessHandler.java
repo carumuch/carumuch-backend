@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,10 +28,13 @@ import static org.springframework.http.HttpStatus.OK;
 @Component
 public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private final String ALLOWED_ORIGINS;
     private final AuthService authService;
 
-    public CustomOAuth2SuccessHandler(AuthService authService) {
+    public CustomOAuth2SuccessHandler(AuthService authService,
+                                      @Value("${cors.allow.origins}") String ALLOWED_ORIGINS) {
         this.authService = authService;
+        this.ALLOWED_ORIGINS = ALLOWED_ORIGINS;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         /* 응답 설정 */
         response.addCookie(createCookie("refresh-token", tokenDto.getRefreshToken()));
         response.addCookie(createCookie("authorization", tokenDto.getAccessToken()));
-        response.sendRedirect("http://localhost:3000/main");
+        response.sendRedirect(ALLOWED_ORIGINS + "/main");
     }
 
     private Cookie createCookie(String key, String value) {

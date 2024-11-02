@@ -115,7 +115,7 @@ public class Estimate extends BaseCreateByEntity {
         this.isPickupRequired = isPickupRequired;
     }
 
-    /* 기본 견적서 생성 */
+    /* 견적서 생성 */
     public static Estimate createBasicEstimate(String description,
                                                String damageArea,
                                                String preferredRepairSido,

@@ -39,7 +39,7 @@ public class BoardController implements BoardControllerDocs{
      * Create: 게시글 작성
      */
     @Override
-    public ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto) throws IOException {
+    public ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto){
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
     }

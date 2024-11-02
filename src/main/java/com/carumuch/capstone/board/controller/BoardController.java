@@ -92,7 +92,7 @@ public class BoardController implements BoardControllerDocs{
 
         }
         int COOKIE_EXPIRATION = 60 * 60 * 24;
-        String cookieHeader = "board-token=" + "[" + id + "]" + "; Max-Age=" + COOKIE_EXPIRATION + "; Path=/; HttpOnly; SameSite=None";
+        String cookieHeader = "board-token=" + "[" + id + "]" + "; Max-Age=" + COOKIE_EXPIRATION + "; Secure; Path=/; HttpOnly; SameSite=None";
 
         response.addHeader("Set-Cookie", cookieHeader);
 

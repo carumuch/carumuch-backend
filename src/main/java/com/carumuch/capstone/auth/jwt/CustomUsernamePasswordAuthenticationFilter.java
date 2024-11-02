@@ -118,8 +118,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     private String createCookie(String key, String value) {
-        return key + "=" + value + "; Max-Age=7776000; Path=/; HttpOnly; SameSite=None";
+        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
     }
-
 }
 

@@ -75,7 +75,7 @@ public class UserController implements UserControllerDocs{
                 .maxAge(0)
                 .path("/")
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .httpOnly(true)
                 .build();
         return ResponseEntity

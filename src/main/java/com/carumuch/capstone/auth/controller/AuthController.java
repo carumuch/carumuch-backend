@@ -67,8 +67,10 @@ public class AuthController implements AuthControllerDocs {
             /* 토큰 재발급 성공*/
             ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
                     .maxAge(COOKIE_EXPIRATION)
+                    .path("/")
+                    .sameSite("None")
+                    .secure(true)
                     .httpOnly(true)
-                    .secure(false)
                     .build();
             return ResponseEntity
                     .status(OK)
@@ -82,7 +84,7 @@ public class AuthController implements AuthControllerDocs {
                     .maxAge(0)
                     .path("/")
                     .sameSite("None")
-                    .secure(false)
+                    .secure(true)
                     .httpOnly(true)
                     .build();
             return ResponseEntity
@@ -114,7 +116,7 @@ public class AuthController implements AuthControllerDocs {
                 .maxAge(600)
                 .path("/")
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .httpOnly(true)
                 .build();
         return ResponseEntity
@@ -150,7 +152,7 @@ public class AuthController implements AuthControllerDocs {
                 .maxAge(0)
                 .path("/")
                 .sameSite("None")
-                .secure(false)
+                .secure(true)
                 .httpOnly(true)
                 .build();
         return ResponseEntity

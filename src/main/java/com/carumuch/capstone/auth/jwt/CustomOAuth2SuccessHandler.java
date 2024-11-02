@@ -60,11 +60,10 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private String createRefreshTokenCookie(String key, String value) {
-        return key + "=" + value + "; Max-Age=7776000; Path=/; HttpOnly; SameSite=None";
+        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
     }
-
     private String createAuthorizationCookie(String key, String value) {
-        return key + "=" + value + "; Max-Age=600; Path=/; HttpOnly; SameSite=None";
+        return key + "=" + value + "; Max-Age=600; Secure; Path=/; HttpOnly; SameSite=None";
     }
 
 }

@@ -46,14 +46,20 @@ public class AuthController implements AuthControllerDocs {
     public ResponseEntity<?> reissue(HttpServletRequest request) {
         /* 쿠키의 Refresh token 추출 */
         String requestRefreshToken = null;
+        String requestAccessToken = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refresh-token")) {
                 requestRefreshToken = cookie.getValue();
             }
+            if (cookie.getName().equals("authorization")) {
+                requestAccessToken = cookie.getValue();
+            }
         }
         /* Access Token 추출 -> Refresh token 키 값에 사용 */
-        String requestAccessToken = request.getHeader("Authorization");
+        if (requestAccessToken == null) {
+            requestAccessToken = request.getHeader("Authorization");
+        }
 
         TokenDto reissuedTokenDto = authService.reissue(requestAccessToken, requestRefreshToken);
 
@@ -75,6 +81,9 @@ public class AuthController implements AuthControllerDocs {
             ResponseCookie responseCookie = ResponseCookie.from("refresh-token", null)
                     .maxAge(0)
                     .path("/")
+                    .sameSite("None")
+                    .secure(true)
+                    .httpOnly(true)
                     .build();
             return ResponseEntity
                     .status(UNAUTHORIZED)
@@ -103,8 +112,10 @@ public class AuthController implements AuthControllerDocs {
         /* 유효기간 10분 임시 토큰 발급 */
         ResponseCookie responseCookie = ResponseCookie.from("temporary-token", temporaryToken)
                 .maxAge(600)
-                .httpOnly(true)
+                .path("/")
+                .sameSite("None")
                 .secure(true)
+                .httpOnly(true)
                 .build();
         return ResponseEntity
                 .status(OK)
@@ -138,6 +149,9 @@ public class AuthController implements AuthControllerDocs {
         ResponseCookie responseCookie = ResponseCookie.from("temporary-token", null)
                 .maxAge(0)
                 .path("/")
+                .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
                 .build();
         return ResponseEntity
                 .status(CREATED)

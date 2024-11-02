@@ -74,6 +74,9 @@ public class UserController implements UserControllerDocs{
         ResponseCookie responseCookie = ResponseCookie.from("refresh-token", null)
                 .maxAge(0)
                 .path("/")
+                .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
                 .build();
         return ResponseEntity
                 .status(OK)

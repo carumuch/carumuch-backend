@@ -32,7 +32,7 @@ public class JwtTokenProvider implements InitializingBean {
     private static final String AUTHORITIES_KEY = "role";
     private static final String LOGIN_ID_KEY = "loginId";
     private static final String EMAIL_KEY = "email";
-    private static final String url = "https://localhost:8080";
+    private final String url;
 
     private final String secretKey;
     private static Key signingKey;
@@ -45,12 +45,14 @@ public class JwtTokenProvider implements InitializingBean {
             RedisService redisService,
             @Value("${spring.jwt.secret}") String secretKey,
             @Value("${spring.jwt.access-token-validity-in-seconds}") Long accessTokenValidityInMilliseconds,
-            @Value("${spring.jwt.refresh-token-validity-in-seconds}") Long refreshTokenValidityInMilliseconds) {
+            @Value("${spring.jwt.refresh-token-validity-in-seconds}") Long refreshTokenValidityInMilliseconds,
+            @Value("${server.host}") String url) {
         this.userDetailsService = userDetailsService;
         this.redisService = redisService;
         this.secretKey = secretKey;
         this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds * 1000;
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds * 1000;
+        this.url = url;
     }
 
     /* 시크릿 키 설정 */

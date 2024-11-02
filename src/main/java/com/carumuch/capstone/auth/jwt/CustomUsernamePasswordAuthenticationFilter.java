@@ -118,13 +118,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     private String createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(7776000);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        // sameSite 추가 용
-        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=Strict";
+        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
     }
 }
 

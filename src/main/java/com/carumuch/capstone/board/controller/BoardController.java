@@ -92,13 +92,7 @@ public class BoardController implements BoardControllerDocs{
 
         }
         int COOKIE_EXPIRATION = 60 * 60 * 24;
-        oldBoardToken.setMaxAge(COOKIE_EXPIRATION);
-        oldBoardToken.setPath("/");
-        oldBoardToken.setSecure(true);
-        oldBoardToken.setHttpOnly(true);
-
-        //samSite 추가
-        String cookieHeader = oldBoardToken.getName() + "=" + oldBoardToken.getValue() +  "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=Strict";
+        String cookieHeader = "board-token=" + "[" + id + "]" + "; Max-Age=" + COOKIE_EXPIRATION + "; Secure; Path=/; HttpOnly; SameSite=None";
         response.addHeader("Set-Cookie", cookieHeader);
 
 

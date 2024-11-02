@@ -68,7 +68,7 @@ public class AuthController implements AuthControllerDocs {
             ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
                     .maxAge(COOKIE_EXPIRATION)
                     .httpOnly(true)
-                    .secure(true)
+                    .secure(false)
                     .build();
             return ResponseEntity
                     .status(OK)
@@ -82,7 +82,7 @@ public class AuthController implements AuthControllerDocs {
                     .maxAge(0)
                     .path("/")
                     .sameSite("None")
-                    .secure(true)
+                    .secure(false)
                     .httpOnly(true)
                     .build();
             return ResponseEntity
@@ -114,7 +114,7 @@ public class AuthController implements AuthControllerDocs {
                 .maxAge(600)
                 .path("/")
                 .sameSite("None")
-                .secure(true)
+                .secure(false)
                 .httpOnly(true)
                 .build();
         return ResponseEntity
@@ -150,7 +150,7 @@ public class AuthController implements AuthControllerDocs {
                 .maxAge(0)
                 .path("/")
                 .sameSite("None")
-                .secure(true)
+                .secure(false)
                 .httpOnly(true)
                 .build();
         return ResponseEntity

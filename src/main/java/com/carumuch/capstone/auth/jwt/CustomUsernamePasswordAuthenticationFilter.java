@@ -95,7 +95,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 
         /* 응답 설정 */
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-        response.addCookie(createCookie("refresh-token", tokenDto.getRefreshToken()));
+        response.addHeader("Set-Cookie", createCookie("refresh-token", tokenDto.getRefreshToken()));
+
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -116,16 +117,14 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
                 ResponseDto.fail(UNAUTHORIZED,"아이디 혹은 비밀번호가 일치하지 않습니다.")));
     }
 
-
-    private Cookie createCookie(String key, String value) {
-
+    private String createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(7776000);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
+        cookie.setSecure(true);
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
-
-        return cookie;
+        // sameSite 추가 용
+        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=Strict";
     }
 }
 

@@ -272,7 +272,17 @@ gradle-app.setting
 application.yml
 application-local.yml
 application-dev.yml
+application-prod.yml
 application-swagger.yml
 application-secret.yml
+application-mail.yml
 application-s3.yml
 
+#img
+*.jpg
+*.jpeg
+*.png
+
+
+# test docker file
+Dockerfile

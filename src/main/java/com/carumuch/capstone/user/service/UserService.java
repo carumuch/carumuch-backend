@@ -4,13 +4,19 @@ import com.carumuch.capstone.global.common.ErrorCode;
 import com.carumuch.capstone.global.common.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.domain.type.Role;
-import com.carumuch.capstone.user.dto.JoinReqDto;
+import com.carumuch.capstone.user.dto.UserInfoResDto;
+import com.carumuch.capstone.user.dto.UserJoinReqDto;
+import com.carumuch.capstone.user.dto.UserUpdatePasswordReqDto;
+import com.carumuch.capstone.user.dto.UserUpdateReqDto;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -20,6 +26,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    /**
+     * READ: 회원 정보
+     */
+    public UserInfoResDto info(String loginId) {
+        User user = userRepository.findLoginUserByLoginId(loginId);
+        return UserInfoResDto.builder()
+                .loginId(user.getLoginId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
+    }
 
     /**
      * 아이디 중복 확인
@@ -43,15 +61,45 @@ public class UserService {
      * Create: 회원 가입
      */
     @Transactional
-    public Long join(JoinReqDto joinReqDto) {
-        checkLoginIdDuplicate(joinReqDto.getLoginId()); // 아이디 중복 확인
-        checkEmailDuplicate(joinReqDto.getEmail()); // 이메일 중복 확인
-        return userRepository.save(User.builder()
-                .loginId(joinReqDto.getLoginId())
-                .password(bCryptPasswordEncoder.encode(joinReqDto.getPassword()))
-                .email(joinReqDto.getEmail())
-                .name(joinReqDto.getName())
+    public Long join(UserJoinReqDto userJoinReqDto) {
+        checkLoginIdDuplicate(userJoinReqDto.getLoginId()); // 아이디 중복 확인
+        checkEmailDuplicate(userJoinReqDto.getEmail()); // 이메일 중복 확인
+        Long userId = userRepository.save(User.builder()
+                .loginId(userJoinReqDto.getLoginId())
+                .password(bCryptPasswordEncoder.encode(userJoinReqDto.getPassword()))
+                .email(userJoinReqDto.getEmail())
+                .name(userJoinReqDto.getName())
                 .role(Role.USER)
                 .build()).getId();
+        log.info(userJoinReqDto.getName() + " : " + "join" + "(" + new Date() + ")");
+        return userId;
+    }
+
+    /**
+     * Update: 회원 수정
+     */
+    @Transactional
+    public Long update(UserUpdateReqDto userUpdateReqDto) {
+        checkEmailDuplicate(userUpdateReqDto.getEmail()); // 이메일 중복 확인
+        User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        user.update(
+                userUpdateReqDto.getName(),
+                userUpdateReqDto.getEmail());
+        return user.getId();
+    }
+
+    /**
+     * Update: 비밀번호 수정
+     */
+    @Transactional
+    public Long updatePassword(UserUpdatePasswordReqDto userUpdatePasswordReqDto) {
+        User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        String encodeNewPassword = bCryptPasswordEncoder.encode(userUpdatePasswordReqDto.getNewPassword());
+        // 비밀번호가 일치하지 않을 때
+        if (!bCryptPasswordEncoder.matches(userUpdatePasswordReqDto.getPassword(), user.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
+        }
+        user.updatePassword(encodeNewPassword);
+        return user.getId();
     }
 }

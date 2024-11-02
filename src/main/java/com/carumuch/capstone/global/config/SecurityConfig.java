@@ -7,6 +7,7 @@ import com.carumuch.capstone.global.common.exception.CustomAccessDeniedHandler;
 import com.carumuch.capstone.global.common.exception.CustomAuthenticationEntryPoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
+    private final String ALLOWED_ORIGINS;
+
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                           JwtTokenProvider jwtTokenProvider,
                           AuthService authService,
@@ -44,7 +47,8 @@ public class SecurityConfig {
                           CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
                           CustomAccessDeniedHandler customAccessDeniedHandler,
                           CustomOAuth2UserService customOAuth2UserService,
-                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
+                          CustomOAuth2SuccessHandler customOAuth2SuccessHandler,
+                          @Value("${cors.allow.origins}") String ALLOWED_ORIGINS) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authService = authService;
@@ -53,6 +57,7 @@ public class SecurityConfig {
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.customOAuth2UserService = customOAuth2UserService;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
+        this.ALLOWED_ORIGINS = ALLOWED_ORIGINS;
     }
 
     @Bean
@@ -76,14 +81,14 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList(ALLOWED_ORIGINS));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 
                         configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                        configuration.setExposedHeaders(Collections.singletonList("access"));
+                        configuration.setExposedHeaders(Collections.singletonList("authorization"));
 
                         return configuration;
                     }
@@ -96,13 +101,16 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login",
-                                "/api-docs/**" ,
+                        .requestMatchers("/api-docs/**" ,
                                 "/v3/**",
-                                "/swagger-ui/**",
-                                "/users",
+                                "/swagger-ui/**", // 스웨거
+                                "/login", // 로그인
+                                "/users/signup", // 회원가입
                                 "/users/check-email/**",
-                                "/users/check-login-id/**").permitAll()
+                                "/users/check-login-id/**",
+                                "/password/reset/**", // 비밀번호 찾기
+                                "/find-id" // 아이디 찾기
+                        ).permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());

@@ -39,6 +39,7 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "데이터가 이미 존재합니다."),
     RESOURCE_CONFLICT(HttpStatus.CONFLICT, "리소스 상태와 충돌이 발생했습니다."),
     OVER_VALIDATION(HttpStatus.CONFLICT,"더 이상 데이터를 저장 할 수 없습니다."),
+    BID_ALREADY_COMPLETED(HttpStatus.CONFLICT,"이미 체결된 견적입니다.."),
 
     /**
      * 500 INTERNAL_SERVER_ERROR : 서버 오류

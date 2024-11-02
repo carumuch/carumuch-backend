@@ -1,7 +1,12 @@
 package com.carumuch.capstone.auth.service;
 
 import com.carumuch.capstone.auth.dto.TokenDto;
+import com.carumuch.capstone.auth.dto.VerificationCodeDto;
+import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
 import com.carumuch.capstone.auth.jwt.JwtTokenProvider;
+import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,8 @@ public class AuthService {
     private final String SERVER = "Server";
 
     private final OAuth2UnlinkService oAuth2UnlinkService;
+    private final MailService mailService;
+
 
     /**
      * 로그아웃: Access Token 무효화
@@ -171,5 +178,71 @@ public class AuthService {
             return requestAccessTokenInHeader.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 1. 비밀번호 찾기: 인증번호 전송
+     */
+    public void sendVerificationCode(VerificationLoginIdDto verificationLoginIdDto) {
+        User user = userRepository.findByLoginId(verificationLoginIdDto.getLoginId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        /* 메일 요소 */
+        String email = user.getEmail();
+        String name = user.getName();
+        String code = mailService.createCode();
+
+        if (redisService.getValues("CODE(" + SERVER + "):" + email) != null) {
+            redisService.deleteValues("CODE(" + SERVER + "):" + email);
+        }
+
+        /* 인증코드 유호 시간 2분*/
+        long codeValidityInMilliseconds = 120 * 1000;
+
+        /* 레디스 저장 */
+        redisService.setValuesWithTimeout("CODE(" + SERVER + "):" + email, code, codeValidityInMilliseconds);
+        /* 이메일 발송 */
+        mailService.sendVerificationCodeMail(name, email, code);
+        log.info(user.getLoginId() + " : " + "sendCodeMail" + "(" + new Date() + ")");
+    }
+
+    /**
+     * 2. 비밀번호 찾기: 인증번호 검증
+     */
+    @Transactional
+    public String verifyCode(VerificationCodeDto verificationCodeDto) {
+        User user = userRepository.findLoginUserByLoginId(verificationCodeDto.getLoginId());
+        String email = user.getEmail();
+        String code = redisService.getValues("CODE(" + SERVER + "):" + email);
+
+        if (!code.equals(verificationCodeDto.getCode())) {
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
+        }
+        return jwtTokenProvider.createTemporaryToken(email);
+    }
+
+    /**
+     * 3. 비밀번호 찾기: 새 비밀번호 업데이트
+     */
+    @Transactional
+    public void resetPassword(String email, String encodePassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.updatePassword(encodePassword);
+    }
+
+    /**
+     * 아이디 찾기
+     */
+    public void findLoginId(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        String loginId = user.getLoginId();
+
+        // 난독화 진행 -> 2,3번 째 아이디 "*"로 변경
+        String obfuscationLoginId = loginId.charAt(0) + "**" + loginId.substring(3);
+
+        mailService.sendFindLoginIdMail(user.getName(), user.getEmail(), obfuscationLoginId);
+        log.info(user.getLoginId() + " : " + "sendFindLoginIdMail" + "(" + new Date() + ")");
     }
 }

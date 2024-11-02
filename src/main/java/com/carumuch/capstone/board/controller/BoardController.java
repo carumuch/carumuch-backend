@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/board")
 public class BoardController implements BoardControllerDocs{
 
-    private final int COOKIE_EXPIRATION = 60 * 60 * 24;
     private final BoardService boardService;
 
     /**
@@ -93,10 +91,15 @@ public class BoardController implements BoardControllerDocs{
             oldBoardToken = new Cookie("board-token", "[" + id + "]");
 
         }
-        oldBoardToken.setPath("/");
+        int COOKIE_EXPIRATION = 60 * 60 * 24;
         oldBoardToken.setMaxAge(COOKIE_EXPIRATION);
-        response.addCookie(oldBoardToken);
+        oldBoardToken.setPath("/");
+        oldBoardToken.setSecure(true);
+        oldBoardToken.setHttpOnly(true);
 
+        //samSite 추가
+        String cookieHeader = oldBoardToken.getName() + "=" + oldBoardToken.getValue() +  "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=Strict";
+        response.addHeader("Set-Cookie", cookieHeader);
 
 
         return ResponseEntity.status(OK)
@@ -117,7 +120,7 @@ public class BoardController implements BoardControllerDocs{
      * Update: 게시글 수정
      */
     @Override
-    public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @RequestBody BoardModifyReqDto boardModifyReqDto) throws IOException {
+    public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @RequestBody BoardModifyReqDto boardModifyReqDto){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.modify(id,boardModifyReqDto)));
     }

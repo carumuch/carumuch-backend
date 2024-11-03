@@ -17,8 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public CustomUserDetails loadUserByUsername(String loginId) {
-        User findUser = userRepository.findByLoginId(loginId)
-                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_CREDENTIALS));
+        User findUser = userRepository.findLoginUserByLoginId(loginId);
         if(findUser != null){
             CustomUserDetails userDetails = new CustomUserDetails(findUser);
             return  userDetails;

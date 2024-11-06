@@ -14,6 +14,37 @@ jobs:
   # Spring Boot를 빌드하여 Docker Hub에 푸시하는 과정
   build-docker-image:
     runs-on: ubuntu-latest
+    env:
+      HOST_API_ADDRESS: ${{ secrets.HOST_API_ADDRESS }}
+      FRONTEND_ADDRESS: ${{ secrets.FRONTEND_ADDRESS }}
+      MYSQL_ADDRESS: ${{ secrets.MYSQL_ADDRESS }}
+      MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      REDIS_ADDRESS: ${{ secrets.REDIS_ADDRESS }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      JWT_KEY: ${{ secrets.JWT_KEY }}
+      REFRESH_TOKEN_VALID_TIME: ${{ secrets.REFRESH_TOKEN_VALID_TIME }}
+      ACCESS_TOKEN_VALID_TIME: ${{ secrets.ACCESS_TOKEN_VALID_TIME }}
+      KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+      KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+      NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+      NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+      NAVER_REDIRECT_URI: ${{ secrets.NAVER_REDIRECT_URI }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+      AWS_CREDENTIALS_KEY: ${{ secrets.AWS_CREDENTIALS_KEY }}
+      AWS_CREDENTIALS_SECRET_KEY: ${{ secrets.AWS_CREDENTIALS_SECRET_KEY }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      S3_REGION: ${{ secrets.S3_REGION }}
+      CLOUDFRONT_NAME: ${{ secrets.CLOUDFRONT_NAME }}
+      MAIL_HOST_ADDRESS: ${{ secrets.MAIL_HOST_ADDRESS }}
+      MAIL_PORT: ${{ secrets.MAIL_PORT }}
+      MAIL_ADDRESS: ${{ secrets.MAIL_ADDRESS }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      SWAGGER_SCAN: ${{ secrets.SWAGGER_SCAN }}
+      SWAGGER_PATH: ${{ secrets.SWAGGER_PATH }}
     steps:
       # 0. 코드 체크아웃
       - uses: actions/checkout@v4

@@ -56,7 +56,8 @@ jobs:
           key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
-            docker stop carumuch-service
-            docker rm carumuch-service
+            docker stop carumuch-service || true
+            docker rm carumuch-service || true
             docker run -d -p 8080:8080 --platform linux/amd64 --network capstone-network -e "spring.datasource.url=jdbc:mysql://mysql:3306/capstone" -e "spring.data.redis.host=redis" --name carumuch-service ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
             docker image prune -f
+

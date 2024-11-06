@@ -15,8 +15,12 @@ jobs:
   build-docker-image:
     runs-on: ubuntu-latest
     steps:
-      # 1. 코드 체크아웃
+      # 0. 코드 체크아웃
       - uses: actions/checkout@v4
+
+      # 1. 외부 설정 파일 세팅
+      - name: application yml
+        run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
 
       # 2. Java JDK 설정
       - name: Set up JDK 17

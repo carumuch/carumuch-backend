@@ -1,8 +1,11 @@
 package com.carumuch.capstone.global.config;
 
-import com.carumuch.capstone.auth.jwt.*;
-import com.carumuch.capstone.auth.service.AuthService;
-import com.carumuch.capstone.auth.service.CustomOAuth2UserService;
+import com.carumuch.capstone.domain.auth.filter.CustomLogoutFilter;
+import com.carumuch.capstone.domain.auth.filter.CustomUsernamePasswordAuthenticationFilter;
+import com.carumuch.capstone.domain.auth.filter.JwtAuthenticationFilter;
+import com.carumuch.capstone.domain.auth.jwt.*;
+import com.carumuch.capstone.domain.auth.service.AuthService;
+import com.carumuch.capstone.domain.auth.service.CustomOAuth2UserService;
 import com.carumuch.capstone.global.common.exception.CustomAccessDeniedHandler;
 import com.carumuch.capstone.global.common.exception.CustomAuthenticationEntryPoint;
 import com.carumuch.capstone.global.common.exception.CustomOAuth2AuthenticationFailureHandler;

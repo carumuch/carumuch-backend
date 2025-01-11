@@ -270,6 +270,7 @@ gradle-app.setting
 
 # applicaion.yml or properties
 application.yml
+application-test.yml
 application-local.yml
 application-dev.yml
 application-prod.yml

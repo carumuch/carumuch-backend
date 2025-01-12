@@ -279,6 +279,9 @@ application-secret.yml
 application-mail.yml
 application-s3.yml
 
+# RestDocs
+api-docs.html
+
 #img
 *.jpg
 *.jpeg

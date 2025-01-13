@@ -1,7 +1,9 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'com.carumuch'
@@ -11,7 +13,12 @@ java {
 	sourceCompatibility = '17'
 }
 
+jacoco {
+	toolVersion = "0.8.10"
+}
+
 configurations {
+	asciidoctorExtensions
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -38,6 +45,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	// mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	// h2
+	runtimeOnly 'com.h2database:h2'
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// lombok
@@ -45,6 +54,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	// swagger docs
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	// Restdocs
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// S3
@@ -58,6 +70,78 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+	jacocoExcludes = [
+			"**/generated/**",  // Querydsl
+			"**/dto/**",
+			"**/exception/**",
+			"**/config/**",
+	]
+}
+
+tasks.named('jacocoTestReport') {
+	dependsOn(tasks.named('test'))
+	reports {
+		xml.required = true
+		html.required = true
+		csv.required = false
+	}
+	classDirectories.setFrom(
+			files(classDirectories.files.collect { dir ->
+				fileTree(dir) {
+					exclude jacocoExcludes // 제외
+				}
+			})
+	)
+
+	finalizedBy tasks.named('jacocoTestCoverageVerification')
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = "BUNDLE"
+			limit {
+				counter = "INSTRUCTION"
+				value = "COVEREDRATIO"
+				minimum = 0.00 // 최소 커버리지 현재는 0 입니다
+			}
+			excludes = jacocoExcludes // 제외
+		}
+	}
+}
+
+tasks.named('asciidoctor') {
+	configurations "asciidoctorExtensions"
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	from file("${asciidoctor.outputDir}")
+	into file("src/main/resources/static/docs")
+}
+
+build {
+	dependsOn copyDocument
+	dependsOn 'jacocoTestReport'
+}
+
+bootJar {
+	dependsOn copyDocument
+	from ("${asciidoctor.outputDir}") {
+		into 'static/docs'
+	}
 }
 
 tasks.named('test') {

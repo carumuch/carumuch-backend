@@ -270,6 +270,7 @@ gradle-app.setting
 
 # applicaion.yml or properties
 application.yml
+application-test.yml
 application-local.yml
 application-dev.yml
 application-prod.yml
@@ -277,6 +278,9 @@ application-swagger.yml
 application-secret.yml
 application-mail.yml
 application-s3.yml
+
+# RestDocs
+api-docs.html
 
 #img
 *.jpg

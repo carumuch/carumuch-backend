@@ -1,7 +1,7 @@
 package com.carumuch.capstone.global.service;
 
-import com.carumuch.capstone.global.common.ErrorCode;
-import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.global.exception.ErrorCode;
+import com.carumuch.capstone.global.exception.CustomException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;

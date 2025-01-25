@@ -1,4 +1,4 @@
-package com.carumuch.capstone.global.auditing;
+package com.carumuch.capstone.global.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseCreateByEntity extends BaseTimeEntity{
+public class BaseCreateByEntity extends BaseTimeEntity {
 
     @CreatedBy
     @Column(updatable = false)

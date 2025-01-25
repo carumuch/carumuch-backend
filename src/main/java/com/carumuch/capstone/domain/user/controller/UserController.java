@@ -4,7 +4,7 @@ import com.carumuch.capstone.domain.auth.service.AuthService;
 import com.carumuch.capstone.domain.user.dto.UserJoinReqDto;
 import com.carumuch.capstone.domain.user.dto.UserUpdatePasswordReqDto;
 import com.carumuch.capstone.domain.user.dto.UserUpdateReqDto;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;

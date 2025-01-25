@@ -3,7 +3,7 @@ package com.carumuch.capstone.domain.auth.controller;
 import com.carumuch.capstone.domain.auth.dto.*;
 import com.carumuch.capstone.domain.auth.jwt.JwtTokenProvider;
 import com.carumuch.capstone.domain.auth.service.AuthService;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

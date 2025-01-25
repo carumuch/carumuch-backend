@@ -2,7 +2,7 @@ package com.carumuch.capstone.domain.bid.model;
 
 import com.carumuch.capstone.domain.bid.model.type.BidStatus;
 import com.carumuch.capstone.domain.bodyshop.model.BodyShop;
-import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
+import com.carumuch.capstone.global.base.BaseCreateByEntity;
 import com.carumuch.capstone.domain.estimate.model.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

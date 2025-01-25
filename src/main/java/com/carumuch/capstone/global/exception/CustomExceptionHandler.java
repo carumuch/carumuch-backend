@@ -1,7 +1,7 @@
-package com.carumuch.capstone.global.common.exception;
+package com.carumuch.capstone.global.exception;
 
+import com.carumuch.capstone.global.dto.CustomErrorResponseDto;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,7 +1,7 @@
 package com.carumuch.capstone.domain.bodyshop.model;
 
 import com.carumuch.capstone.domain.bid.model.Bid;
-import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
+import com.carumuch.capstone.global.base.BaseCreateByEntity;
 import com.carumuch.capstone.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

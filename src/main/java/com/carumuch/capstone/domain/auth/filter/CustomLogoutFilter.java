@@ -1,7 +1,7 @@
 package com.carumuch.capstone.domain.auth.filter;
 
 import com.carumuch.capstone.domain.auth.service.AuthService;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

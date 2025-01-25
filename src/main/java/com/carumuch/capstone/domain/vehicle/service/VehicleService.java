@@ -1,7 +1,7 @@
 package com.carumuch.capstone.domain.vehicle.service;
 
-import com.carumuch.capstone.global.common.ErrorCode;
-import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.global.exception.ErrorCode;
+import com.carumuch.capstone.global.exception.CustomException;
 import com.carumuch.capstone.domain.user.model.User;
 import com.carumuch.capstone.domain.user.repository.UserRepository;
 import com.carumuch.capstone.domain.vehicle.model.Vehicle;

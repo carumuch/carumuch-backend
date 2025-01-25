@@ -2,7 +2,7 @@ package com.carumuch.capstone.domain.bid.controller;
 
 import com.carumuch.capstone.domain.bid.dto.BidStatusUpdateReqDto;
 import com.carumuch.capstone.domain.bid.service.BidService;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

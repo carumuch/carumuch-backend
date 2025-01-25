@@ -6,7 +6,7 @@ import com.carumuch.capstone.domain.bid.model.type.BidStatus;
 import com.carumuch.capstone.domain.bid.dto.BidPageResDto;
 import com.carumuch.capstone.domain.bid.dto.BidResDto;
 import com.carumuch.capstone.domain.bid.repository.BidRepository;
-import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.global.exception.CustomException;
 import com.carumuch.capstone.domain.estimate.model.Estimate;
 import com.carumuch.capstone.domain.estimate.model.type.EstimateStatus;
 import com.carumuch.capstone.domain.estimate.repository.EstimateRepository;
@@ -17,7 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.carumuch.capstone.global.common.ErrorCode.*;
+import static com.carumuch.capstone.global.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor

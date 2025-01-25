@@ -1,8 +1,8 @@
 package com.carumuch.capstone.domain.image.service;
 
 import com.carumuch.capstone.domain.image.common.SetImageKey;
-import com.carumuch.capstone.global.common.ErrorCode;
-import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.global.exception.ErrorCode;
+import com.carumuch.capstone.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

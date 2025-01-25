@@ -1,4 +1,4 @@
-package com.carumuch.capstone.global.common.exception;
+package com.carumuch.capstone.domain.auth.handler;
 
 import com.carumuch.capstone.global.common.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

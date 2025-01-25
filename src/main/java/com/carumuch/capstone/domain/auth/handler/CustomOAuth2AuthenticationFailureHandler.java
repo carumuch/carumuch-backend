@@ -1,6 +1,5 @@
-package com.carumuch.capstone.global.common.exception;
+package com.carumuch.capstone.domain.auth.handler;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;

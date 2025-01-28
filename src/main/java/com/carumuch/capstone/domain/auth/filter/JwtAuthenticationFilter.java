@@ -1,6 +1,6 @@
 package com.carumuch.capstone.domain.auth.filter;
 
-import com.carumuch.capstone.domain.auth.jwt.JwtTokenProvider;
+import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
 import io.jsonwebtoken.IncorrectClaimException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider tokenProvider;
 
     @Override
     protected void doFilterInternal(
@@ -38,34 +38,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = resolveToken(request);
+        String accessToken = tokenProvider.resolveAccessToken(request);
 
         try {
-            /* 정상 토큰인지 검사 */
-            if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+            if (accessToken != null && tokenProvider.validateAccessToken(accessToken)) {
+                Authentication authentication = tokenProvider.getAuthenticationByAccessToken(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("authentication를 SecurityContextHolder에 저장했습니다.");
             }
-        } catch (IncorrectClaimException e) { // 잘못된 토큰일 경우
+        } catch (IncorrectClaimException e) {
             SecurityContextHolder.clearContext();
-            log.debug("debug-> 잘못된 토큰 입니다.");
+            log.debug("잘못된 토큰 입니다.");
             response.sendError(403);
-        } catch (UsernameNotFoundException e) { // 회원을 찾을 수 없을 경우
+        } catch (UsernameNotFoundException e) {
             SecurityContextHolder.clearContext();
-            log.debug("debug-> 회원을 찾을 수 없습니다..");
+            log.debug("회원을 찾을 수 없습니다..");
             response.sendError(403);
         }
-
         filterChain.doFilter(request, response);
     }
 
-    /* 헤더로 부터 Access Token 추출 */
-    public String resolveToken(HttpServletRequest httpServletRequest) {
-        String bearerToken = httpServletRequest.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.equals("/login") || requestURI.equals("/users/signup") || requestURI.equals("/reissue");
     }
 }

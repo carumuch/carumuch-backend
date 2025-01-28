@@ -1,5 +1,6 @@
 package com.carumuch.capstone.domain.auth.handler;
 
+import com.carumuch.capstone.global.constants.CorsConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,14 +14,11 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class CustomOAuth2AuthenticationFailureHandler implements AuthenticationFailureHandler {
-    private final String ALLOWED_ORIGINS;
-    public CustomOAuth2AuthenticationFailureHandler(@Value("${cors.allow.origins}") String ALLOWED_ORIGINS) {
-        this.ALLOWED_ORIGINS = ALLOWED_ORIGINS;
-    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
         String errorMessage = URLEncoder.encode("social_login_duplicate", StandardCharsets.UTF_8);
-        response.sendRedirect(ALLOWED_ORIGINS + "?error=" + errorMessage);
+        response.sendRedirect(CorsConstant.ALLOWED_ORIGINS + "?error=" + errorMessage);
     }
 }

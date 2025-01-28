@@ -1,74 +1,61 @@
 package com.carumuch.capstone.domain.auth.filter;
 
-import com.carumuch.capstone.domain.auth.service.AuthService;
-import com.carumuch.capstone.global.dto.ResponseDto;
+import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
+import com.carumuch.capstone.global.utils.CookieUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.util.Date;
 
+import static com.carumuch.capstone.global.constants.TokenConstant.*;
+
+@Slf4j
 public class CustomLogoutFilter extends GenericFilterBean {
 
-    private final AuthService authService;
+    private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
 
-    public CustomLogoutFilter(AuthService authService, ObjectMapper objectMapper) {
-        this.authService = authService;
+    public CustomLogoutFilter(TokenProvider tokenProvider, ObjectMapper objectMapper) {
+        this.tokenProvider = tokenProvider;
         this.objectMapper = objectMapper;
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
-        /* 경로, Http 메소드 */
-        String requestUri = request.getRequestURI();
-        if (!requestUri.matches("^\\/logout$")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        String requestMethod = request.getMethod();
-        if (!requestMethod.equals("POST")) {
+        if (!request.getRequestURI().equals("/logout") || !request.getMethod().equals("POST")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        /* Refresh Token 추출 */
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh-token")) {
-                refresh = cookie.getValue();
-            }
-        }
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = tokenProvider.resolveAccessToken(request);
+        Claims claimsByAccessToken = tokenProvider.getClaimsByAccessToken(accessToken);
 
-        authService.logout(accessToken);
+        String id = claimsByAccessToken.getSubject();
+        String role = claimsByAccessToken.get(AUTHORITIES_KEY).toString();
 
-        /* 응답 설정 */
-        response.addHeader("Set-Cookie", createCookie("refresh-token", null));
+        tokenProvider.invalidateRefreshToken(role, id);
+
+        log.info("{}-{}: logout ({})", id, role, new Date());
+        response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.createCookie(REFRESH_TOKEN_COOKIE_NAME, null, REFRESH_EXPIRATION_DELETE).toString());
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        response.getWriter().write(objectMapper.writeValueAsString(
-                ResponseDto.success(HttpStatus.OK,null)));
-    }
-
-    private String createCookie(String key, String value) {
-        return key + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
+        response.getWriter().write(objectMapper.writeValueAsString(null));
     }
 }

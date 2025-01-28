@@ -1,5 +1,7 @@
 package com.carumuch.capstone.domain.user.service;
 
+import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
+import com.carumuch.capstone.domain.auth.service.OAuth2UnlinkService;
 import com.carumuch.capstone.domain.user.dto.UserInfoResDto;
 import com.carumuch.capstone.domain.user.dto.UserJoinReqDto;
 import com.carumuch.capstone.domain.user.dto.UserUpdatePasswordReqDto;
@@ -9,6 +11,9 @@ import com.carumuch.capstone.domain.user.model.type.Role;
 import com.carumuch.capstone.domain.user.repository.UserRepository;
 import com.carumuch.capstone.global.exception.ErrorCode;
 import com.carumuch.capstone.global.exception.CustomException;
+import com.carumuch.capstone.global.service.RedisService;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+import static com.carumuch.capstone.global.constants.TokenConstant.AUTHORITIES_KEY;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +32,34 @@ import java.util.Date;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
+    private final RedisService redisService;
+    private final OAuth2UnlinkService oAuth2UnlinkService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Transactional
+    public void delete(HttpServletRequest request) {
+        String accessToken = tokenProvider.resolveAccessToken(request);
+        Claims claimsByAccessToken = tokenProvider.getClaimsByAccessToken(accessToken);
+
+        String loginId = claimsByAccessToken.getSubject();
+        String role = claimsByAccessToken.get(AUTHORITIES_KEY).toString();
+
+        tokenProvider.invalidateRefreshToken(role, loginId);
+        userRepository.deleteByLoginId(loginId);
+        deleteOauth2AccessToken(loginId);
+
+        log.info("{}-{}: delete ({})", loginId, role, new Date());
+    }
+
+    private void deleteOauth2AccessToken(String loginId) {
+        if (loginId.startsWith("kakao") || loginId.startsWith("google") || loginId.startsWith("naver")) {
+            oAuth2UnlinkService.unlink(loginId);
+        }
+        if (redisService.getOauth2AccessToken(loginId) != null) {
+            redisService.deleteOauth2AccessToken(loginId);
+        }
+    }
 
     /**
      * READ: 회원 정보

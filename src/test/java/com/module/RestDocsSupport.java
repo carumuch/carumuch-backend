@@ -1,7 +1,7 @@
 package com.module;
 
 import com.carumuch.capstone.domain.auth.controller.AuthController;
-import com.carumuch.capstone.domain.auth.jwt.JwtTokenProvider;
+import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
 import com.carumuch.capstone.domain.bid.controller.BidController;
 import com.carumuch.capstone.domain.board.controller.BoardController;
 import com.carumuch.capstone.domain.bodyshop.controller.BodyShopController;
@@ -42,7 +42,7 @@ public abstract class RestDocsSupport {
     protected ObjectMapper objectMapper;
 
     @MockBean
-    protected JwtTokenProvider jwtTokenProvider;
+    protected TokenProvider tokenProvider;
 
     @BeforeEach
     void setUpMockMvcForRestDocs(WebApplicationContext webApplicationContext,

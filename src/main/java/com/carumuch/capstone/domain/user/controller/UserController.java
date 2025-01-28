@@ -1,21 +1,22 @@
 package com.carumuch.capstone.domain.user.controller;
 
-import com.carumuch.capstone.domain.auth.service.AuthService;
 import com.carumuch.capstone.domain.user.dto.UserJoinReqDto;
 import com.carumuch.capstone.domain.user.dto.UserUpdatePasswordReqDto;
 import com.carumuch.capstone.domain.user.dto.UserUpdateReqDto;
 import com.carumuch.capstone.global.dto.ResponseDto;
+import com.carumuch.capstone.global.utils.CookieUtil;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.carumuch.capstone.global.constants.TokenConstant.REFRESH_EXPIRATION_DELETE;
+import static com.carumuch.capstone.global.constants.TokenConstant.REFRESH_TOKEN_COOKIE_NAME;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -24,7 +25,6 @@ import static org.springframework.http.HttpStatus.*;
 public class UserController implements UserControllerDocs{
 
     private final UserService userService;
-    private final AuthService authService;
 
     /**
      * READ: 회원 정보
@@ -70,18 +70,10 @@ public class UserController implements UserControllerDocs{
      */
     @DeleteMapping
     public ResponseEntity<?> delete(HttpServletRequest request) {
-        authService.delete(request.getHeader("Authorization"));
-        ResponseCookie responseCookie = ResponseCookie.from("refresh-token", null)
-                .maxAge(0)
-                .path("/")
-                .sameSite("None")
-                .secure(true)
-                .httpOnly(true)
-                .build();
-        return ResponseEntity
-                .status(OK)
-                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ResponseDto.success(OK,null));
+        userService.delete(request);
+        return ResponseEntity.status(CREATED)
+                .header(HttpHeaders.SET_COOKIE, CookieUtil.createCookie(REFRESH_TOKEN_COOKIE_NAME, null, REFRESH_EXPIRATION_DELETE).toString())
+                .body(null);
     }
 
     /**

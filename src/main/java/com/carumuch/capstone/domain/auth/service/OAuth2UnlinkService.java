@@ -47,7 +47,7 @@ public class OAuth2UnlinkService {
     /**
      * 구글 연결 해제
      */
-    public void googleUnlink(String provider) {
+    private void googleUnlink(String provider) {
         String accessToken = redisService.getOauth2AccessToken(provider);
         // oauth2 토큰이 만료 시 재 로그인
         if (accessToken == null) {
@@ -62,7 +62,7 @@ public class OAuth2UnlinkService {
     /**
      * 카카오 연결 해제
      */
-    public void kakaoUnlink(String provider) {
+    private void kakaoUnlink(String provider) {
         String accessToken = redisService.getOauth2AccessToken(provider);
         // oauth2 토큰이 만료 시 재 로그인
         if (accessToken == null) {
@@ -77,7 +77,7 @@ public class OAuth2UnlinkService {
     /**
      * 네이버 연결 해제
      */
-    public void naverUnlink(String provider) {
+    private void naverUnlink(String provider) {
 
         String accessToken = redisService.getOauth2AccessToken(provider);
 

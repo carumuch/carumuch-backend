@@ -141,6 +141,10 @@ public class TokenProvider {
     }
 
     private boolean validateToken(SecretKey key, String token) {
+        if (token == null) {
+            log.error("jwt 토큰이 비어 있습니다.");
+            return false;
+        }
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
@@ -154,8 +158,6 @@ public class TokenProvider {
             log.error("지원되지 않는 jwt 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.error("jwt 클레임 문자열이 비어 있습니다.");
-        } catch (NullPointerException e){
-            log.error("jwt 토큰이 비어 있습니다.");
         }
         return false;
     }

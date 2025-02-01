@@ -1,6 +1,7 @@
 package com.carumuch.capstone.domain.auth.filter;
 
 import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.carumuch.capstone.global.utils.CookieUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -56,6 +58,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(null));
+        response.getWriter().write(objectMapper.writeValueAsString(ResponseDto.success(HttpStatus.OK,null)));
     }
 }

@@ -61,13 +61,13 @@ public class AuthController implements AuthControllerDocs {
         if (!isValid) {
             return ResponseEntity.status(UNAUTHORIZED)
                     .header(HttpHeaders.SET_COOKIE, createCookie(REFRESH_TOKEN_COOKIE_NAME, null, REFRESH_EXPIRATION_DELETE).toString())
-                    .body(null);
+                    .body(ResponseDto.fail(UNAUTHORIZED,null));
         }
 
         String newAccessToken = tokenProvider.createAccessToken(subject, role, new Date());
         return ResponseEntity.status(OK)
                 .header(AUTHORIZATION, newAccessToken)
-                .body(null);
+                .body(ResponseDto.success(OK,null));
     }
 
     /**

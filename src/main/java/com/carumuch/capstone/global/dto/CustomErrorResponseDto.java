@@ -1,6 +1,6 @@
-package com.carumuch.capstone.global.common.exception;
+package com.carumuch.capstone.global.dto;
 
-import com.carumuch.capstone.global.common.ErrorCode;
+import com.carumuch.capstone.global.exception.ErrorCode;
 import jakarta.validation.ConstraintViolationException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

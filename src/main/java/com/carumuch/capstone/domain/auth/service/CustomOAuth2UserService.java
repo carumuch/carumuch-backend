@@ -1,6 +1,6 @@
 package com.carumuch.capstone.domain.auth.service;
 
-import com.carumuch.capstone.domain.auth.dto.UserDto;
+import com.carumuch.capstone.domain.auth.dto.OAuth2UserDto;
 import com.carumuch.capstone.domain.auth.dto.oauth2.GoogleResponse;
 import com.carumuch.capstone.domain.auth.dto.oauth2.KakaoResponse;
 import com.carumuch.capstone.domain.auth.dto.oauth2.NaverResponse;
@@ -62,7 +62,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             if (userRepository.existsByEmail(oAuth2Response.getEmail())) {
                 throw new OAuth2AuthenticationException("중복 소셜 회원 가입");
             }
-            /* 유저 저장 */
             userRepository.save(User.builder()
                     .loginId(loginId)
                     .name(oAuth2Response.getName())
@@ -70,11 +69,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(Role.USER)
                     .build());
 
-            /*레디스 소셜 로그인 토큰 저장*/
-            redisService.setValuesWithTimeout("AT(oauth2):" + loginId , oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
+            redisService.saveOauth2AccessToken(loginId , oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
 
-            /* 유저 정보 전달 */
-            return new CustomOAuth2User(UserDto.builder()
+            return new CustomOAuth2User(OAuth2UserDto.builder()
                     .loginId(loginId)
                     .name(oAuth2Response.getName())
                     .role(Role.USER)
@@ -84,14 +81,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             User user = userRepository.findOAuth2UserByLoginId(loginId);
             user.updateOAuth2(oAuth2Response.getName(), oAuth2Response.getEmail());
 
-            /* oauth2 토큰 중복 방지 */
-            if (redisService.getValues("AT(oauth2):" + loginId) != null) {
-                redisService.deleteValues("AT(oauth2):" + loginId);
+            if (redisService.getOauth2AccessToken(loginId) != null) {
+                redisService.deleteOauth2AccessToken(loginId);
             }
-            /* 레디스 토큰 정보 */
-            redisService.setValuesWithTimeout("AT(oauth2):" + loginId ,oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
+            redisService.saveOauth2AccessToken(loginId ,oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
 
-            return new CustomOAuth2User(UserDto.builder()
+            return new CustomOAuth2User(OAuth2UserDto.builder()
                     .loginId(user.getLoginId())
                     .name(oAuth2Response.getName()) // 받아온 값
                     .role(user.getRole())

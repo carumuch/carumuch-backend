@@ -1,4 +1,4 @@
-package com.carumuch.capstone.global.auditing;
+package com.carumuch.capstone.global.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

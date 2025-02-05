@@ -1,1 +1,15 @@
 = 카우머치 서버 API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 인증 API
+
+=== 로그아웃
+operation::auth-controller-test/api_로그아웃_테스트[snippets='http-request,http-response,response-cookies,response-fields']
+
+=== 재발급
+operation::auth-controller-test/api_토큰_재발급_요청_테스트[snippets='http-request,http-response,response-headers,response-fields']

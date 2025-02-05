@@ -5,7 +5,7 @@ import com.carumuch.capstone.domain.bodyshop.dto.BodyShopBidUpdateReqDto;
 import com.carumuch.capstone.domain.bodyshop.dto.BodyShopRegistrationReqDto;
 import com.carumuch.capstone.domain.bodyshop.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.domain.bodyshop.service.BodyShopService;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.domain.estimate.dto.EstimateSearchReqDto;
 import lombok.RequiredArgsConstructor;

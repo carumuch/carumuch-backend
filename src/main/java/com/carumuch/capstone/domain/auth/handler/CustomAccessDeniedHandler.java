@@ -1,6 +1,6 @@
-package com.carumuch.capstone.global.common.exception;
+package com.carumuch.capstone.domain.auth.handler;
 
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +29,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
         response.getWriter().write(objectMapper.writeValueAsString(
                 ResponseDto.fail(HttpStatus.UNAUTHORIZED, "권한이 없습니다")));
     }

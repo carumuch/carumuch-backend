@@ -1,7 +1,7 @@
 package com.carumuch.capstone.domain.comment.model;
 
 import com.carumuch.capstone.domain.board.model.Board;
-import com.carumuch.capstone.global.auditing.BaseCreateByEntity;
+import com.carumuch.capstone.global.base.BaseCreateByEntity;
 import com.carumuch.capstone.domain.user.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

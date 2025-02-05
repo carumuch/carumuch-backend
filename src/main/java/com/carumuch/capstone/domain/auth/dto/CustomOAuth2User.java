@@ -9,10 +9,10 @@ import java.util.Map;
 
 public class CustomOAuth2User implements OAuth2User {
 
-    private final UserDto userDto;
+    private final OAuth2UserDto OAuth2UserDto;
 
-    public CustomOAuth2User(UserDto userDto) {
-        this.userDto = userDto;
+    public CustomOAuth2User(OAuth2UserDto OAuth2UserDto) {
+        this.OAuth2UserDto = OAuth2UserDto;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CustomOAuth2User implements OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return userDto.getRole().getKey();
+                return OAuth2UserDto.getRole().getKey();
             }
         });
         return collection;
@@ -34,10 +34,10 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return userDto.getName();
+        return OAuth2UserDto.getName();
     }
 
     public String getLoginId() {
-        return userDto.getLoginId();
+        return OAuth2UserDto.getLoginId();
     }
 }

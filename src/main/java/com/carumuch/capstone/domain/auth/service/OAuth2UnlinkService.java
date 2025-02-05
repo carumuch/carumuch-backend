@@ -1,7 +1,7 @@
 package com.carumuch.capstone.domain.auth.service;
 
-import com.carumuch.capstone.global.common.ErrorCode;
-import com.carumuch.capstone.global.common.exception.CustomException;
+import com.carumuch.capstone.global.exception.ErrorCode;
+import com.carumuch.capstone.global.exception.CustomException;
 import com.carumuch.capstone.global.service.RedisService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class OAuth2UnlinkService {
     private static final String KAKAO_URL = "https://kapi.kakao.com/v1/user/unlink";
     private static final String NAVER_URL = "https://nid.naver.com/oauth2.0/token";
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
     private final RedisService redisService;
 
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
@@ -47,8 +47,8 @@ public class OAuth2UnlinkService {
     /**
      * 구글 연결 해제
      */
-    public void googleUnlink(String provider) {
-        String accessToken = redisService.getValues("AT(oauth2):" + provider);
+    private void googleUnlink(String provider) {
+        String accessToken = redisService.getOauth2AccessToken(provider);
         // oauth2 토큰이 만료 시 재 로그인
         if (accessToken == null) {
             throw new CustomException(ErrorCode.EXPIRED_AUTH_TOKEN);
@@ -62,8 +62,8 @@ public class OAuth2UnlinkService {
     /**
      * 카카오 연결 해제
      */
-    public void kakaoUnlink(String provider) {
-        String accessToken = redisService.getValues("AT(oauth2):" + provider);
+    private void kakaoUnlink(String provider) {
+        String accessToken = redisService.getOauth2AccessToken(provider);
         // oauth2 토큰이 만료 시 재 로그인
         if (accessToken == null) {
             throw new CustomException(ErrorCode.EXPIRED_AUTH_TOKEN);
@@ -77,9 +77,9 @@ public class OAuth2UnlinkService {
     /**
      * 네이버 연결 해제
      */
-    public void naverUnlink(String provider) {
+    private void naverUnlink(String provider) {
 
-        String accessToken = redisService.getValues("AT(oauth2):" + provider);
+        String accessToken = redisService.getOauth2AccessToken(provider);
 
         // oauth2 토큰이 만료 시 재 로그인
         if (accessToken == null) {
@@ -114,4 +114,3 @@ public class OAuth2UnlinkService {
         private final String result;
     }
 }
-

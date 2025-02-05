@@ -4,7 +4,7 @@ import com.carumuch.capstone.domain.estimate.dto.EstimateAIRepairCostReqDto;
 import com.carumuch.capstone.domain.estimate.dto.EstimateRegistrationReqDto;
 import com.carumuch.capstone.domain.estimate.dto.EstimateStatusUpdateReqDto;
 import com.carumuch.capstone.domain.estimate.dto.EstimateUpdateReqDto;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
 import com.carumuch.capstone.global.validation.ValidationSequence;
 import com.carumuch.capstone.domain.estimate.service.EstimateService;
 import lombok.RequiredArgsConstructor;

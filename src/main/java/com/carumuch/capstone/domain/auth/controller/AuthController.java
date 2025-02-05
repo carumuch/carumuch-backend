@@ -1,10 +1,12 @@
 package com.carumuch.capstone.domain.auth.controller;
 
 import com.carumuch.capstone.domain.auth.dto.*;
-import com.carumuch.capstone.domain.auth.jwt.JwtTokenProvider;
+import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
 import com.carumuch.capstone.domain.auth.service.AuthService;
-import com.carumuch.capstone.global.common.ResponseDto;
+import com.carumuch.capstone.global.dto.ResponseDto;
+import com.carumuch.capstone.global.utils.CookieUtil;
 import com.carumuch.capstone.global.validation.ValidationSequence;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Date;
+
+import static com.carumuch.capstone.global.constants.TokenConstant.*;
+import static com.carumuch.capstone.global.utils.CookieUtil.createCookie;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
@@ -23,8 +30,7 @@ import static org.springframework.http.HttpStatus.*;
 public class AuthController implements AuthControllerDocs {
 
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final long COOKIE_EXPIRATION = 7776000; // 90일
+    private final TokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /* 로그인 Docs */
@@ -44,54 +50,24 @@ public class AuthController implements AuthControllerDocs {
      */
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request) {
-        /* 쿠키의 Refresh token 추출 */
-        String requestRefreshToken = null;
-        String requestAccessToken = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh-token")) {
-                requestRefreshToken = cookie.getValue();
-            }
-            if (cookie.getName().equals("authorization")) {
-                requestAccessToken = "Bearer " + cookie.getValue();
-            }
-        }
-        /* Access Token 추출 -> Refresh token 키 값에 사용 */
-        if (requestAccessToken == null) {
-            requestAccessToken = request.getHeader("Authorization");
+        String accessToken = tokenProvider.resolveAccessToken(request);
+        Claims claimsByAccessToken = tokenProvider.getClaimsByAccessToken(accessToken);
+
+        String role = claimsByAccessToken.get(AUTHORITIES_KEY).toString();
+        String subject = claimsByAccessToken.getSubject();
+        String requestRefreshToken = CookieUtil.findCookieByName(request, REFRESH_TOKEN_COOKIE_NAME).getValue();
+
+        boolean isValid = tokenProvider.validateRefreshTokenWithAccessTokenInfo(role, subject, requestRefreshToken);
+        if (!isValid) {
+            return ResponseEntity.status(UNAUTHORIZED)
+                    .header(HttpHeaders.SET_COOKIE, createCookie(REFRESH_TOKEN_COOKIE_NAME, null, REFRESH_EXPIRATION_DELETE).toString())
+                    .body(ResponseDto.fail(UNAUTHORIZED,null));
         }
 
-        TokenDto reissuedTokenDto = authService.reissue(requestAccessToken, requestRefreshToken);
-
-        if (reissuedTokenDto != null) {
-            /* 토큰 재발급 성공*/
-            ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
-                    .maxAge(COOKIE_EXPIRATION)
-                    .path("/")
-                    .sameSite("None")
-                    .secure(true)
-                    .httpOnly(true)
-                    .build();
-            return ResponseEntity
-                    .status(OK)
-                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedTokenDto.getAccessToken())
-                    .body(ResponseDto.success(OK,null));
-        } else {
-            /* Refresh Token 탈취 가능성 */
-            /* Cookie 초기화 후 재로그인 유도 */
-            ResponseCookie responseCookie = ResponseCookie.from("refresh-token", null)
-                    .maxAge(0)
-                    .path("/")
-                    .sameSite("None")
-                    .secure(true)
-                    .httpOnly(true)
-                    .build();
-            return ResponseEntity
-                    .status(UNAUTHORIZED)
-                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .body(ResponseDto.fail(UNAUTHORIZED,"토큰이 재발급 실패, 다시 로그인 해야합니다."));
-        }
+        String newAccessToken = tokenProvider.createAccessToken(subject, role, new Date());
+        return ResponseEntity.status(OK)
+                .header(AUTHORIZATION, newAccessToken)
+                .body(ResponseDto.success(OK,null));
     }
 
     /**
@@ -141,7 +117,7 @@ public class AuthController implements AuthControllerDocs {
         }
 
         /* Temporary Token 추출 -> 해당 유저가 업데이트 중 인지 확인 */
-        String email = jwtTokenProvider.getClaims(requestTemporaryToken).get("email").toString();
+        String email = tokenProvider.getClaimsByTemporaryToken(requestTemporaryToken).getSubject();
 
         /* 비밀번호 변경 */
         String encodePassword = bCryptPasswordEncoder.encode(resetPasswordDto.getNewPassword());

@@ -1,6 +1,5 @@
-package com.carumuch.capstone.global.common.exception;
+package com.carumuch.capstone.global.exception;
 
-import com.carumuch.capstone.global.common.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -3,45 +3,64 @@ package com.carumuch.capstone.global.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    /**
-     * 만료 시간 없는 키 값 지정
-     */
-    @Transactional
-    public void setValues(String key, String value){
-        redisTemplate.opsForValue().set(key, value);
+    public final String REFRESH_PREFIX = "RT:";
+    private final String OAUTH2_PREFIX = "AT:";
+    private final String CODE_PREFIX = "CODE:";
+
+    public void save(String key, String value, long expirationSeconds) {
+        redisTemplate.opsForValue().set(key, value, expirationSeconds, TimeUnit.SECONDS);
     }
 
-    /**
-     * 만료시간 설정 -> 자동삭제
-     */
-    @Transactional
-    public void setValuesWithTimeout(String key, String value, long timeout){
-        redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * 키를 이용한 값 확인
-     */
-    public String getValues(String key){
+    public String get(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
-    /**
-     * 키 삭제
-     */
-    @Transactional
-    public void deleteValues(String key) {
-        redisTemplate.delete(key);
+    public Boolean delete(String key) {
+        return redisTemplate.delete(key);
+    }
+
+    public void saveRefreshToken(String loginId, String refreshToken, long refreshTokenExpirationSeconds) {
+        redisTemplate.opsForValue().set(REFRESH_PREFIX + loginId, refreshToken, refreshTokenExpirationSeconds, TimeUnit.SECONDS);
+    }
+
+    public String getRefreshToken(String loginId) {
+        return redisTemplate.opsForValue().get(REFRESH_PREFIX + loginId);
+    }
+
+    public Boolean deleteRefreshToken(String loginId) {
+        return redisTemplate.delete(REFRESH_PREFIX + loginId);
+    }
+
+    public void saveOauth2AccessToken(String loginId, String oauth2AccessToken, long oauth2ValidityInMilliseconds) {
+        redisTemplate.opsForValue().set(OAUTH2_PREFIX + loginId, oauth2AccessToken, oauth2ValidityInMilliseconds, TimeUnit.SECONDS);
+    }
+
+    public String getOauth2AccessToken(String loginId) {
+        return redisTemplate.opsForValue().get(OAUTH2_PREFIX + loginId);
+    }
+
+    public Boolean deleteOauth2AccessToken(String loginId) {
+        return redisTemplate.delete(OAUTH2_PREFIX + loginId);
+    }
+
+    public void saveCode(String email, String code, long codeValidityInMilliseconds) {
+        redisTemplate.opsForValue().set(CODE_PREFIX + email, code, codeValidityInMilliseconds, TimeUnit.SECONDS);
+    }
+
+    public String getCode(String email) {
+        return redisTemplate.opsForValue().get(CODE_PREFIX + email);
+    }
+
+    public Boolean deleteCode(String email) {
+        return redisTemplate.delete(CODE_PREFIX + email);
     }
 }

@@ -6,7 +6,10 @@ import com.carumuch.capstone.comment.service.CommentService;
 import com.carumuch.capstone.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,13 +20,13 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comment")
-public class CommentController implements CommentControllerDocs{
+public class CommentController {
 
     private final CommentService commentService;
     /**
      * Create: 댓글 작성
      */
-    @Override
+	@PostMapping("/write")
     public ResponseEntity<?> writeComment(@RequestBody CommentReqDto commentReqDto) {
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, commentService.writeComment(commentReqDto)));
@@ -31,7 +34,7 @@ public class CommentController implements CommentControllerDocs{
     /**
      * Update: 댓글 수정
      */
-    @Override
+	@PutMapping("/{commentId}/modify")
     public ResponseEntity<?> modifyComment(@PathVariable("commentId") Long id, @RequestBody CommentModifyReqDto commentModifyReqDto) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, commentService.modifyComment(id,commentModifyReqDto)));
@@ -40,7 +43,7 @@ public class CommentController implements CommentControllerDocs{
     /**
      * Delete: 게시글 삭제
      */
-    @Override
+	@DeleteMapping("/{commentId}/delete")
     public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long id){
         commentService.deleteComment(id);
         return ResponseEntity.status(OK)

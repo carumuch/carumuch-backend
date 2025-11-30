@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController implements UserControllerDocs{
+public class UserController {
 
     private final UserService userService;
 

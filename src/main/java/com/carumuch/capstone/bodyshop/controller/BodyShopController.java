@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/body-shops")
 @RequiredArgsConstructor
-public class BodyShopController implements BodyShopControllerDocs{
+public class BodyShopController {
     private final BodyShopService bodyShopService;
 
     /**

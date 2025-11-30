@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/bids")
 @RequiredArgsConstructor
-public class BidController implements BidControllerDocs{
+public class BidController {
     private final BidService bidService;
 
     @GetMapping("history/{estimateId}")

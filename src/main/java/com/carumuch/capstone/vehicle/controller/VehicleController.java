@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/vehicles")
 @RequiredArgsConstructor
-public class VehicleController implements VehicleControllerDocs {
+public class VehicleController {
 
     private final VehicleService vehicleService;
 

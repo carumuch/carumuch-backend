@@ -10,7 +10,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,14 +28,14 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-public class BoardController implements BoardControllerDocs{
+public class BoardController {
 
     private final BoardService boardService;
 
     /**
      * Create: 게시글 작성
      */
-    @Override
+	@PostMapping("/write")
     public ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto){
         return ResponseEntity.status(CREATED)
                 .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
@@ -45,9 +44,9 @@ public class BoardController implements BoardControllerDocs{
     /**
      * Select: 전체 게시글 조회
      */
-    @Override
     //기본 페이지 1
-    public ResponseEntity<?> findAll(@ParameterObject @PageableDefault(page = 1) Pageable pageable){
+	@GetMapping
+    public ResponseEntity<?> findAll(@PageableDefault(page = 1) Pageable pageable){
         Page<Board> boards = boardService.findAll(pageable);
         int blockLimit = 5;
         int startPage =  (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
@@ -60,8 +59,8 @@ public class BoardController implements BoardControllerDocs{
     /**
      * Select: 게시글 상세 조회
      */
-    @Override
-    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, @ParameterObject @PageableDefault(size=1, sort="id", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request, HttpServletResponse response){
+	@GetMapping("/{boardId}")
+    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, @PageableDefault(size=1, sort="id", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request, HttpServletResponse response){
 
         /*게시글 조회시 넘어온 페이지 넘버*/
         int pageNumber = pageable.getPageNumber();
@@ -104,7 +103,7 @@ public class BoardController implements BoardControllerDocs{
     /**
      * Delete: 게시글 삭제
      */
-    @Override
+	@DeleteMapping("/{boardId}/delete")
     public ResponseEntity<?> delete(@PathVariable("boardId") Long id){
         boardService.delete(id);
         return ResponseEntity.status(OK)
@@ -114,7 +113,7 @@ public class BoardController implements BoardControllerDocs{
     /**
      * Update: 게시글 수정
      */
-    @Override
+	@PutMapping("/{boardId}/modify")
     public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @RequestBody BoardModifyReqDto boardModifyReqDto){
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK,boardService.modify(id,boardModifyReqDto)));

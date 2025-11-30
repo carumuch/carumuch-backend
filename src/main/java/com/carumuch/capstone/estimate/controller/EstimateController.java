@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/estimates")
 @RequiredArgsConstructor
-public class EstimateController implements EstimateControllerDocs {
+public class EstimateController {
     private final EstimateService estimateService;
 
     /**

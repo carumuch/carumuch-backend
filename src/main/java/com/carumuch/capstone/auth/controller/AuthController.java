@@ -5,7 +5,6 @@ import com.carumuch.capstone.auth.dto.LoginReqDto;
 import com.carumuch.capstone.auth.dto.ResetPasswordDto;
 import com.carumuch.capstone.auth.dto.VerificationCodeDto;
 import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
-import com.carumuch.capstone.domain.auth.dto.*;
 import com.carumuch.capstone.auth.jwt.TokenProvider;
 import com.carumuch.capstone.auth.service.AuthService;
 import com.carumuch.capstone.common.dto.ResponseDto;
@@ -32,23 +31,11 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AuthController implements AuthControllerDocs {
+public class AuthController {
 
     private final AuthService authService;
     private final TokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    /* 로그인 Docs */
-    @Override
-    public ResponseEntity<?> login(LoginReqDto loginReqDto) {
-        return null;
-    }
-
-    /* 로그아웃 Docs */
-    @Override
-    public ResponseEntity<?> logout() {
-        return null;
-    }
 
     /**
      * 토큰 재발급

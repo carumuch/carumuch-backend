@@ -12,7 +12,7 @@ import com.carumuch.capstone.estimate.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.estimate.repository.EstimateRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.vehicle.model.Vehicle;

@@ -5,7 +5,7 @@ import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
 import com.carumuch.capstone.auth.jwt.TokenProvider;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.common.legacy.service.MailService;
 import com.carumuch.capstone.common.legacy.service.RedisService;

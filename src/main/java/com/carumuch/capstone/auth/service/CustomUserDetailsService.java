@@ -1,7 +1,7 @@
 package com.carumuch.capstone.auth.service;
 
 import com.carumuch.capstone.auth.dto.CustomUserDetails;
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;

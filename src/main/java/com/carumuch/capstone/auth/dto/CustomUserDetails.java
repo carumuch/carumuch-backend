@@ -1,6 +1,6 @@
 package com.carumuch.capstone.auth.dto;
 
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

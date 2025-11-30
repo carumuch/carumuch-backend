@@ -1,4 +1,4 @@
-package com.carumuch.capstone.user.model.type;
+package com.carumuch.capstone.user.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

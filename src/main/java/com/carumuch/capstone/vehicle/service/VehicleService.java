@@ -2,7 +2,7 @@ package com.carumuch.capstone.vehicle.service;
 
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.vehicle.model.Vehicle;
 import com.carumuch.capstone.vehicle.dto.VehicleInfoResDto;

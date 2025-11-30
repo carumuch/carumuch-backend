@@ -1,6 +1,6 @@
 package com.carumuch.capstone.auth.dto;
 
-import com.carumuch.capstone.user.model.type.Role;
+import com.carumuch.capstone.user.domain.Role;
 import lombok.Builder;
 import lombok.Getter;
 

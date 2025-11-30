@@ -2,7 +2,7 @@ package com.carumuch.capstone.bodyshop.model;
 
 import com.carumuch.capstone.bid.model.Bid;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -15,7 +15,7 @@ import com.carumuch.capstone.bid.repository.BidRepository;
 import com.carumuch.capstone.bodyshop.repository.BodyShopRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
-import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.estimate.dto.EstimateDetailResDto;

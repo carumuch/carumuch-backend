@@ -10,7 +10,7 @@ import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.image.service.ImageService;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardImageRepository boardImageRepository;
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
     private final ImageService imageService;
 
     /**
@@ -37,7 +37,7 @@ public class BoardService {
     public Long write(BoardReqDto boardReqDto){
 
         /*로그인한 유저정보 조회*/
-        User user =  userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user =  userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Board board = boardRepository.save(Board.builder()
                         .user(user)
@@ -92,7 +92,7 @@ public class BoardService {
     public Long modify(Long id, BoardModifyReqDto boardModifyReqDto) {
 
         /* 로그인한 유저정보 조회 */
-        User user =  userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user =  userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         /*게시글 조회*/
         Board savedBoard = boardRepository.findById(id)
@@ -143,7 +143,7 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         /* 로그인한 유저정보 조회 */
-        User user =  userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user =  userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         /* 게시글 작성자와 접속되어있는 유저 비교 */
         if (!board.getUser().equals(user)){

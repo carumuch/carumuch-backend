@@ -13,7 +13,7 @@ import com.carumuch.capstone.estimate.repository.EstimateRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.vehicle.model.Vehicle;
 import com.carumuch.capstone.estimate.model.type.EstimateStatus;
@@ -37,7 +37,7 @@ import static com.carumuch.capstone.common.legacy.exception.ErrorCode.BID_ALREAD
 public class EstimateService {
     private final EstimateRepository estimateRepository;
     private final VehicleRepository vehicleRepository;
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
     private final BidRepository bidRepository;
 
     /**
@@ -48,7 +48,7 @@ public class EstimateService {
         // 유저/차량 정보 조회
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User user = userRepository.findLoginUserByLoginId(loginId);
+        User user = userLegacyRepository.findLoginUserByLoginId(loginId);
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 

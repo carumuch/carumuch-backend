@@ -3,7 +3,7 @@ package com.carumuch.capstone.vehicle.service;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import com.carumuch.capstone.vehicle.model.Vehicle;
 import com.carumuch.capstone.vehicle.dto.VehicleInfoResDto;
 import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
 
     /**
      * Create: 차량 등록
@@ -31,7 +31,7 @@ public class VehicleService {
     public Long register(VehicleRegistrationReqDto requestDto) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
         checkVehicleDuplicate(requestDto.getLicenseNumber(), loginId);// 차량 번호와 차량 소유 검사
-        User user = userRepository.findLoginUserByLoginId(loginId);
+        User user = userLegacyRepository.findLoginUserByLoginId(loginId);
         Vehicle vehicle = vehicleRepository.save(Vehicle.builder()
                 .licenseNumber(requestDto.getLicenseNumber())
                 .type(requestDto.getType())

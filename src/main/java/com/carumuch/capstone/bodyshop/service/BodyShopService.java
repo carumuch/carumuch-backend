@@ -16,7 +16,7 @@ import com.carumuch.capstone.bodyshop.repository.BodyShopRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.estimate.dto.EstimateDetailResDto;
 import com.carumuch.capstone.estimate.dto.EstimateSearchReqDto;
@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BodyShopService {
     private final BodyShopRepository bodyShopRepository;
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
     private final EstimateRepository estimateRepository;
     private final BidRepository bidRepository;
     private final EstimateRepositoryCustom estimateRepositoryCustom;
@@ -48,7 +48,7 @@ public class BodyShopService {
      */
     public void validateMechanicUser() {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!userRepository.findLoginUserByLoginId(loginId).isMechanic()) {
+        if (!userLegacyRepository.findLoginUserByLoginId(loginId).isMechanic()) {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
     }
@@ -58,7 +58,7 @@ public class BodyShopService {
      */
     public void validationBodyShopBid(Long bodyShopId) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByLoginIdWithBodyShop(loginId);
+        User user = userLegacyRepository.findByLoginIdWithBodyShop(loginId);
         if (user.getBodyShop() == null) throw new CustomException(ErrorCode.ACCESS_DENIED); // 공업사 유저가 아닐 경우
         if (!user.getBodyShop().getId().equals(bodyShopId)) throw new CustomException(ErrorCode.ACCESS_DENIED); // 입찰건 주인이 해당 공업사가 아닐 경우
     }
@@ -68,7 +68,7 @@ public class BodyShopService {
      */
     @Transactional
     public Long register(BodyShopRegistrationReqDto requestDto) {
-        User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
         /* 사용자를 공업사 직원으로 등록 */
         user.registerMechanic();
 
@@ -106,7 +106,7 @@ public class BodyShopService {
     public Long join(Long id) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        User user = userRepository
+        User user = userLegacyRepository
                 .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         user.registerMechanic(); // 사용자를 공업사 직원으로 등록
@@ -121,7 +121,7 @@ public class BodyShopService {
     public Long update(Long id, BodyShopUpdateReqDto requestDto) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        User user = userRepository
+        User user = userLegacyRepository
                 .findByLoginIdWithBodyShop(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (user.getBodyShop().getId().equals(id)) {
@@ -143,7 +143,7 @@ public class BodyShopService {
     @Transactional
     public Long transfer(Long id) {
         validateMechanicUser();
-        User user = userRepository
+        User user = userLegacyRepository
                 .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
@@ -205,7 +205,7 @@ public class BodyShopService {
         /* 공업사 측인지 확인 */
         validateMechanicUser();
 
-        User user = userRepository
+        User user = userLegacyRepository
                 .findByLoginIdWithBodyShop(SecurityContextHolder.getContext().getAuthentication().getName());
 
         /* 이미 입찰을 신청했을 경우  */

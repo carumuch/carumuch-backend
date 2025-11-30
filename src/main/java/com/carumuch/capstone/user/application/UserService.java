@@ -3,12 +3,12 @@ package com.carumuch.capstone.user.application;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.user.domain.UserRepository;
 import com.carumuch.capstone.user.presentation.dto.request.ChangePasswordRequest;
 import com.carumuch.capstone.user.presentation.dto.request.RegisterUserRequest;
 import com.carumuch.capstone.user.presentation.dto.request.UpdateUserRequest;
 import com.carumuch.capstone.user.presentation.dto.response.PublicUserProfileResponse;
 import com.carumuch.capstone.user.presentation.dto.response.UserProfileResponse;
-import com.carumuch.capstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.dao.DataIntegrityViolationException;

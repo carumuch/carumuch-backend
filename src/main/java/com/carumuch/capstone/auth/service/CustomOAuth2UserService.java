@@ -8,7 +8,7 @@ import com.carumuch.capstone.auth.dto.oauth2.OAuth2Response;
 import com.carumuch.capstone.auth.dto.CustomOAuth2User;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.domain.Role;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import com.carumuch.capstone.common.legacy.service.RedisService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -20,12 +20,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
     private final RedisService redisService;
     private final long ACCESS_TOKEN_EXPIRATION = 3600 * 1000;
 
-    public CustomOAuth2UserService(UserRepository userRepository, RedisService redisService) {
-        this.userRepository = userRepository;
+    public CustomOAuth2UserService(UserLegacyRepository userLegacyRepository, RedisService redisService) {
+        this.userLegacyRepository = userLegacyRepository;
         this.redisService = redisService;
     }
 
@@ -58,11 +58,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         String loginId = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
 
-        if (!userRepository.existsByLoginId(loginId)) {
-            if (userRepository.existsByEmail(oAuth2Response.getEmail())) {
+        if (!userLegacyRepository.existsByLoginId(loginId)) {
+            if (userLegacyRepository.existsByEmail(oAuth2Response.getEmail())) {
                 throw new OAuth2AuthenticationException("중복 소셜 회원 가입");
             }
-            userRepository.save(User.builder()
+            userLegacyRepository.save(User.builder()
                     .loginId(loginId)
                     .name(oAuth2Response.getName())
                     .email(oAuth2Response.getEmail())
@@ -78,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .build());
         }
         else {
-            User user = userRepository.findOAuth2UserByLoginId(loginId);
+            User user = userLegacyRepository.findOAuth2UserByLoginId(loginId);
             user.updateOAuth2(oAuth2Response.getName(), oAuth2Response.getEmail());
 
             if (redisService.getOauth2AccessToken(loginId) != null) {

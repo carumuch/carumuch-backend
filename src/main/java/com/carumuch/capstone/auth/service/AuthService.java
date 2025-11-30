@@ -6,7 +6,7 @@ import com.carumuch.capstone.auth.jwt.TokenProvider;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import com.carumuch.capstone.common.legacy.service.MailService;
 import com.carumuch.capstone.common.legacy.service.RedisService;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,14 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final RedisService redisService;
     private final MailService mailService;
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
 
 
     /**
      * 1. 비밀번호 찾기: 인증번호 전송
      */
     public void sendVerificationCode(VerificationLoginIdDto verificationLoginIdDto) {
-        User user = userRepository.findByLoginId(verificationLoginIdDto.getLoginId())
+        User user = userLegacyRepository.findByLoginId(verificationLoginIdDto.getLoginId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         String email = user.getEmail();
@@ -54,7 +54,7 @@ public class AuthService {
      * 2. 비밀번호 찾기: 인증번호 검증
      */
     public String verifyCode(VerificationCodeDto verificationCodeDto) {
-        User user = userRepository.findLoginUserByLoginId(verificationCodeDto.getLoginId());
+        User user = userLegacyRepository.findLoginUserByLoginId(verificationCodeDto.getLoginId());
         String email = user.getEmail();
         String code = redisService.getCode(email);
 
@@ -69,7 +69,7 @@ public class AuthService {
      */
     @Transactional
     public void resetPassword(String email, String encodePassword) {
-        User user = userRepository.findByEmail(email)
+        User user = userLegacyRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         user.updatePassword(encodePassword);
     }
@@ -78,7 +78,7 @@ public class AuthService {
      * 아이디 찾기
      */
     public void findLoginId(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = userLegacyRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         String loginId = user.getLoginId();
 

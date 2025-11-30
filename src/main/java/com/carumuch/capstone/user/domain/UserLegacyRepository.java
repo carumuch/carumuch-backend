@@ -1,13 +1,13 @@
-package com.carumuch.capstone.user.repository;
+package com.carumuch.capstone.user.domain;
 
-import com.carumuch.capstone.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+// TODO 의존성이 모두 덜어지면 제거합니다.
+public interface UserLegacyRepository extends JpaRepository<User, Long> {
 
     /* 로그인 아이디 중복 체크 */
     boolean existsByLoginId(String loginId);

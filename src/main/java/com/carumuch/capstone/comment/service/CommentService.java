@@ -9,7 +9,7 @@ import com.carumuch.capstone.comment.repository.CommentRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.user.repository.UserRepository;
+import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final UserLegacyRepository userLegacyRepository;
     private final BoardRepository boardRepository;
 
     /**
@@ -28,7 +28,7 @@ public class CommentService {
      */
     public Long writeComment(CommentReqDto commentReqDto){
         /*로그인한 유저정보 조회*/
-        User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Board board = boardRepository.findById(commentReqDto.getBoardId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
@@ -49,7 +49,7 @@ public class CommentService {
     @Transactional
     public Long modifyComment(Long id, CommentModifyReqDto commentModifyReqDto){
         /*로그인한 유저정보 조회*/
-        User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Comment savedComment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
@@ -69,7 +69,7 @@ public class CommentService {
      */
     @Transactional
     public void deleteComment(Long id){
-        User user = userRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Comment savedComment = commentRepository.findById(id)
                 .orElseThrow(() ->  new CustomException(ErrorCode.RESOURCE_NOT_FOUND));

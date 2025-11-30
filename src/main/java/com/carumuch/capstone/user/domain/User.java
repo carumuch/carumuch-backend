@@ -3,7 +3,7 @@ package com.carumuch.capstone.user.domain;
 import com.carumuch.capstone.board.model.Board;
 import com.carumuch.capstone.bodyshop.model.BodyShop;
 import com.carumuch.capstone.comment.model.Comment;
-import com.carumuch.capstone.common.legacy.base.BaseTimeEntity;
+import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.vehicle.model.Vehicle;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,32 +20,29 @@ import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+public class User extends BaseEntity<User> {
 
-    @Column(name = "login_id", unique = true)
-    private String loginId;
+	@Column(name = "login_id", length = 30, unique = true)
+	private String loginId;
 
-    @Column(name = "password")
-    private String password;
+	@Column(name = "password", length = 200, nullable = false)
+	private String password;
 
-    @Column(name = "email", unique = true)
-    private String email;
+	@Column(name = "email", length = 30, unique = true)
+	private String email;
 
-    @Column(name = "name")
-    private String name;
+	@Column(name = "name", length = 20, nullable = false)
+	private String name;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role", length = 20, nullable = false)
+	private Role role;
 
     @Column(name = "is_mechanic")
     private boolean isMechanic;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Board> boards = new ArrayList<>();
@@ -65,15 +62,31 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    @Builder
+	@Builder
     public User(String loginId, String password, String email, String name, Role role) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
         this.name = name;
         this.role = role;
-        this.isMechanic = false; // 가입시 기본 회원
+        this.isMechanic = false;
+		registerEvent(new UserRegisteredEvent(this));
+
     }
+
+	public void updateInfo(String name) {
+		this.name = name;
+	}
+
+	public void updatePassword(String encodedNewPassword) {
+		this.password = encodedNewPassword;
+	}
+
+	public void withdraw() {
+		registerEvent(new UserWithdrawnEvent(this.loginId));
+	}
+
+	//== 레거시 도메인 로직==//
 
     /* OAuth2 사용자 정보 업데이트 */
     public void updateOAuth2(String name,String email) {
@@ -85,11 +98,6 @@ public class User extends BaseTimeEntity {
     public void update(String name,String email) {
         this.name = name;
         this.email = email;
-    }
-
-    /* 사용자 비밀번호 수정 */
-    public void updatePassword(String password) {
-        this.password = password;
     }
 
     /* body shop 사용자 등록 */

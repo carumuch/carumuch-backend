@@ -1,8 +1,8 @@
 package com.carumuch.capstone.common.infrastructure.mail;
 
 public interface MailSender {
-	String MAIL_SUBJECT_PREFIX = "[보일러플레이]";
-	String DOMAIN_NAME = "BPCOM";
+	String MAIL_SUBJECT_PREFIX = "[카우머치]";
+	String DOMAIN_NAME = "카우머치";
 	String MAIL_CHARSET = "utf-8";
 	String MAIL_SUBTYPE_HTML = "html";
 

@@ -1,0 +1,394 @@
+package com.carumuch.capstone.auth.application;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Optional;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.carumuch.capstone.auth.infrastructure.jwt.JwtTokenProvider;
+import com.carumuch.capstone.auth.presentation.dto.request.AuthenticateUserRequest;
+import com.carumuch.capstone.auth.presentation.dto.response.AuthenticateUserResponse;
+import com.carumuch.capstone.auth.presentation.dto.response.ReissueTokenResponse;
+import com.carumuch.capstone.common.exception.CustomException;
+import com.carumuch.capstone.common.exception.UnauthorizedException;
+import com.carumuch.capstone.support.fixture.UserFixture;
+import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.user.domain.UserRepository;
+
+import io.jsonwebtoken.Claims;
+
+@ExtendWith(MockitoExtension.class)
+class AuthServiceTest {
+
+	@InjectMocks AuthService authService;
+	@Mock UserRepository userRepository;
+	@Mock BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Mock RefreshTokenStore refreshTokenStore;
+	@Mock
+	JwtTokenProvider jwtTokenProvider;
+
+	@Nested
+	@DisplayName("인증(로그인) 기능")
+	class Authenticate {
+		@Test
+		void 아이디로_사용자를_조회한다() {
+			//given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(true);
+
+			//when
+			authService.authenticate(authenticateUserRequest);
+
+			//then
+			Mockito.verify(userRepository, Mockito.times(1))
+				.findByLoginId(authenticateUserRequest.loginId());
+		}
+
+		@Test
+		void 아이디에_해당하는_사용자가_없다면_예외를_반환한다() {
+		    //given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenThrow(CustomException.class);
+
+		    //when & then
+			assertThatThrownBy(() -> authService.authenticate(authenticateUserRequest))
+				.isInstanceOf(CustomException.class);
+		}
+
+		@Test
+		void 비밀번호를_검증한다() {
+		    //given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(true);
+
+		    //when
+			authService.authenticate(authenticateUserRequest);
+
+		    //then
+		    Mockito.verify(bCryptPasswordEncoder, Mockito.times(1))
+				.matches(authenticateUserRequest.password(), user.getPassword());
+		}
+
+		@Test
+		void 비밀번호_검증에_실패한다() {
+		    //given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(false);
+
+		    //when & then
+			assertThatThrownBy(() -> authService.authenticate(authenticateUserRequest))
+				.isInstanceOf(CustomException.class);
+		}
+
+		@Test
+		void 응답할_엑세스_토큰을_생성한다() {
+		    //given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(true);
+			Mockito.when(jwtTokenProvider.createAccessToken(Mockito.any(User.class), Mockito.any()))
+				.thenReturn("accessToken");
+
+		    //when
+			authService.authenticate(authenticateUserRequest);
+
+		    //then
+			Mockito.verify(jwtTokenProvider, Mockito.times(1))
+				.createAccessToken(Mockito.any(), Mockito.any());
+
+		}
+
+		@Test
+		void 응답할_재발급_토큰을_생성한다() {
+		    //given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(true);
+			Mockito.when(jwtTokenProvider.createRefreshToken(Mockito.any(User.class), Mockito.any()))
+				.thenReturn("refreshToken");
+
+			//when
+		    authService.authenticate(authenticateUserRequest);
+
+		    //then
+		    Mockito.verify(jwtTokenProvider, Mockito.times(1))
+				.createRefreshToken(Mockito.any(), Mockito.any());
+		}
+
+		@Test
+		void 인증된_사용자의_재발급_토큰을_저장한다() {
+		    //given
+			String refreshToken = "refreshToken";
+
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(true);
+			Mockito.when(jwtTokenProvider.createRefreshToken(Mockito.any(User.class), Mockito.any()))
+				.thenReturn(refreshToken);
+
+		    //when
+		    authService.authenticate(authenticateUserRequest);
+
+		    //then
+			Mockito.verify(refreshTokenStore, Mockito.times(1))
+				.save(authenticateUserRequest.loginId(), refreshToken);
+
+		}
+
+		@Test
+		void 인증을_한다() {
+		    //given
+			String accessToken = "accessToken";
+			String refreshToken = "refreshToken";
+
+			User user = UserFixture.USER_FIXTURE_1.create();
+			AuthenticateUserRequest authenticateUserRequest = new AuthenticateUserRequest(
+				user.getLoginId(),
+				user.getPassword()
+			);
+			Mockito.when(userRepository.findByLoginId(authenticateUserRequest.loginId()))
+				.thenReturn(Optional.of(user));
+			Mockito.when(bCryptPasswordEncoder.matches(authenticateUserRequest.password(), user.getPassword()))
+				.thenReturn(true);
+			Mockito.when(jwtTokenProvider.createAccessToken(Mockito.any(User.class), Mockito.any()))
+				.thenReturn(accessToken);
+			Mockito.when(jwtTokenProvider.createRefreshToken(Mockito.any(User.class), Mockito.any()))
+				.thenReturn(refreshToken);
+
+		    //when
+			AuthenticateUserResponse result = authService.authenticate(authenticateUserRequest);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.accessToken()).isEqualTo(accessToken),
+				() -> Assertions.assertThat(result.refreshToken()).isEqualTo(refreshToken)
+			);
+		}
+	}
+
+	@Nested
+	@DisplayName("인증 무효화(로그아웃) 기능")
+	class Invalidate {
+		@Test
+		void 인증_정보를_삭제한다() {
+		    //given
+			String loginId = "loginId";
+
+		    //when
+		    authService.invalidate(loginId);
+
+		    //then
+			Mockito.verify(refreshTokenStore, Mockito.times(1))
+				.delete(loginId);
+		}
+	}
+
+	@Nested
+	@DisplayName("토큰 재발급 기능")
+	class ReissueToken {
+		@Test
+		void 재발급_토큰으로_Subject를_추출한다() {
+		    //given
+			String subject = "subject";
+			String refreshToken = "refreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+		    //when & then
+			Assertions.assertThatThrownBy(() -> authService.reissueToken(refreshToken))
+				.isInstanceOf(UnauthorizedException.class);
+
+			Mockito.verify(jwtTokenProvider, Mockito.times(1)).parseRefreshToken(refreshToken);
+		}
+
+		@Test
+		void Subject로_저장된_재발급_토큰을_조회한다() {
+		    //given
+			String subject = "subject";
+			String refreshToken = "refreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+			Mockito.when(refreshTokenStore.get(subject))
+				.thenReturn("refreshToken");
+
+		    //when & then
+			assertThatThrownBy(() -> authService.reissueToken(refreshToken))
+				.isInstanceOf(UnauthorizedException.class);
+
+			Mockito.verify(refreshTokenStore, Mockito.times(1))
+				.get(subject);
+		}
+
+		@Test
+		void 저장된_토큰과_요청된_토큰이_다르다면_예외를_반환한다() {
+		    //given
+		    String subject = "subject";
+			String refreshToken = "wrongRefreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+			Mockito.when(refreshTokenStore.get(subject))
+				.thenReturn("refreshToken");
+
+		    //when & then
+			assertThatThrownBy(() -> authService.reissueToken(refreshToken))
+				.isInstanceOf(CustomException.class);
+		}
+
+		@Test
+		void 저장된_토큰과_요청된_토큰이_다르다면_저장된_토큰을_삭제한다() {
+			//given
+			String subject = "subject";
+			String refreshToken = "wrongRefreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+			Mockito.when(refreshTokenStore.get(subject))
+				.thenReturn("storedRefreshToken");
+
+			//when & then
+			assertThatThrownBy(() -> authService.reissueToken(refreshToken))
+				.isInstanceOf(UnauthorizedException.class);
+
+			Mockito.verify(refreshTokenStore, Mockito.times(1))
+				.delete(subject);
+		}
+
+		@Test
+		void Subject로_사용자를_조회한다() {
+			//given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			String subject = user.getLoginId();
+			String refreshToken = "refreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+			Mockito.when(refreshTokenStore.get(subject))
+				.thenReturn(refreshToken);
+			Mockito.when(userRepository.findByLoginId(subject))
+				.thenReturn(Optional.of(user));
+
+			//when
+			authService.reissueToken(refreshToken);
+
+			//then
+			Mockito.verify(userRepository, Mockito.times(1))
+				.findByLoginId(subject);
+		}
+
+		@Test
+		void Subject에_맞는_사용자가_없는_경우_예외를_반환한다() {
+			//given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			String subject = user.getLoginId();
+			String refreshToken = "refreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+			Mockito.when(refreshTokenStore.get(subject))
+				.thenReturn(refreshToken);
+			Mockito.doThrow(UnauthorizedException.class)
+				.when(userRepository).findByLoginId(subject);
+
+			//when & then
+			assertThatThrownBy(() -> authService.reissueToken(refreshToken))
+				.isInstanceOf(UnauthorizedException.class);
+		}
+
+		@Test
+		void 토큰을_재발급한다() {
+			//given
+			User user = UserFixture.USER_FIXTURE_1.create();
+			String subject = user.getLoginId();
+			String refreshToken = "refreshToken";
+
+			Claims claims = Mockito.mock(Claims.class);
+			Mockito.when(claims.getSubject()).thenReturn(subject);
+			Mockito.when(jwtTokenProvider.parseRefreshToken(refreshToken)).thenReturn(claims);
+
+			Mockito.when(refreshTokenStore.get(subject))
+				.thenReturn(refreshToken);
+			Mockito.when(userRepository.findByLoginId(subject))
+				.thenReturn(Optional.of(user));
+
+			String newAccessToken = "newAccessToken";
+			Mockito.when(jwtTokenProvider.createAccessToken(Mockito.any(User.class), Mockito.any()))
+				.thenReturn(newAccessToken);
+
+			//when
+			ReissueTokenResponse result = authService.reissueToken(refreshToken);
+
+			//then
+			Assertions.assertThat(result.accessToken()).isEqualTo(newAccessToken);
+		}
+	}
+}

@@ -1,7 +1,7 @@
 package com.carumuch.capstone.support.security;
 
-import com.carumuch.capstone.domain.auth.dto.CustomUserDetails;
-import com.carumuch.capstone.domain.user.model.User;
+import com.carumuch.capstone.auth.dto.CustomUserDetails;
+import com.carumuch.capstone.user.model.User;
 import com.carumuch.capstone.support.annotation.WithMockCustom;
 import com.carumuch.capstone.support.fixture.UserFixture;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

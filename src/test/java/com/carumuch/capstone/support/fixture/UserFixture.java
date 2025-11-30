@@ -1,7 +1,7 @@
 package com.carumuch.capstone.support.fixture;
 
-import com.carumuch.capstone.domain.user.model.User;
-import com.carumuch.capstone.domain.user.model.type.Role;
+import com.carumuch.capstone.user.model.User;
+import com.carumuch.capstone.user.model.type.Role;
 import lombok.Getter;
 
 @Getter

@@ -1,10 +1,10 @@
 package com.module;
 
-import com.carumuch.capstone.domain.auth.controller.AuthController;
-import com.carumuch.capstone.domain.auth.jwt.TokenProvider;
-import com.carumuch.capstone.domain.auth.service.AuthService;
-import com.carumuch.capstone.domain.auth.service.CustomOAuth2UserService;
-import com.carumuch.capstone.global.config.SecurityConfig;
+import com.carumuch.capstone.auth.controller.AuthController;
+import com.carumuch.capstone.auth.jwt.TokenProvider;
+import com.carumuch.capstone.auth.service.AuthService;
+import com.carumuch.capstone.auth.service.CustomOAuth2UserService;
+import com.carumuch.capstone.common.config.SecurityConfig;
 import com.carumuch.capstone.support.config.RestDocsConfig;
 import com.carumuch.capstone.support.config.TestAuditorAwareConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;

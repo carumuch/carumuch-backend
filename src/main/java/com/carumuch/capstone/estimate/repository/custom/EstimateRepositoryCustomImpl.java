@@ -3,7 +3,7 @@ package com.carumuch.capstone.estimate.repository.custom;
 
 import com.carumuch.capstone.estimate.dto.EstimateSearchReqDto;
 import com.carumuch.capstone.estimate.dto.EstimateSearchResDto;
-import com.carumuch.capstone.domain.estimate.dto.QEstimateSearchResDto;
+import com.carumuch.capstone.estimate.dto.QEstimateSearchResDto;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.estimate.model.type.EstimateStatus;
 import com.querydsl.core.types.OrderSpecifier;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.carumuch.capstone.domain.estimate.model.QEstimate.estimate;
-import static com.carumuch.capstone.domain.vehicle.model.QVehicle.vehicle;
+import static com.carumuch.capstone.estimate.model.QEstimate.*;
+import static com.carumuch.capstone.vehicle.model.QVehicle.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository

@@ -3,9 +3,9 @@ package com.carumuch.capstone.user.controller;
 import com.carumuch.capstone.user.dto.UserJoinReqDto;
 import com.carumuch.capstone.user.dto.UserUpdatePasswordReqDto;
 import com.carumuch.capstone.user.dto.UserUpdateReqDto;
-import com.carumuch.capstone.common.dto.ResponseDto;
-import com.carumuch.capstone.common.utils.CookieUtil;
-import com.carumuch.capstone.common.validation.ValidationSequence;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.utils.CookieUtil;
+import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import com.carumuch.capstone.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.REFRESH_EXPIRATION_DELETE;
-import static com.carumuch.capstone.common.constants.TokenConstant.REFRESH_TOKEN_COOKIE_NAME;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.REFRESH_EXPIRATION_DELETE;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.REFRESH_TOKEN_COOKIE_NAME;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController

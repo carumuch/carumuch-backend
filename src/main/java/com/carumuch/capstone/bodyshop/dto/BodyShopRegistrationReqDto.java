@@ -1,7 +1,7 @@
 package com.carumuch.capstone.bodyshop.dto;
 
 import com.carumuch.capstone.bodyshop.model.Location;
-import com.carumuch.capstone.common.validation.ValidationGroups;
+import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

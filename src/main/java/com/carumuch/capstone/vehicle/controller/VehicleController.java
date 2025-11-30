@@ -1,7 +1,7 @@
 package com.carumuch.capstone.vehicle.controller;
 
-import com.carumuch.capstone.common.dto.ResponseDto;
-import com.carumuch.capstone.common.validation.ValidationSequence;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
 import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
 import com.carumuch.capstone.vehicle.service.VehicleService;

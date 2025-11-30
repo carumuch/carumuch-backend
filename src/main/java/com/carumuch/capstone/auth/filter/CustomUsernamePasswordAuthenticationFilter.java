@@ -2,7 +2,7 @@ package com.carumuch.capstone.auth.filter;
 
 import com.carumuch.capstone.auth.dto.LoginReqDto;
 import com.carumuch.capstone.auth.jwt.TokenProvider;
-import com.carumuch.capstone.common.utils.CookieUtil;
+import com.carumuch.capstone.common.legacy.utils.CookieUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.*;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j

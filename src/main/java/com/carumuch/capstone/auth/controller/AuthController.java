@@ -1,15 +1,14 @@
 package com.carumuch.capstone.auth.controller;
 
 import com.carumuch.capstone.auth.dto.FindLoginIdDto;
-import com.carumuch.capstone.auth.dto.LoginReqDto;
 import com.carumuch.capstone.auth.dto.ResetPasswordDto;
 import com.carumuch.capstone.auth.dto.VerificationCodeDto;
 import com.carumuch.capstone.auth.dto.VerificationLoginIdDto;
 import com.carumuch.capstone.auth.jwt.TokenProvider;
 import com.carumuch.capstone.auth.service.AuthService;
-import com.carumuch.capstone.common.dto.ResponseDto;
-import com.carumuch.capstone.common.utils.CookieUtil;
-import com.carumuch.capstone.common.validation.ValidationSequence;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.utils.CookieUtil;
+import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.*;
-import static com.carumuch.capstone.common.utils.CookieUtil.createCookie;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.*;
+import static com.carumuch.capstone.common.legacy.utils.CookieUtil.createCookie;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 

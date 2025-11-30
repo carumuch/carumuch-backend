@@ -1,6 +1,6 @@
 package com.carumuch.capstone.board.model;
 
-import com.carumuch.capstone.common.base.BaseCreateByEntity;
+import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

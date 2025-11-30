@@ -10,8 +10,8 @@ import com.carumuch.capstone.estimate.dto.EstimateRegistrationReqDto;
 import com.carumuch.capstone.estimate.dto.EstimateStatusUpdateReqDto;
 import com.carumuch.capstone.estimate.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.estimate.repository.EstimateRepository;
-import com.carumuch.capstone.common.exception.ErrorCode;
-import com.carumuch.capstone.common.exception.CustomException;
+import com.carumuch.capstone.common.legacy.exception.ErrorCode;
+import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.model.User;
 import com.carumuch.capstone.user.repository.UserRepository;
 import com.carumuch.capstone.estimate.model.Estimate;
@@ -27,7 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.carumuch.capstone.common.exception.ErrorCode.BID_ALREADY_COMPLETED;
+import static com.carumuch.capstone.common.legacy.exception.ErrorCode.BID_ALREADY_COMPLETED;
 
 
 @Service

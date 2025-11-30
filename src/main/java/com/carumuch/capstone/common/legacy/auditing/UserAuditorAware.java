@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.auditing;
+package com.carumuch.capstone.common.legacy.auditing;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

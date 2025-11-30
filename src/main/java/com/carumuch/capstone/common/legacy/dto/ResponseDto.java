@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.dto;
+package com.carumuch.capstone.common.legacy.dto;
 
 import lombok.Builder;
 import lombok.Getter;

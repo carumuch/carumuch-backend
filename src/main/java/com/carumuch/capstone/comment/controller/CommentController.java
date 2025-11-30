@@ -3,7 +3,7 @@ package com.carumuch.capstone.comment.controller;
 import com.carumuch.capstone.comment.dto.CommentModifyReqDto;
 import com.carumuch.capstone.comment.dto.CommentReqDto;
 import com.carumuch.capstone.comment.service.CommentService;
-import com.carumuch.capstone.common.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

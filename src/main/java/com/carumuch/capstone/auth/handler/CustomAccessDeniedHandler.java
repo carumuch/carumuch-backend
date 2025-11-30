@@ -1,6 +1,6 @@
 package com.carumuch.capstone.auth.handler;
 
-import com.carumuch.capstone.common.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

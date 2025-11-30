@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.carumuch.capstone.common.validation.ValidationGroups.*;
+import static com.carumuch.capstone.common.legacy.validation.ValidationGroups.*;
 
 @Getter
 @NoArgsConstructor

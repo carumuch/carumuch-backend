@@ -2,8 +2,8 @@ package com.carumuch.capstone.auth.handler;
 
 import com.carumuch.capstone.auth.dto.CustomOAuth2User;
 import com.carumuch.capstone.auth.jwt.TokenProvider;
-import com.carumuch.capstone.common.constants.CorsConstant;
-import com.carumuch.capstone.common.utils.CookieUtil;
+import com.carumuch.capstone.common.legacy.constants.CorsConstant;
+import com.carumuch.capstone.common.legacy.utils.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.*;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.*;
 
 @Slf4j
 @Component

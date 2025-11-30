@@ -2,7 +2,7 @@ package com.carumuch.capstone.estimate.model;
 
 import com.carumuch.capstone.bid.model.Bid;
 import com.carumuch.capstone.vehicle.model.Vehicle;
-import com.carumuch.capstone.common.base.BaseCreateByEntity;
+import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.model.User;
 import com.carumuch.capstone.estimate.model.type.EstimateStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;

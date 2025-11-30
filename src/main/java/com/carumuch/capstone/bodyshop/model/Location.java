@@ -1,6 +1,6 @@
 package com.carumuch.capstone.bodyshop.model;
 
-import com.carumuch.capstone.common.validation.ValidationGroups;
+import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

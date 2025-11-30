@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.config;
+package com.carumuch.capstone.common.legacy.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

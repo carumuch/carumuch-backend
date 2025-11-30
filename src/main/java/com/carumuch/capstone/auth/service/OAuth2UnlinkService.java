@@ -1,8 +1,8 @@
 package com.carumuch.capstone.auth.service;
 
-import com.carumuch.capstone.common.exception.ErrorCode;
-import com.carumuch.capstone.common.exception.CustomException;
-import com.carumuch.capstone.common.service.RedisService;
+import com.carumuch.capstone.common.legacy.exception.ErrorCode;
+import com.carumuch.capstone.common.legacy.exception.CustomException;
+import com.carumuch.capstone.common.legacy.service.RedisService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

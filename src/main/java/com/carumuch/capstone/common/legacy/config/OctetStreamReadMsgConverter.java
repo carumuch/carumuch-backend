@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.config;
+package com.carumuch.capstone.common.legacy.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;

@@ -3,7 +3,7 @@ package com.carumuch.capstone.user.model;
 import com.carumuch.capstone.board.model.Board;
 import com.carumuch.capstone.bodyshop.model.BodyShop;
 import com.carumuch.capstone.comment.model.Comment;
-import com.carumuch.capstone.common.base.BaseTimeEntity;
+import com.carumuch.capstone.common.legacy.base.BaseTimeEntity;
 import com.carumuch.capstone.user.model.type.Role;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.vehicle.model.Vehicle;

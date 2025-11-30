@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.base;
+package com.carumuch.capstone.common.legacy.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

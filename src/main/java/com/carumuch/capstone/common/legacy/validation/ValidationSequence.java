@@ -1,7 +1,7 @@
-package com.carumuch.capstone.common.validation;
+package com.carumuch.capstone.common.legacy.validation;
 
 import jakarta.validation.GroupSequence;
-import static com.carumuch.capstone.common.validation.ValidationGroups.*;
+import static com.carumuch.capstone.common.legacy.validation.ValidationGroups.*;
 
 @GroupSequence({
         NotBlankGroup.class,

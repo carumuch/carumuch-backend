@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.validation;
+package com.carumuch.capstone.common.legacy.validation;
 
 public class ValidationGroups {
     public interface NotBlankGroup {}

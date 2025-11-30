@@ -1,6 +1,6 @@
 package com.carumuch.capstone.auth.handler;
 
-import com.carumuch.capstone.common.constants.CorsConstant;
+import com.carumuch.capstone.common.legacy.constants.CorsConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

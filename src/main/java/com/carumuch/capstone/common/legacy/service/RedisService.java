@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.service;
+package com.carumuch.capstone.common.legacy.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

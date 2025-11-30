@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.constants;
+package com.carumuch.capstone.common.legacy.constants;
 
 import org.springframework.beans.factory.annotation.Value;
 

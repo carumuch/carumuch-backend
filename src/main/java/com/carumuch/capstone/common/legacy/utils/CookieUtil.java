@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.utils;
+package com.carumuch.capstone.common.legacy.utils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

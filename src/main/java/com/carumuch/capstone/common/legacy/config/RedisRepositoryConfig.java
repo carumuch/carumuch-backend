@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.config;
+package com.carumuch.capstone.common.legacy.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

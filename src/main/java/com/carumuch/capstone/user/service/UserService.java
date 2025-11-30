@@ -9,9 +9,9 @@ import com.carumuch.capstone.user.dto.UserUpdateReqDto;
 import com.carumuch.capstone.user.model.User;
 import com.carumuch.capstone.user.model.type.Role;
 import com.carumuch.capstone.user.repository.UserRepository;
-import com.carumuch.capstone.common.exception.ErrorCode;
-import com.carumuch.capstone.common.exception.CustomException;
-import com.carumuch.capstone.common.service.RedisService;
+import com.carumuch.capstone.common.legacy.exception.ErrorCode;
+import com.carumuch.capstone.common.legacy.exception.CustomException;
+import com.carumuch.capstone.common.legacy.service.RedisService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.AUTHORITIES_KEY;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.AUTHORITIES_KEY;
 
 @Service
 @Slf4j

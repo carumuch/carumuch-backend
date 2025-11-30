@@ -1,7 +1,7 @@
 package com.carumuch.capstone.vehicle.model;
 
 import com.carumuch.capstone.estimate.model.Estimate;
-import com.carumuch.capstone.common.base.BaseCreateByEntity;
+import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;

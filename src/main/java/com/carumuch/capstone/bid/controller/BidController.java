@@ -2,8 +2,8 @@ package com.carumuch.capstone.bid.controller;
 
 import com.carumuch.capstone.bid.dto.BidStatusUpdateReqDto;
 import com.carumuch.capstone.bid.service.BidService;
-import com.carumuch.capstone.common.dto.ResponseDto;
-import com.carumuch.capstone.common.validation.ValidationSequence;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

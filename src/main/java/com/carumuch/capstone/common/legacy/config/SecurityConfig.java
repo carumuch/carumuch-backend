@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.config;
+package com.carumuch.capstone.common.legacy.config;
 
 import com.carumuch.capstone.auth.filter.CustomLogoutFilter;
 import com.carumuch.capstone.auth.filter.CustomUserLoginFilter;
@@ -30,7 +30,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
 
-import static com.carumuch.capstone.common.constants.CorsConstant.*;
+import static com.carumuch.capstone.common.legacy.constants.CorsConstant.*;
 
 
 @Configuration

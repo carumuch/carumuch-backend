@@ -1,8 +1,8 @@
 package com.carumuch.capstone.auth.filter;
 
 import com.carumuch.capstone.auth.jwt.TokenProvider;
-import com.carumuch.capstone.common.dto.ResponseDto;
-import com.carumuch.capstone.common.utils.CookieUtil;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import com.carumuch.capstone.common.legacy.utils.CookieUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -20,7 +20,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.*;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.*;
 
 @Slf4j
 public class CustomLogoutFilter extends GenericFilterBean {

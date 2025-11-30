@@ -9,7 +9,7 @@ import com.carumuch.capstone.auth.dto.CustomOAuth2User;
 import com.carumuch.capstone.user.model.User;
 import com.carumuch.capstone.user.model.type.Role;
 import com.carumuch.capstone.user.repository.UserRepository;
-import com.carumuch.capstone.common.service.RedisService;
+import com.carumuch.capstone.common.legacy.service.RedisService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

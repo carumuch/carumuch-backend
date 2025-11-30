@@ -1,6 +1,6 @@
 package com.carumuch.capstone.bid.dto;
 
-import com.carumuch.capstone.common.validation.ValidationGroups;
+import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

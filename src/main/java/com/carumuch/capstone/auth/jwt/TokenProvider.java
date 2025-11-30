@@ -1,7 +1,7 @@
 package com.carumuch.capstone.auth.jwt;
 
 
-import com.carumuch.capstone.common.service.RedisService;
+import com.carumuch.capstone.common.legacy.service.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -19,7 +19,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-import static com.carumuch.capstone.common.constants.TokenConstant.*;
+import static com.carumuch.capstone.common.legacy.constants.TokenConstant.*;
 
 
 @Slf4j

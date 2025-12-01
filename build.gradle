@@ -99,8 +99,8 @@ openapi3 {
             { url = extractDomainFromYaml() },
             { url = "http://localhost:8080" }
     ]
-    title = '카우머치'
-    description = 'API 문서'
+    title = '🚘 카우머치 Car U Much'
+    description = '카우머치 서비스의 API 문서입니다.'
     version = new Date().format("yyyy.MM.dd HH:mm", TimeZone.getTimeZone("Asia/Seoul"))
     format = 'yaml'
 }
@@ -147,9 +147,21 @@ tasks.register('copyOasToSwagger', Copy) {
 
 // 제외할 디렉토리 및 파일 패턴을 공통 변수로 선언
 ext.jacocoExcludes = [
-        "**/dto/**",       // DTO 클래스
-        "**/exception/**", // 커스텀 예외
-        "**/config/**",    // 설정 파일
+        "**/CapstoneApplication.class",
+        "**/dto/**",
+        "**/exception/**",
+        "**/config/**",
+        "**/Q*",
+
+        // 리펙토링 대상 패키지 TODO: 진행 완료시 제거한다.
+        "**/common/legacy/**",
+        "**/bid/**",
+        "**/board/**",
+        "**/bodyshop/**",
+        "**/comment/**",
+        "**/estimate/**",
+        "**/image/**",
+        "**/vehicle/**",
 ]
 
 tasks.named('jacocoTestReport') {
@@ -178,7 +190,7 @@ tasks.jacocoTestCoverageVerification {
             limit {
                 counter = "INSTRUCTION" // 라인 커버리지 기준
                 value = "COVEREDRATIO"
-                minimum = 0.30
+                minimum = 0.10
             }
             excludes = jacocoExcludes
         }

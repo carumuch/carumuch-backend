@@ -9,10 +9,10 @@
     <property name="TRACE_KEY" value="traceId"/>
 
     <property name="CONSOLE_LOG_PATTERN"
-              value="%cyan([%X{${TRACE_KEY}:-no ${TRACE_KEY}}]) %yellow([%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}]) %green(%thread) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n : %msg%n"/>
+              value="%magenta([%X{${TRACE_KEY}:-no ${TRACE_KEY}}]) %yellow([%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}]) %green(%thread) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n : %msg%n"/>
 
     <property name="FILE_LOG_PATTERN"
-              value=": %msg %n %cyan([%X{${TRACE_KEY}:-NO ${TRACE_KEY}}]) %yellow([%d{yyyy-MM-dd HH:mm:ss}]) %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n"/>
+              value=": %msg %n %magenta([%X{${TRACE_KEY}:-NO ${TRACE_KEY}}]) %yellow([%d{yyyy-MM-dd HH:mm:ss}]) %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%L]) %n"/>
 
     <!--
     =====================

@@ -99,8 +99,8 @@ openapi3 {
             { url = extractDomainFromYaml() },
             { url = "http://localhost:8080" }
     ]
-    title = '카우머치'
-    description = 'API 문서'
+    title = '🚘 카우머치 Car U Much'
+    description = '카우머치 서비스의 API 문서입니다.'
     version = new Date().format("yyyy.MM.dd HH:mm", TimeZone.getTimeZone("Asia/Seoul"))
     format = 'yaml'
 }

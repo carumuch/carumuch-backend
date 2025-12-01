@@ -1,0 +1,197 @@
+server:
+  port: 8080
+
+dev-host: https://hosting-not-yet
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql:true
+  mail:
+    #    host: smtp.naver.com
+    host: smtp.${HOST_ADDRESS}
+    port: 465
+    username: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
+    address: ${MAIL_ADDRESS}@${HOST_ADDRESS}
+    protocol: smtps
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  cloud:
+    aws:
+      credentials:
+        accessKey: ${AWS_ACCESS_KEY}
+        secretKey: ${AWS_SECRET_KEY}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+      cloudfront:
+        domainName: ${AWS_CLOUDFRONT_DOMAIN}
+
+jwt:
+  access-secret-key: ${ACCESS_SECRET_KEY}
+  refresh-secret-key: ${REFRESH_SECRET_KEY}
+  verification-secret-key: ${VERIFICATION_SECRET_KEY}
+  access-token-valid-days: 3
+  refresh-token-valid-days: 30
+
+cookie:
+  name: CAR_U_MUCH
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info,metrics"
+  endpoint:
+    health:
+      show-details: always
+
+---
+server:
+  port: 8080
+
+dev-host: https://hosting-not-yet
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql:true
+
+  mail:
+    #    host: smtp.naver.com
+    host: smtp.${HOST_ADDRESS}
+    port: 465
+    username: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
+    address: ${MAIL_ADDRESS}@${HOST_ADDRESS}
+    protocol: smtps
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  cloud:
+    aws:
+      credentials:
+        accessKey: ${AWS_ACCESS_KEY}
+        secretKey: ${AWS_SECRET_KEY}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+      cloudfront:
+        domainName: ${AWS_CLOUDFRONT_DOMAIN}
+
+jwt:
+  access-secret-key: ${ACCESS_SECRET_KEY}
+  refresh-secret-key: ${REFRESH_SECRET_KEY}
+  verification-secret-key: ${VERIFICATION_SECRET_KEY}
+  access-token-valid-days: 3
+  refresh-token-valid-days: 30
+
+cookie:
+  name: CAR_U_MUCH
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info,metrics"
+  endpoint:
+    health:
+      show-details: always
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql:true
+
+  mail:
+    #    host: smtp.naver.com
+    host: smtp.test.com
+    port: 465
+    username: test
+    password: test
+    address: test@test.com
+    protocol: smtps
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  cloud:
+    aws:
+      credentials:
+        accessKey: secret
+        secretKey: secret
+      s3:
+        bucket: bucket
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+      cloudfront:
+        domainName: domainName
+
+jwt:
+  access-secret-key: accessabcdefghijklmnopqrstuvwxyz
+  refresh-secret-key: refreshabcdefghijklmnopqrstuvwxyz
+  verification-secret-key: verificationabcdefghijklmnopqrstu
+  access-token-valid-days: 3
+  refresh-token-valid-days: 30
+
+cookie:
+  name: CAR_U_MUCH

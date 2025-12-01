@@ -269,15 +269,6 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/gradle,intellij,windows,git,macos,java
 
 # applicaion.yml or properties
-application.yml
-application-test.yml
-application-local.yml
-application-dev.yml
-application-prod.yml
-application-swagger.yml
-application-secret.yml
-application-mail.yml
-application-s3.yml
 
 # API document
 openapi3.yaml

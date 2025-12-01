@@ -1,28 +1,20 @@
 package com.carumuch.capstone.support.config;
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 @TestConfiguration
 public class RestDocsConfig {
 
-    private static final OperationRequestPreprocessor HOST_INFO = preprocessRequest(modifyUris()
-            .scheme("http")
-            .host("localhost")
-            .port(8080)
-            .removePort(), prettyPrint()
-    );
-
     @Bean
     public RestDocumentationResultHandler restDocsMockMvcConfigurationCustomizer() {
-        return MockMvcRestDocumentation.document(
-                "{class-name}/{method-name}",
-                HOST_INFO,
+        return MockMvcRestDocumentationWrapper.document(
+                "{method-name}",
                 preprocessResponse(prettyPrint())
         );
     }

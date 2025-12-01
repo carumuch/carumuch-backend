@@ -86,32 +86,16 @@ public class User extends BaseEntity<User> {
 		registerEvent(new UserWithdrawnEvent(this.loginId));
 	}
 
-	//== 레거시 도메인 로직==//
-
-    /* OAuth2 사용자 정보 업데이트 */
-    public void updateOAuth2(String name,String email) {
-        this.name = name;
-        this.email = email;
-    }
-
-    /* 사용자 정보 수정 */
-    public void update(String name,String email) {
-        this.name = name;
-        this.email = email;
-    }
-
-    /* body shop 사용자 등록 */
+	//== 레거시 도메인 로직==// TODO: 사용되지 않을 때 삭제합니다.
     public void setBodyShop(BodyShop bodyShop) {
         this.bodyShop = bodyShop;
         bodyShop.getUsers().add(this);
     }
 
-    /* 공업사 직원으로 변경 */
     public void registerMechanic() {
         this.isMechanic = true;
     }
 
-    /* 연관관계 설정을 위한 메서드*/
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }

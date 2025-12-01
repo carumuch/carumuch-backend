@@ -35,18 +35,4 @@ public class ResponseDto<T> {
                 .response(data)
                 .build();
     }
-
-    /**
-     * 실패 응답
-     */
-    public static <T> ResponseDto<T> fail(HttpStatus status, String message) {
-        return ResponseDto.<T>builder()
-                .success(false)
-                .status(status.value())
-                .code(status.name())
-                .message(message)
-                .response(null)
-                .build();
-    }
-
 }

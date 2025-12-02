@@ -1,7 +1,7 @@
 package com.carumuch.capstone.community.domain;
 
 import com.carumuch.capstone.common.domain.BaseEntity;
-import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.identity.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

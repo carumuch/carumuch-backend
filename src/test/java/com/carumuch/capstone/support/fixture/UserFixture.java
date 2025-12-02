@@ -1,7 +1,7 @@
 package com.carumuch.capstone.support.fixture;
 
-import com.carumuch.capstone.user.domain.Role;
-import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.identity.domain.user.Role;
+import com.carumuch.capstone.identity.domain.user.User;
 
 public enum UserFixture {
     USER_FIXTURE_1("test1", "test1@1234", "test1@gmail.com", "홍길동"),

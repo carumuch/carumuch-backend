@@ -7,8 +7,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.carumuch.capstone.auth.presentation.resolver.AuthUserResolver;
-import com.carumuch.capstone.user.domain.UserRepository;
+import com.carumuch.capstone.identity.presentation.resolver.AuthUserResolver;
+import com.carumuch.capstone.identity.domain.user.UserRepository;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;

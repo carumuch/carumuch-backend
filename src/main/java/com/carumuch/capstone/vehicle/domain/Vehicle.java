@@ -2,7 +2,7 @@ package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.estimate.domain.Estimate;
-import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,8 +11,6 @@ import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "vehicle")

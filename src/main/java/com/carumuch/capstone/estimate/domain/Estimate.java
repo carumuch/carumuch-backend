@@ -3,7 +3,7 @@ package com.carumuch.capstone.estimate.domain;
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
-import com.carumuch.capstone.user.domain.User;
+import com.carumuch.capstone.identity.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,8 +16,6 @@ import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "estimate")

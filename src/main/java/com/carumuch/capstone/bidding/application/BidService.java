@@ -1,11 +1,11 @@
-package com.carumuch.capstone.bid.service;
+package com.carumuch.capstone.bidding.application;
 
-import com.carumuch.capstone.bid.model.Bid;
+import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.bodyshop.model.BodyShop;
-import com.carumuch.capstone.bid.model.type.BidStatus;
-import com.carumuch.capstone.bid.dto.BidPageResDto;
-import com.carumuch.capstone.bid.dto.BidResDto;
-import com.carumuch.capstone.bid.repository.BidRepository;
+import com.carumuch.capstone.bidding.domain.BidStatus;
+import com.carumuch.capstone.bidding.presentation.dto.BidPageResDto;
+import com.carumuch.capstone.bidding.presentation.dto.BidResDto;
+import com.carumuch.capstone.bidding.domain.BidRepository;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.carumuch.capstone.estimate.model.type.EstimateStatus;

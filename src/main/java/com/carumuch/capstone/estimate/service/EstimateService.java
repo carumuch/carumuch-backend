@@ -1,7 +1,7 @@
 package com.carumuch.capstone.estimate.service;
 
-import com.carumuch.capstone.bid.model.type.BidStatus;
-import com.carumuch.capstone.bid.repository.BidRepository;
+import com.carumuch.capstone.bidding.domain.BidStatus;
+import com.carumuch.capstone.bidding.domain.BidRepository;
 import com.carumuch.capstone.estimate.dto.EstimateAIRepairCostReqDto;
 import com.carumuch.capstone.estimate.dto.EstimateByVehiclePageResDto;
 import com.carumuch.capstone.estimate.dto.EstimateDetailResDto;

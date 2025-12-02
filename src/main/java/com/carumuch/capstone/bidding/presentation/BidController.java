@@ -1,7 +1,7 @@
-package com.carumuch.capstone.bid.controller;
+package com.carumuch.capstone.bidding.presentation;
 
-import com.carumuch.capstone.bid.dto.BidStatusUpdateReqDto;
-import com.carumuch.capstone.bid.service.BidService;
+import com.carumuch.capstone.bidding.presentation.dto.BidStatusUpdateReqDto;
+import com.carumuch.capstone.bidding.application.BidService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import lombok.RequiredArgsConstructor;

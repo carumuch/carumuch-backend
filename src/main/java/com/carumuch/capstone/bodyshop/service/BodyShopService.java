@@ -1,8 +1,8 @@
 package com.carumuch.capstone.bodyshop.service;
 
-import com.carumuch.capstone.bid.model.Bid;
+import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.bodyshop.model.BodyShop;
-import com.carumuch.capstone.bid.model.type.BidStatus;
+import com.carumuch.capstone.bidding.domain.BidStatus;
 import com.carumuch.capstone.bodyshop.dto.BodyShopBidCreateReqDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopBidDetailResDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopBidPageResDto;
@@ -11,7 +11,7 @@ import com.carumuch.capstone.bodyshop.dto.BodyShopInfoResDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopPageResDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
 import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
-import com.carumuch.capstone.bid.repository.BidRepository;
+import com.carumuch.capstone.bidding.domain.BidRepository;
 import com.carumuch.capstone.bodyshop.repository.BodyShopRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;

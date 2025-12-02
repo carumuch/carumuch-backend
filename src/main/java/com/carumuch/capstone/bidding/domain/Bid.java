@@ -1,6 +1,5 @@
-package com.carumuch.capstone.bid.model;
+package com.carumuch.capstone.bidding.domain;
 
-import com.carumuch.capstone.bid.model.type.BidStatus;
 import com.carumuch.capstone.bodyshop.model.BodyShop;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.estimate.model.Estimate;

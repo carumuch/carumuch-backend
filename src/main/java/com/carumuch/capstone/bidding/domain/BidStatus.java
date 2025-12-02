@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bid.model.type;
+package com.carumuch.capstone.bidding.domain;
 
 
 import lombok.Getter;

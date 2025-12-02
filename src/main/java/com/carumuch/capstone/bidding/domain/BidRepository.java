@@ -1,7 +1,5 @@
-package com.carumuch.capstone.bid.repository;
+package com.carumuch.capstone.bidding.domain;
 
-import com.carumuch.capstone.bid.model.Bid;
-import com.carumuch.capstone.bid.model.type.BidStatus;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

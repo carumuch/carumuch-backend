@@ -1,7 +1,7 @@
-package com.carumuch.capstone.estimate.repository.custom;
+package com.carumuch.capstone.estimate.domain;
 
-import com.carumuch.capstone.estimate.dto.EstimateSearchReqDto;
-import com.carumuch.capstone.estimate.dto.EstimateSearchResDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateSearchReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateSearchResDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

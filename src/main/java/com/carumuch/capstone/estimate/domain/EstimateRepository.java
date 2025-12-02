@@ -1,6 +1,5 @@
-package com.carumuch.capstone.estimate.repository;
+package com.carumuch.capstone.estimate.domain;
 
-import com.carumuch.capstone.estimate.model.Estimate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

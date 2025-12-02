@@ -1,10 +1,9 @@
-package com.carumuch.capstone.estimate.model;
+package com.carumuch.capstone.estimate.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.vehicle.model.Vehicle;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
-import com.carumuch.capstone.estimate.model.type.EstimateStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

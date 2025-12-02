@@ -7,7 +7,7 @@ import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
-import com.carumuch.capstone.estimate.dto.EstimateSearchReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateSearchReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

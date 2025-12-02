@@ -1,12 +1,12 @@
-package com.carumuch.capstone.estimate.controller;
+package com.carumuch.capstone.estimate.presentation;
 
-import com.carumuch.capstone.estimate.dto.EstimateAIRepairCostReqDto;
-import com.carumuch.capstone.estimate.dto.EstimateRegistrationReqDto;
-import com.carumuch.capstone.estimate.dto.EstimateStatusUpdateReqDto;
-import com.carumuch.capstone.estimate.dto.EstimateUpdateReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateAIRepairCostReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateRegistrationReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateStatusUpdateReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.EstimateUpdateReqDto;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
-import com.carumuch.capstone.estimate.service.EstimateService;
+import com.carumuch.capstone.estimate.application.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

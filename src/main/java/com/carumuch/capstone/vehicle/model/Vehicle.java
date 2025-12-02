@@ -1,6 +1,6 @@
 package com.carumuch.capstone.vehicle.model;
 
-import com.carumuch.capstone.estimate.model.Estimate;
+import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import jakarta.persistence.*;

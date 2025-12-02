@@ -1,4 +1,4 @@
-package com.carumuch.capstone.estimate.dto;
+package com.carumuch.capstone.estimate.presentation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

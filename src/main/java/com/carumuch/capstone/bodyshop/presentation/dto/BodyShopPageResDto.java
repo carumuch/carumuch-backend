@@ -1,6 +1,6 @@
-package com.carumuch.capstone.bodyshop.dto;
+package com.carumuch.capstone.bodyshop.presentation.dto;
 
-import com.carumuch.capstone.bodyshop.model.Location;
+import com.carumuch.capstone.bodyshop.domain.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

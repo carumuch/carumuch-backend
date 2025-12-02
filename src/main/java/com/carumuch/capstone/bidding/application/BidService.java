@@ -1,7 +1,7 @@
 package com.carumuch.capstone.bidding.application;
 
 import com.carumuch.capstone.bidding.domain.Bid;
-import com.carumuch.capstone.bodyshop.model.BodyShop;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bidding.domain.BidStatus;
 import com.carumuch.capstone.bidding.presentation.dto.BidPageResDto;
 import com.carumuch.capstone.bidding.presentation.dto.BidResDto;

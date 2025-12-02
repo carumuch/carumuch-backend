@@ -1,10 +1,10 @@
-package com.carumuch.capstone.bodyshop.controller;
+package com.carumuch.capstone.bodyshop.presentation;
 
-import com.carumuch.capstone.bodyshop.dto.BodyShopBidCreateReqDto;
-import com.carumuch.capstone.bodyshop.dto.BodyShopBidUpdateReqDto;
-import com.carumuch.capstone.bodyshop.dto.BodyShopRegistrationReqDto;
-import com.carumuch.capstone.bodyshop.dto.BodyShopUpdateReqDto;
-import com.carumuch.capstone.bodyshop.service.BodyShopService;
+import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopBidCreateReqDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopBidUpdateReqDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopRegistrationReqDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
+import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import com.carumuch.capstone.estimate.dto.EstimateSearchReqDto;

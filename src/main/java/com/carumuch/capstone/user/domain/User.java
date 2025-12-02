@@ -1,7 +1,7 @@
 package com.carumuch.capstone.user.domain;
 
 import com.carumuch.capstone.community.domain.Board;
-import com.carumuch.capstone.bodyshop.model.BodyShop;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.community.domain.Comment;
 import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.estimate.model.Estimate;

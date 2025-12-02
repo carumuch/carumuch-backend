@@ -1,6 +1,6 @@
 package com.carumuch.capstone.bidding.domain;
 
-import com.carumuch.capstone.bodyshop.model.BodyShop;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.estimate.model.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;

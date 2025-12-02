@@ -1,6 +1,6 @@
-package com.carumuch.capstone.bodyshop.dto;
+package com.carumuch.capstone.bodyshop.presentation.dto;
 
-import com.carumuch.capstone.bodyshop.model.Location;
+import com.carumuch.capstone.bodyshop.domain.Location;
 import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -10,19 +10,18 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Schema(name = "BodyShopRegistrationReqDto: 공업사 등록 요청 Dto")
-public class BodyShopRegistrationReqDto {
-
+@Schema(name = "BodyShopUpdateReqDto: 공업사 수정 요청 Dto")
+public class BodyShopUpdateReqDto {
     @NotBlank(message = "공업사 이름이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "공업사 이름 입니다.",
-            example = "차박고카센터")
+            example = "카우머치수리")
     private String name;
 
     private Location location;
 
     @NotBlank(message = "공업사 설명이 입력되지 않았습니다.", groups = ValidationGroups.NotBlankGroup.class)
     @Schema(description = "공업사 설명 입니다. (최대 100자)",
-            example = "고양사거리에서 고양동, 고양방면으로 직진하시면 고양교회 건너편에 위치하고 있습니다." +
+            example = "홍대사거리에서 홍대동, 홍대방면으로 직진하시면 홍대교회 건너편에 위치하고 있습니다." +
                     "찾아오기 힘드시다면 바로 전화해주세요! 친철하게 안내 해드리겠습니다!")
     private String description;
 
@@ -36,16 +35,16 @@ public class BodyShopRegistrationReqDto {
     private String link;
 
     @Schema(description = "픽업 여부 입니다.",
-            example = "true")
+            example = "false")
     private boolean pickupAvailability;
 
     @Builder
-    public BodyShopRegistrationReqDto(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
+    public BodyShopUpdateReqDto(String name, Location location, String description, String phoneNumber, String link, boolean pickupAvailability) {
         this.name = name;
         this.location = location;
         this.description = description;
-        this.link = link;
         this.phoneNumber = phoneNumber;
+        this.link = link;
         this.pickupAvailability = pickupAvailability;
     }
 }

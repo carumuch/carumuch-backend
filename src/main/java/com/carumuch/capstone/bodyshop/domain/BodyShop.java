@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bodyshop.model;
+package com.carumuch.capstone.bodyshop.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;

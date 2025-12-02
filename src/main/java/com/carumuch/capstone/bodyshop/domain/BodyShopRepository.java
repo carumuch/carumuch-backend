@@ -1,6 +1,5 @@
-package com.carumuch.capstone.bodyshop.repository;
+package com.carumuch.capstone.bodyshop.domain;
 
-import com.carumuch.capstone.bodyshop.model.BodyShop;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

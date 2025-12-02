@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bodyshop.model;
+package com.carumuch.capstone.bodyshop.domain;
 
 import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;

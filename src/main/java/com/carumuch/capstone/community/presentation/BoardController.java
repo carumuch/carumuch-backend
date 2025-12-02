@@ -1,10 +1,10 @@
-package com.carumuch.capstone.board.controller;
+package com.carumuch.capstone.community.presentation;
 
 
-import com.carumuch.capstone.board.model.Board;
-import com.carumuch.capstone.board.dto.BoardModifyReqDto;
-import com.carumuch.capstone.board.dto.BoardReqDto;
-import com.carumuch.capstone.board.service.BoardService;
+import com.carumuch.capstone.community.domain.Board;
+import com.carumuch.capstone.community.presentation.dto.BoardModifyReqDto;
+import com.carumuch.capstone.community.presentation.dto.BoardReqDto;
+import com.carumuch.capstone.community.application.BoardService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

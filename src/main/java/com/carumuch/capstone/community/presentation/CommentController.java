@@ -1,8 +1,8 @@
-package com.carumuch.capstone.comment.controller;
+package com.carumuch.capstone.community.presentation;
 
-import com.carumuch.capstone.comment.dto.CommentModifyReqDto;
-import com.carumuch.capstone.comment.dto.CommentReqDto;
-import com.carumuch.capstone.comment.service.CommentService;
+import com.carumuch.capstone.community.presentation.dto.CommentModifyReqDto;
+import com.carumuch.capstone.community.presentation.dto.CommentReqDto;
+import com.carumuch.capstone.community.application.CommentService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,11 @@
-package com.carumuch.capstone.board.service;
+package com.carumuch.capstone.community.application;
 
-import com.carumuch.capstone.board.model.Board;
-import com.carumuch.capstone.board.model.BoardImage;
-import com.carumuch.capstone.board.dto.BoardModifyReqDto;
-import com.carumuch.capstone.board.dto.BoardReqDto;
-import com.carumuch.capstone.board.repository.BoardImageRepository;
-import com.carumuch.capstone.board.repository.BoardRepository;
+import com.carumuch.capstone.community.domain.Board;
+import com.carumuch.capstone.community.domain.BoardImage;
+import com.carumuch.capstone.community.presentation.dto.BoardModifyReqDto;
+import com.carumuch.capstone.community.presentation.dto.BoardReqDto;
+import com.carumuch.capstone.community.infrastructure.BoardImageRepository;
+import com.carumuch.capstone.community.infrastructure.BoardRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.common.legacy.infrastructure.image.ImageService;

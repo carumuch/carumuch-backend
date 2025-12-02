@@ -1,4 +1,4 @@
-package com.carumuch.capstone.comment.dto;
+package com.carumuch.capstone.community.presentation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

@@ -1,6 +1,5 @@
-package com.carumuch.capstone.board.model;
+package com.carumuch.capstone.community.domain;
 
-import com.carumuch.capstone.comment.model.Comment;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,4 +1,4 @@
-package com.carumuch.capstone.board.model;
+package com.carumuch.capstone.community.domain;
 
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;

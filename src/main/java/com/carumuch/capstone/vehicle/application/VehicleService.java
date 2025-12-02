@@ -1,14 +1,14 @@
-package com.carumuch.capstone.vehicle.service;
+package com.carumuch.capstone.vehicle.application;
 
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.domain.UserLegacyRepository;
-import com.carumuch.capstone.vehicle.model.Vehicle;
-import com.carumuch.capstone.vehicle.dto.VehicleInfoResDto;
-import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
-import com.carumuch.capstone.vehicle.repository.VehicleRepository;
+import com.carumuch.capstone.vehicle.domain.Vehicle;
+import com.carumuch.capstone.vehicle.presentation.dto.VehicleInfoResDto;
+import com.carumuch.capstone.vehicle.presentation.dto.VehicleRegistrationReqDto;
+import com.carumuch.capstone.vehicle.presentation.dto.VehicleUpdateReqDto;
+import com.carumuch.capstone.vehicle.domain.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;

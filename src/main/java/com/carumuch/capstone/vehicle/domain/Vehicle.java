@@ -1,4 +1,4 @@
-package com.carumuch.capstone.vehicle.model;
+package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;

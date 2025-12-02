@@ -1,10 +1,10 @@
-package com.carumuch.capstone.vehicle.controller;
+package com.carumuch.capstone.vehicle.presentation;
 
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
-import com.carumuch.capstone.vehicle.dto.VehicleRegistrationReqDto;
-import com.carumuch.capstone.vehicle.dto.VehicleUpdateReqDto;
-import com.carumuch.capstone.vehicle.service.VehicleService;
+import com.carumuch.capstone.vehicle.presentation.dto.VehicleRegistrationReqDto;
+import com.carumuch.capstone.vehicle.presentation.dto.VehicleUpdateReqDto;
+import com.carumuch.capstone.vehicle.application.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

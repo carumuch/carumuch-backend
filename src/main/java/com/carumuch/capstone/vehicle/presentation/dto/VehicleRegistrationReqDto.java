@@ -1,4 +1,4 @@
-package com.carumuch.capstone.vehicle.dto;
+package com.carumuch.capstone.vehicle.presentation.dto;
 
 import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,6 +1,6 @@
 package com.carumuch.capstone.community.domain;
 
-import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
+import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,11 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment")
 @Getter
-public class Comment extends BaseCreateByEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private Long id;
+public class Comment extends BaseEntity<Comment> {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)

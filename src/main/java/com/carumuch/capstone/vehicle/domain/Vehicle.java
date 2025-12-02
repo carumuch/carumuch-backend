@@ -1,7 +1,7 @@
 package com.carumuch.capstone.vehicle.domain;
 
+import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.estimate.domain.Estimate;
-import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,15 +12,13 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity
 @Table(name = "vehicle")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Vehicle extends BaseCreateByEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vehicle_id")
-    private Long id;
+public class Vehicle extends BaseEntity<Vehicle> {
 
     @Column(name = "license_number", unique = true)
     private String licenseNumber; // 차량 번호

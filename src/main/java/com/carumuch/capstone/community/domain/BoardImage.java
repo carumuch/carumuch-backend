@@ -1,6 +1,6 @@
 package com.carumuch.capstone.community.domain;
 
-import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
+import com.carumuch.capstone.common.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,12 +14,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "board_image")
 @Getter
-public class BoardImage extends BaseCreateByEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_image_id")
-    Long id;
+public class BoardImage extends BaseEntity<BoardImage> {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)

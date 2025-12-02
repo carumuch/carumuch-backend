@@ -1,8 +1,8 @@
 package com.carumuch.capstone.estimate.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
+import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
-import com.carumuch.capstone.common.legacy.base.BaseCreateByEntity;
 import com.carumuch.capstone.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -17,15 +17,13 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity
 @Table(name = "estimate")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Estimate extends BaseCreateByEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "estimate_id")
-    private Long id; // 견적 번호
+public class Estimate extends BaseEntity<Estimate> {
 
     @Column(name = "description", length = 300)
     private String description; // 상세 설명

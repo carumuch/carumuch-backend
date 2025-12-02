@@ -1,11 +1,11 @@
 package com.carumuch.capstone.community.application;
 
 import com.carumuch.capstone.community.domain.Board;
-import com.carumuch.capstone.community.infrastructure.BoardRepository;
+import com.carumuch.capstone.community.domain.BoardRepository;
 import com.carumuch.capstone.community.domain.Comment;
 import com.carumuch.capstone.community.presentation.dto.CommentModifyReqDto;
 import com.carumuch.capstone.community.presentation.dto.CommentReqDto;
-import com.carumuch.capstone.community.infrastructure.CommentRepository;
+import com.carumuch.capstone.community.domain.CommentRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.user.domain.User;

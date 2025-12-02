@@ -1,7 +1,7 @@
-package com.carumuch.capstone.image.controller;
+package com.carumuch.capstone.common.legacy.presentation;
 
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
-import com.carumuch.capstone.image.service.ImageService;
+import com.carumuch.capstone.common.legacy.infrastructure.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

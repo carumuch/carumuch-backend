@@ -8,7 +8,7 @@ import com.carumuch.capstone.board.repository.BoardImageRepository;
 import com.carumuch.capstone.board.repository.BoardRepository;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
-import com.carumuch.capstone.image.service.ImageService;
+import com.carumuch.capstone.common.legacy.infrastructure.image.ImageService;
 import com.carumuch.capstone.user.domain.User;
 import com.carumuch.capstone.user.domain.UserLegacyRepository;
 import lombok.RequiredArgsConstructor;

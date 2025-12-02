@@ -1,6 +1,5 @@
-package com.carumuch.capstone.image.service;
+package com.carumuch.capstone.common.legacy.infrastructure.image;
 
-import com.carumuch.capstone.image.common.SetImageKey;
 import com.carumuch.capstone.common.legacy.exception.ErrorCode;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
 import lombok.RequiredArgsConstructor;

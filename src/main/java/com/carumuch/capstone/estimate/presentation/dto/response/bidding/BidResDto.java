@@ -1,6 +1,6 @@
-package com.carumuch.capstone.bidding.presentation.dto;
+package com.carumuch.capstone.estimate.presentation.dto.response.bidding;
 
-import com.carumuch.capstone.bidding.domain.Bid;
+import com.carumuch.capstone.estimate.domain.bidding.Bid;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopInfoResDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

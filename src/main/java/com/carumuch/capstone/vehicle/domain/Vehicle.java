@@ -1,7 +1,7 @@
 package com.carumuch.capstone.vehicle.domain;
 
 import com.carumuch.capstone.common.domain.BaseEntity;
-import com.carumuch.capstone.estimate.domain.Estimate;
+import com.carumuch.capstone.estimate.domain.estimate.Estimate;
 import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;

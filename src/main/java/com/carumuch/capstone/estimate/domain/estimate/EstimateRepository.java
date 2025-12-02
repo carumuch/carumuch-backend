@@ -1,4 +1,4 @@
-package com.carumuch.capstone.estimate.domain;
+package com.carumuch.capstone.estimate.domain.estimate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

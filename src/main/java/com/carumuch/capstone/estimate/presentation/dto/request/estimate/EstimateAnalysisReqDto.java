@@ -1,4 +1,4 @@
-package com.carumuch.capstone.estimate.presentation.dto;
+package com.carumuch.capstone.estimate.presentation.dto.request.estimate;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

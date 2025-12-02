@@ -1,8 +1,8 @@
-package com.carumuch.capstone.bidding.domain;
+package com.carumuch.capstone.estimate.domain.bidding;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.common.domain.BaseEntity;
-import com.carumuch.capstone.estimate.domain.Estimate;
+import com.carumuch.capstone.estimate.domain.estimate.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

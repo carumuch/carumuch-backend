@@ -1,15 +1,15 @@
-package com.carumuch.capstone.bidding.application;
+package com.carumuch.capstone.estimate.application;
 
-import com.carumuch.capstone.bidding.domain.Bid;
+import com.carumuch.capstone.estimate.domain.bidding.Bid;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
-import com.carumuch.capstone.bidding.domain.BidStatus;
-import com.carumuch.capstone.bidding.presentation.dto.BidPageResDto;
-import com.carumuch.capstone.bidding.presentation.dto.BidResDto;
-import com.carumuch.capstone.bidding.domain.BidRepository;
+import com.carumuch.capstone.estimate.domain.bidding.BidStatus;
+import com.carumuch.capstone.estimate.presentation.dto.response.bidding.BidPageResDto;
+import com.carumuch.capstone.estimate.presentation.dto.response.bidding.BidResDto;
+import com.carumuch.capstone.estimate.domain.bidding.BidRepository;
 import com.carumuch.capstone.common.legacy.exception.CustomException;
-import com.carumuch.capstone.estimate.domain.Estimate;
-import com.carumuch.capstone.estimate.domain.EstimateStatus;
-import com.carumuch.capstone.estimate.domain.EstimateRepository;
+import com.carumuch.capstone.estimate.domain.estimate.Estimate;
+import com.carumuch.capstone.estimate.domain.estimate.EstimateStatus;
+import com.carumuch.capstone.estimate.domain.estimate.EstimateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +22,7 @@ import static com.carumuch.capstone.common.legacy.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BidService {
+public class BiddingService {
 
     private final BidRepository bidRepository;
     private final EstimateRepository estimateRepository;

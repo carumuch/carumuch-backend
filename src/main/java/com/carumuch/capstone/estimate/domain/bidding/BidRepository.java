@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bidding.domain;
+package com.carumuch.capstone.estimate.domain.bidding;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;

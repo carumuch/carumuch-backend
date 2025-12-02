@@ -1,6 +1,6 @@
-package com.carumuch.capstone.estimate.presentation.dto;
+package com.carumuch.capstone.estimate.presentation.dto.response.estimate;
 
-import com.carumuch.capstone.estimate.domain.Estimate;
+import com.carumuch.capstone.estimate.domain.estimate.Estimate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

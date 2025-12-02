@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bidding.presentation.dto;
+package com.carumuch.capstone.estimate.presentation.dto.request.bidding;
 
 import com.carumuch.capstone.common.legacy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;

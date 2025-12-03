@@ -21,9 +21,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.carumuch.capstone.auth.infrastructure.security.AccessDeniedHandlerImpl;
-import com.carumuch.capstone.auth.infrastructure.security.AuthenticationEntryPointImpl;
-import com.carumuch.capstone.auth.infrastructure.security.JwtAuthorizationFilter;
+import com.carumuch.capstone.identity.infrastructure.security.AccessDeniedHandlerImpl;
+import com.carumuch.capstone.identity.infrastructure.security.AuthenticationEntryPointImpl;
+import com.carumuch.capstone.identity.infrastructure.security.JwtAuthorizationFilter;
 
 import lombok.RequiredArgsConstructor;
 

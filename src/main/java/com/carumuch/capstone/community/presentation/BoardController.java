@@ -1,0 +1,122 @@
+package com.carumuch.capstone.community.presentation;
+
+
+import com.carumuch.capstone.community.domain.Board;
+import com.carumuch.capstone.community.presentation.dto.BoardModifyReqDto;
+import com.carumuch.capstone.community.presentation.dto.BoardReqDto;
+import com.carumuch.capstone.community.application.BoardService;
+import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/board")
+public class BoardController {
+
+    private final BoardService boardService;
+
+    /**
+     * Create: 게시글 작성
+     */
+	@PostMapping("/write")
+    public ResponseEntity<?> write(@RequestBody BoardReqDto boardReqDto){
+        return ResponseEntity.status(CREATED)
+                .body(ResponseDto.success(CREATED, boardService.write(boardReqDto)));
+    }
+
+    /**
+     * Select: 전체 게시글 조회
+     */
+    //기본 페이지 1
+	@GetMapping
+    public ResponseEntity<?> findAll(@PageableDefault(page = 1) Pageable pageable){
+        Page<Board> boards = boardService.findAll(pageable);
+        int blockLimit = 5;
+        int startPage =  (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min((startPage + blockLimit - 1), boards.getTotalPages());
+
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,boards));
+    }
+
+    /**
+     * Select: 게시글 상세 조회
+     */
+	@GetMapping("/{boardId}")
+    public ResponseEntity<?> findById(@PathVariable("boardId") Long id, @PageableDefault(size=1, sort="id", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request, HttpServletResponse response){
+
+        /*게시글 조회시 넘어온 페이지 넘버*/
+        int pageNumber = pageable.getPageNumber();
+
+        Map<String, Object> boardDetailResponse = new HashMap<>();
+        Board board = boardService.findById(id);
+
+        boardDetailResponse.put("board",board);
+        boardDetailResponse.put("pageNumber",pageNumber);
+
+        /*쿠키값 추출*/
+        Cookie oldBoardToken = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("board-token")) {
+                oldBoardToken = cookie;
+            }
+        }
+        /*조회수 업데이트*/
+        if (oldBoardToken != null) {
+            if (!oldBoardToken.getValue().contains("["+ id +"]")) {
+                boardService.updateBoardHits(id);
+                oldBoardToken.setValue(oldBoardToken.getValue() + "[" + id + "]");
+            }
+        } else {
+            boardService.updateBoardHits(id);
+            oldBoardToken = new Cookie("board-token", "[" + id + "]");
+
+        }
+        int COOKIE_EXPIRATION = 60 * 60 * 24;
+        String cookieHeader = "board-token=" + oldBoardToken.getValue() + "; Max-Age=" + COOKIE_EXPIRATION + "; Secure; Path=/; HttpOnly; SameSite=None";
+
+        response.addHeader("Set-Cookie", cookieHeader);
+
+
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,boardDetailResponse));
+    }
+
+    /**
+     * Delete: 게시글 삭제
+     */
+	@DeleteMapping("/{boardId}/delete")
+    public ResponseEntity<?> delete(@PathVariable("boardId") Long id){
+        boardService.delete(id);
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,null));
+    }
+
+    /**
+     * Update: 게시글 수정
+     */
+	@PutMapping("/{boardId}/modify")
+    public ResponseEntity<?> modify(@PathVariable("boardId") Long id, @RequestBody BoardModifyReqDto boardModifyReqDto){
+        return ResponseEntity.status(OK)
+                .body(ResponseDto.success(OK,boardService.modify(id,boardModifyReqDto)));
+    }
+    
+}

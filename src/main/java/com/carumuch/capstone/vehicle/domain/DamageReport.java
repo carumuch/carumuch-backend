@@ -45,5 +45,6 @@ public class DamageReport extends BaseEntity<DamageReport> {
 		this.isPickupRequired = isPickupRequired;
 		this.imagePath = imagePath;
 		this.vehicle = vehicle;
+		registerEvent(new DamageReportRegisteredEvent(this));
 	}
 }

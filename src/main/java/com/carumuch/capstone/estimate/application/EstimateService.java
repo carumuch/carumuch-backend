@@ -1,5 +1,6 @@
 package com.carumuch.capstone.estimate.application;
 
+import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.estimate.domain.bidding.BidStatus;
 import com.carumuch.capstone.estimate.domain.bidding.BidRepository;
 import com.carumuch.capstone.estimate.presentation.dto.request.estimate.EstimateAIRepairCostReqDto;
@@ -17,7 +18,8 @@ import com.carumuch.capstone.identity.domain.user.UserLegacyRepository;
 import com.carumuch.capstone.estimate.domain.estimate.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.estimate.domain.estimate.EstimateStatus;
-import com.carumuch.capstone.vehicle.domain.VehicleLegacyRepository;
+import com.carumuch.capstone.vehicle.domain.VehicleRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +38,7 @@ import static com.carumuch.capstone.common.legacy.exception.ErrorCode.BID_ALREAD
 @Transactional(readOnly = true)
 public class EstimateService {
     private final EstimateRepository estimateRepository;
-    private final VehicleLegacyRepository vehicleLegacyRepository;
+    private final VehicleRepository vehicleRepository;
     private final UserLegacyRepository userLegacyRepository;
     private final BidRepository bidRepository;
 
@@ -49,7 +51,7 @@ public class EstimateService {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userLegacyRepository.findLoginUserByLoginId(loginId);
-        Vehicle vehicle = vehicleLegacyRepository.findById(id)
+        Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         Estimate estimate = Estimate.createBasicEstimate(
@@ -117,21 +119,14 @@ public class EstimateService {
     /**
      * Select: 견적 히스토리 차량별 조회
      */
-    public Page<EstimateByVehiclePageResDto> getEstimateHistoryByVehicleId(int page, Long id) {
-        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+    public Page<EstimateByVehiclePageResDto> getEstimateHistoryByVehicleId(int page, Long userId) {
 
-        Vehicle vehicle = vehicleLegacyRepository.findByIdWithUser(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        Vehicle vehicle = vehicleRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(Vehicle.class));
 
-        if (vehicle.getUser().getLoginId().equals(loginId)) {
-            Page<Estimate> estimatePage = estimateRepository
-                    .findPageByVehicleId(id, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
-            return estimatePage.map(estimate -> EstimateByVehiclePageResDto.builder()
-                    .estimate(estimate)
-                    .build());
-        } else {
-            throw new CustomException(ErrorCode.ACCESS_DENIED);
-        }
+		Page<Estimate> estimatePage = estimateRepository
+			.findPageByVehicleId(vehicle.getId(), PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
+		return estimatePage.map(estimate -> EstimateByVehiclePageResDto.builder().estimate(estimate).build());
     }
 
     /**

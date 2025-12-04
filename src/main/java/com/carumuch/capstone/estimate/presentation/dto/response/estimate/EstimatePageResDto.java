@@ -59,7 +59,7 @@ public class EstimatePageResDto {
         this.isAIEstimate = estimate.isAIEstimate();
         this.createDate = estimate.getCreateDate();
         this.licenseNumber = estimate.getVehicle().getLicenseNumber();
-        this.type = estimate.getVehicle().getType();
+        this.type = estimate.getVehicle().getOwnershipType().name();
         this.brand = estimate.getVehicle().getBrand();
         this.modelYear = estimate.getVehicle().getModelYear();
         this.modelName = estimate.getVehicle().getModelName();

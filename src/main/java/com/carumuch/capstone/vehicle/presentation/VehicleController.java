@@ -1,13 +1,14 @@
 package com.carumuch.capstone.vehicle.presentation;
 
-import com.carumuch.capstone.common.legacy.dto.ResponseDto;
-import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
+import com.carumuch.capstone.common.presentation.dto.ApiResponse;
+import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.vehicle.presentation.dto.VehicleRegistrationReqDto;
 import com.carumuch.capstone.vehicle.presentation.dto.VehicleUpdateReqDto;
 import com.carumuch.capstone.vehicle.application.VehicleService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -20,83 +21,29 @@ public class VehicleController {
 
     private final VehicleService vehicleService;
 
-    /**
-     * CREATE: 차량 등록
-     */
     @PostMapping
-    public ResponseEntity<?> register(@Validated(ValidationSequence.class) @RequestBody VehicleRegistrationReqDto vehicleRegistrationReqDto) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, vehicleService.register(vehicleRegistrationReqDto)));
+    public ResponseEntity<?> register(@Valid @RequestBody VehicleRegistrationReqDto vehicleRegistrationReqDto, User user) {
+        return ResponseEntity.status(OK).body(ApiResponse.of(vehicleService.register(vehicleRegistrationReqDto, user)));
     }
 
-    /**
-     * UPDATE: 차량 정보 수정
-     */
     @PutMapping
-    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, vehicleService.update(vehicleUpdateReqDto)));
+    public ResponseEntity<?> update(@Valid @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto, User user) {
+        return ResponseEntity.status(OK).body(ApiResponse.of(vehicleService.update(vehicleUpdateReqDto, user.getId())));
     }
 
-    /**
-     * DELETE: 차량 삭제 요청
-     */
     @DeleteMapping
-    public ResponseEntity<?> delete() {
-        vehicleService.delete();
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, null));
+    public ResponseEntity<?> delete(User user) {
+        vehicleService.delete(user.getId());
+        return ResponseEntity.status(OK).body(ApiResponse.of());
     }
 
-    /**
-     * SELECT: 차량 상세 조회
-     */
     @GetMapping("/{vehicleId}")
     public ResponseEntity<?> findById(@PathVariable("vehicleId") Long id) {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, vehicleService.findById(id)));
+        return ResponseEntity.status(OK).body(ApiResponse.of(vehicleService.findById(id)));
     }
 
-    /**
-     * SELECT: 내 차량 정보 조회
-     */
     @GetMapping
-    public ResponseEntity<?> vehicleInfo() {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, vehicleService.info()));
+    public ResponseEntity<?> vehicleInfo(User user) {
+        return ResponseEntity.status(OK).body(ApiResponse.of(vehicleService.info(user.getId())));
     }
-
-    /**
-     * info: 요구사항 변경 -> 차량 2대 이상에서 1대만 가지는것으로 변경 되었습니다.
-     * Date: 2024.10.07
-     */
-
-    /**
-     * SELECT: 차량 목록 조회
-     */
-//    @GetMapping
-//    public ResponseEntity<?> findAll() {
-//        return ResponseEntity.status(OK)
-//                .body(ResponseDto.success(OK, vehicleService.findAll()));
-//    }
-
-    /**
-     * DELETE: 차량 삭제 요청
-     */
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> delete(@PathVariable Long id) {
-//        vehicleService.delete(id);
-//        return ResponseEntity.status(CREATED)
-//                .body(ResponseDto.success(CREATED, null));
-//    }
-
-    /**
-     * UPDATE: 차량 정보 수정
-     */
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto,
-//                                    @PathVariable Long id) {
-//        return ResponseEntity.status(CREATED)
-//                .body(ResponseDto.success(CREATED, vehicleService.update(id, vehicleUpdateReqDto)));
-//    }
 }

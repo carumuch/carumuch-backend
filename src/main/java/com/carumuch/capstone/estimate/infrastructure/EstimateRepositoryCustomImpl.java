@@ -47,7 +47,7 @@ public class EstimateRepositoryCustomImpl implements EstimateRepositoryCustom {
                         estimate.isAIEstimate.as("isAIEstimate"),
                         estimate.createDate.as("createDate"),
                         estimate.applicantCount.as("applicantCount"),
-                        vehicle.type.as("type"),
+                        vehicle.ownershipType.as("ownershipType").stringValue(),
                         vehicle.brand.as("brand"),
                         vehicle.modelYear.as("modelYear"),
                         vehicle.modelName.as("modelName"),

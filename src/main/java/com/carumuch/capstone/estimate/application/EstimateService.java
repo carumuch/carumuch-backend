@@ -17,7 +17,7 @@ import com.carumuch.capstone.identity.domain.user.UserLegacyRepository;
 import com.carumuch.capstone.estimate.domain.estimate.Estimate;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.estimate.domain.estimate.EstimateStatus;
-import com.carumuch.capstone.vehicle.domain.VehicleRepository;
+import com.carumuch.capstone.vehicle.domain.VehicleLegacyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +36,7 @@ import static com.carumuch.capstone.common.legacy.exception.ErrorCode.BID_ALREAD
 @Transactional(readOnly = true)
 public class EstimateService {
     private final EstimateRepository estimateRepository;
-    private final VehicleRepository vehicleRepository;
+    private final VehicleLegacyRepository vehicleLegacyRepository;
     private final UserLegacyRepository userLegacyRepository;
     private final BidRepository bidRepository;
 
@@ -49,7 +49,7 @@ public class EstimateService {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userLegacyRepository.findLoginUserByLoginId(loginId);
-        Vehicle vehicle = vehicleRepository.findById(id)
+        Vehicle vehicle = vehicleLegacyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         Estimate estimate = Estimate.createBasicEstimate(
@@ -120,7 +120,7 @@ public class EstimateService {
     public Page<EstimateByVehiclePageResDto> getEstimateHistoryByVehicleId(int page, Long id) {
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Vehicle vehicle = vehicleRepository.findByIdWithUser(id)
+        Vehicle vehicle = vehicleLegacyRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         if (vehicle.getUser().getLoginId().equals(loginId)) {

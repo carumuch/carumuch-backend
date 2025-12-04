@@ -7,7 +7,7 @@ import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.vehicle.domain.VehicleOwnershipType;
 import com.carumuch.capstone.vehicle.domain.VehicleRepository;
 import com.carumuch.capstone.vehicle.presentation.dto.VehicleInfoResDto;
-import com.carumuch.capstone.vehicle.presentation.dto.VehicleRegistrationReqDto;
+import com.carumuch.capstone.vehicle.presentation.dto.request.RegisterVehicleRequest;
 import com.carumuch.capstone.vehicle.presentation.dto.VehicleUpdateReqDto;
 
 import lombok.RequiredArgsConstructor;
@@ -21,22 +21,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class VehicleService {
 	private static final String LICENSE_NUMBER_DUPLICATE_MESSAGE = "이미 등록된 차량 번호힙니다.";
-	private static final String VEHICLE_DUPLICATE_MESSAGE = "이미 등록된 차량이 존재합니다.";
+	private static final String VEHICLE_ALREADY_EXIST_MESSAGE = "이미 등록된 차량이 존재합니다.";
 
     private final VehicleRepository vehicleRepository;
 
     @Transactional
-    public Long register(VehicleRegistrationReqDto requestDto, User user) {
-        checkVehicleDuplicate(requestDto.licenseNumber(), user.getId());
-        return vehicleRepository.save(requestDto.toEntity(requestDto, user)).getId();
+    public Long register(RegisterVehicleRequest requestDto, User user) {
+        checkDuplicateVehicle(requestDto.licenseNumber(), user.getId());
+        return vehicleRepository.save(requestDto.toEntity(user)).getId();
     }
 
-    private void checkVehicleDuplicate(String licenseNumber, Long userId) {
+    private void checkDuplicateVehicle(String licenseNumber, Long userId) {
         if (vehicleRepository.existsByLicenseNumber(licenseNumber)) {
             throw new CustomException(HttpStatus.CONFLICT, LICENSE_NUMBER_DUPLICATE_MESSAGE);
         }
         if (vehicleRepository.existsByUserId(userId)) {
-            throw new CustomException(HttpStatus.CONFLICT, VEHICLE_DUPLICATE_MESSAGE);
+            throw new CustomException(HttpStatus.CONFLICT, VEHICLE_ALREADY_EXIST_MESSAGE);
         }
     }
 

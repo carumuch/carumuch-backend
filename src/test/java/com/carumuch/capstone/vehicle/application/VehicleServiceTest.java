@@ -271,4 +271,51 @@ class VehicleServiceTest {
 			);
 		}
 	}
+
+	@Nested
+	@DisplayName("차량 삭제 기능")
+	class Delete {
+		@Test
+		void 사용자의_등록된_차량을_조회한다() {
+		    //given
+			Long userId = 1L;
+			Vehicle vehicle = VehicleFixture.VEHICLE_FIXTURE_1.create();
+
+			Mockito.when(vehicleRepository.findByUserId(userId)).thenReturn(Optional.of(vehicle));
+
+		    //when
+			vehicleService.delete(userId);
+
+		    //then
+			Mockito.verify(vehicleRepository, Mockito.times(1))
+				.findByUserId(userId);
+		}
+
+		@Test
+		void 사용자의_등록된_차량이_없다면_예외를_반환한다() {
+		    //given
+			Long userId = 1L;
+			Mockito.when(vehicleRepository.findByUserId(userId)).thenReturn(Optional.empty());
+
+		    //when & then
+		    Assertions.assertThatThrownBy(() -> vehicleService.delete(userId))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 사용자의_등록된_차량을_삭제한다() {
+		    //given
+		    Long userId = 1L;
+			Vehicle vehicle = VehicleFixture.VEHICLE_FIXTURE_1.create();
+			ReflectionTestUtils.setField(vehicle, "id", 1L);
+			Mockito.when(vehicleRepository.findByUserId(userId)).thenReturn(Optional.of(vehicle));
+
+		    //when
+			vehicleService.delete(userId);
+
+		    //then
+			Mockito.verify(vehicleRepository, Mockito.times(1))
+				.deleteById(userId);
+		}
+	}
 }

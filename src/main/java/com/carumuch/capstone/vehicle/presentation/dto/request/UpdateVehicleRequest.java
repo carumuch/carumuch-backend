@@ -1,13 +1,13 @@
-package com.carumuch.capstone.vehicle.presentation.dto;
+package com.carumuch.capstone.vehicle.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record VehicleUpdateReqDto(
+public record UpdateVehicleRequest(
 	@NotBlank String licenseNumber,
 	@NotBlank String ownershipType,
 	@NotBlank String brand,
-	@NotNull int modelYear,
+	@NotNull Integer modelYear,
 	@NotBlank String modelName,
 	@NotBlank String ownerName
 ) {

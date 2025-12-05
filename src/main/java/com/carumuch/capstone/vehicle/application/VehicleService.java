@@ -8,7 +8,7 @@ import com.carumuch.capstone.vehicle.domain.VehicleOwnershipType;
 import com.carumuch.capstone.vehicle.domain.VehicleRepository;
 import com.carumuch.capstone.vehicle.presentation.dto.VehicleInfoResDto;
 import com.carumuch.capstone.vehicle.presentation.dto.request.RegisterVehicleRequest;
-import com.carumuch.capstone.vehicle.presentation.dto.VehicleUpdateReqDto;
+import com.carumuch.capstone.vehicle.presentation.dto.request.UpdateVehicleRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,11 +41,10 @@ public class VehicleService {
     }
 
     @Transactional
-    public Long update(VehicleUpdateReqDto requestDto, Long userId) {
+    public void update(UpdateVehicleRequest requestDto, Long userId) {
 		Vehicle vehicle = vehicleRepository.findByUserId(userId)
 			.orElseThrow(() -> new NotFoundException(Vehicle.class));
-
-        vehicle.update(
+		vehicle.update(
 			requestDto.licenseNumber(),
 			VehicleOwnershipType.from(requestDto.ownershipType()),
 			requestDto.brand(),
@@ -53,7 +52,6 @@ public class VehicleService {
 			requestDto.modelName(),
 			requestDto.ownerName()
 		);
-		return vehicle.getId();
     }
 
     @Transactional

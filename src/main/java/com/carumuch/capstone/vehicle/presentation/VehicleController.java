@@ -3,7 +3,7 @@ package com.carumuch.capstone.vehicle.presentation;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.vehicle.presentation.dto.request.RegisterVehicleRequest;
-import com.carumuch.capstone.vehicle.presentation.dto.VehicleUpdateReqDto;
+import com.carumuch.capstone.vehicle.presentation.dto.request.UpdateVehicleRequest;
 import com.carumuch.capstone.vehicle.application.VehicleService;
 
 import jakarta.validation.Valid;
@@ -26,8 +26,9 @@ public class VehicleController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody VehicleUpdateReqDto vehicleUpdateReqDto, User user) {
-        return ResponseEntity.status(OK).body(ApiResponse.of(vehicleService.update(vehicleUpdateReqDto, user.getId())));
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateVehicleRequest updateVehicleRequest, User user) {
+		vehicleService.update(updateVehicleRequest, user.getId());
+        return ResponseEntity.status(OK).body(ApiResponse.of());
     }
 
     @DeleteMapping

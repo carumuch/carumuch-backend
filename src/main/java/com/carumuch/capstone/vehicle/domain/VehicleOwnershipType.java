@@ -12,7 +12,7 @@ public enum VehicleOwnershipType {
 	public static VehicleOwnershipType from(String value) {
 		return Arrays.stream(VehicleOwnershipType.values())
 			.filter(state -> state.name().equalsIgnoreCase(value))
-			.findFirst().orElseThrow(
-				() -> new CustomException(HttpStatus.BAD_REQUEST, "올바른 차량 유형이 아닙니다."));
+			.findFirst()
+			.orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "올바른 차량 유형이 아닙니다."));
 	}
 }

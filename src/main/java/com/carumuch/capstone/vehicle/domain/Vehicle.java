@@ -15,6 +15,7 @@ import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Table(
@@ -57,7 +58,15 @@ public class Vehicle extends BaseEntity<Vehicle> {
 	@JoinColumn(name = "user_id")
     private User user;
 
-    public Vehicle(String licenseNumber, VehicleOwnershipType ownershipType, String brand, int modelYear, String modelName, String ownerName, User user) {
+    public Vehicle(
+		String licenseNumber,
+		VehicleOwnershipType ownershipType,
+		String brand,
+		int modelYear,
+		String modelName,
+		String ownerName,
+		User user
+	) {
 		validateLicenseNumber(licenseNumber);
         this.licenseNumber = licenseNumber;
         this.ownershipType = ownershipType;
@@ -68,15 +77,22 @@ public class Vehicle extends BaseEntity<Vehicle> {
         this.user = user;
     }
 
-    public void update(String licenseNumber, VehicleOwnershipType ownershipType, String brand, Integer modelYear, String modelName, String ownerName) {
+	public void update(
+		String licenseNumber,
+		VehicleOwnershipType ownershipType,
+		String brand,
+		Integer modelYear,
+		String modelName,
+		String ownerName
+	) {
 		validateLicenseNumber(licenseNumber);
-        this.licenseNumber = licenseNumber;
-        this.ownershipType = ownershipType;
-        this.brand = brand;
-        this.modelYear = modelYear;
-        this.modelName = modelName;
-        this.ownerName = ownerName;
-    }
+		this.licenseNumber = licenseNumber;
+		this.ownershipType = ownershipType;
+		this.brand = brand;
+		this.modelYear = modelYear;
+		this.modelName = modelName;
+		this.ownerName = ownerName;
+	}
 
 	private void validateLicenseNumber(String licenseNumber) {
 		if (licenseNumber == null || !licenseNumber.matches(LICENSE_NUMBER_PATTERN)) {

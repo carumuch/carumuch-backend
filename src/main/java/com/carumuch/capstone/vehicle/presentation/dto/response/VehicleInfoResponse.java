@@ -1,8 +1,8 @@
-package com.carumuch.capstone.vehicle.presentation.dto;
+package com.carumuch.capstone.vehicle.presentation.dto.response;
 
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 
-public record VehicleInfoResDto(
+public record VehicleInfoResponse(
 	Long id,
 	String licenseNumber,
 	String ownershipType,
@@ -11,8 +11,8 @@ public record VehicleInfoResDto(
 	String modelName,
 	String ownerName
 ) {
-	public static VehicleInfoResDto from(Vehicle vehicle) {
-		return new VehicleInfoResDto(
+	public static VehicleInfoResponse from(Vehicle vehicle) {
+		return new VehicleInfoResponse(
 			vehicle.getId(),
 			vehicle.getLicenseNumber(),
 			vehicle.getOwnershipType().name(),

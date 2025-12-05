@@ -6,7 +6,7 @@ import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.vehicle.domain.VehicleOwnershipType;
 import com.carumuch.capstone.vehicle.domain.VehicleRepository;
-import com.carumuch.capstone.vehicle.presentation.dto.VehicleInfoResDto;
+import com.carumuch.capstone.vehicle.presentation.dto.response.VehicleInfoResponse;
 import com.carumuch.capstone.vehicle.presentation.dto.request.RegisterVehicleRequest;
 import com.carumuch.capstone.vehicle.presentation.dto.request.UpdateVehicleRequest;
 
@@ -61,9 +61,9 @@ public class VehicleService {
         vehicleRepository.deleteById(vehicle.getId());
     }
 
-    public VehicleInfoResDto info(Long userId) {
+    public VehicleInfoResponse info(Long userId) {
         return vehicleRepository.findByUserId(userId)
-			.map(VehicleInfoResDto::from)
+			.map(VehicleInfoResponse::from)
 			.orElseThrow(() -> new NotFoundException(Vehicle.class));
     }
 }

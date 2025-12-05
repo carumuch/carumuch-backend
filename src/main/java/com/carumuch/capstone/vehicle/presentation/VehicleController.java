@@ -37,10 +37,6 @@ public class VehicleController {
         return ResponseEntity.status(OK).body(ApiResponse.of());
     }
 
-    @GetMapping("/{vehicleId}")
-    public ResponseEntity<?> findById(@PathVariable("vehicleId") Long id) {
-        return ResponseEntity.status(OK).body(ApiResponse.of(vehicleService.findById(id)));
-    }
 
     @GetMapping
     public ResponseEntity<?> vehicleInfo(User user) {

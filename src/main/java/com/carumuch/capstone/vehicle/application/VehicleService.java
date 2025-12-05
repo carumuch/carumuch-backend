@@ -61,12 +61,6 @@ public class VehicleService {
         vehicleRepository.deleteById(vehicle.getId());
     }
 
-    public VehicleInfoResDto findById(Long id) {
-        return vehicleRepository.findById(id)
-			.map(VehicleInfoResDto::from)
-			.orElseThrow(() -> new NotFoundException(Vehicle.class));
-    }
-
     public VehicleInfoResDto info(Long userId) {
         return vehicleRepository.findByUserId(userId)
 			.map(VehicleInfoResDto::from)

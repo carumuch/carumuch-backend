@@ -31,17 +31,27 @@ public class VehicleService {
         return vehicleRepository.save(requestDto.toEntity(user)).getId();
     }
 
-    private void checkDuplicateVehicle(String licenseNumber, Long userId) {
-        if (vehicleRepository.existsByLicenseNumber(licenseNumber)) {
-            throw new CustomException(HttpStatus.CONFLICT, LICENSE_NUMBER_DUPLICATE_MESSAGE);
-        }
-        if (vehicleRepository.existsByUserId(userId)) {
-            throw new CustomException(HttpStatus.CONFLICT, VEHICLE_ALREADY_EXIST_MESSAGE);
-        }
-    }
+	private void checkDuplicateVehicle(String licenseNumber, Long userId) {
+		checkDuplicateLicenseNumber(licenseNumber);
+		checkVehicleAlreadyExists(userId);
+	}
+
+	private void checkDuplicateLicenseNumber(String licenseNumber) {
+		if (vehicleRepository.existsByLicenseNumber(licenseNumber)) {
+			throw new CustomException(HttpStatus.CONFLICT, LICENSE_NUMBER_DUPLICATE_MESSAGE);
+		}
+	}
+
+	private void checkVehicleAlreadyExists(Long userId) {
+		if (vehicleRepository.existsByUserId(userId)) {
+			throw new CustomException(HttpStatus.CONFLICT, VEHICLE_ALREADY_EXIST_MESSAGE);
+		}
+	}
 
     @Transactional
     public void update(UpdateVehicleRequest requestDto, Long userId) {
+		checkDuplicateLicenseNumber(requestDto.licenseNumber());
+
 		Vehicle vehicle = vehicleRepository.findByUserId(userId)
 			.orElseThrow(() -> new NotFoundException(Vehicle.class));
 		vehicle.update(

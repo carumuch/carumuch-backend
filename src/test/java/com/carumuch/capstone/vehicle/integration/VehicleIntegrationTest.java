@@ -2,6 +2,8 @@ package com.carumuch.capstone.vehicle.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.hibernate.AssertionFailure;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.carumuch.capstone.common.exception.CustomException;
+import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 import com.carumuch.capstone.support.IntegrationSupportTest;
@@ -21,6 +24,7 @@ import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.carumuch.capstone.vehicle.domain.VehicleRepository;
 import com.carumuch.capstone.vehicle.presentation.dto.request.RegisterVehicleRequest;
 import com.carumuch.capstone.vehicle.presentation.dto.request.UpdateVehicleRequest;
+import com.carumuch.capstone.vehicle.presentation.dto.response.VehicleInfoResponse;
 
 public class VehicleIntegrationTest extends IntegrationSupportTest {
 
@@ -202,4 +206,86 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 				.isInstanceOf(CustomException.class);
 		}
 	}
+
+	@Nested
+	@DisplayName("차량 삭제 기능")
+	class Delete {
+		@Test
+		void 차량을_삭제한다() {
+		    //given
+			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
+			Vehicle vehicle = vehicleRepository.save(
+				new Vehicle(
+					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getOwnershipType(),
+					vehicleFixture.getBrand(),
+					vehicleFixture.getModelYear(),
+					vehicleFixture.getModelName(),
+					vehicleFixture.getOwnerName(),
+					user1
+				)
+			);
+
+			//when
+			vehicleService.delete(user1.getId());
+
+		    //then
+			Assertions.assertThat(vehicleRepository.findById(vehicle.getId())).isEqualTo(Optional.empty());
+		}
+
+		@Test
+		void 사용자의_등록된_차량이_없다면_예외를_반환한다() {
+		    //given
+			Long userId = user1.getId();
+
+		    //when & then
+			Assertions.assertThatThrownBy(() -> vehicleService.delete(userId))
+				.isInstanceOf(NotFoundException.class);
+		}
+	}
+
+	@Nested
+	@DisplayName("차량 정보 조회 기능")
+	class Info {
+		@Test
+		void 차량_정보를_조회한다() {
+		    //given
+			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
+			Vehicle vehicle = vehicleRepository.save(
+				new Vehicle(
+					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getOwnershipType(),
+					vehicleFixture.getBrand(),
+					vehicleFixture.getModelYear(),
+					vehicleFixture.getModelName(),
+					vehicleFixture.getOwnerName(),
+					user1
+				)
+			);
+
+		    //when
+			VehicleInfoResponse result = vehicleService.info(user1.getId());
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.id()).isEqualTo(vehicle.getId()),
+				() -> Assertions.assertThat(result.ownershipType()).isEqualTo(vehicle.getOwnershipType().name()),
+				() -> Assertions.assertThat(result.modelName()).isEqualTo(vehicle.getModelName()),
+				() -> Assertions.assertThat(result.modelYear()).isEqualTo(vehicle.getModelYear()),
+				() -> Assertions.assertThat(result.brand()).isEqualTo(vehicle.getBrand()),
+				() -> Assertions.assertThat(result.ownerName()).isEqualTo(vehicle.getOwnerName())
+			);
+		}
+
+		@Test
+		void 사용자의_등록된_차량이_없다면_예외를_반환한다() {
+		    //given
+			Long userId = user1.getId();
+
+		    //when & then
+			Assertions.assertThatThrownBy(() -> vehicleService.info(userId))
+				.isInstanceOf(NotFoundException.class);
+		}
+	}
+
 }

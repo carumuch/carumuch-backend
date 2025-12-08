@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class VehicleService {
-	private static final String LICENSE_NUMBER_DUPLICATE_MESSAGE = "이미 등록된 차량 번호힙니다.";
+	private static final String LICENSE_NUMBER_DUPLICATE_MESSAGE = "이미 등록된 차량 번호입니다.";
 	private static final String VEHICLE_ALREADY_EXIST_MESSAGE = "이미 등록된 차량이 존재합니다.";
 
     private final VehicleRepository vehicleRepository;

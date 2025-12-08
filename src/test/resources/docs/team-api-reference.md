@@ -31,6 +31,7 @@ Swagger 좌측 상단의 **Servers** 항목에서 요청할 서버를 선택할 
 <summary><strong>View</strong></summary>
 
 - [Github Repository 바로가기](https://github.com/carumuch/carumuch-backend)
+- [카우머치 설계 문서 바로가기](https://www.notion.so/joyeongmu/2c32b0cb232580fd8cb9fd002de73a8b)
 
 </details>
 

@@ -34,7 +34,7 @@ import com.epages.restdocs.apispec.Schema;
 class VehicleControllerTest extends RestDocsSupport {
 
 	private static final String BASE_URI = "/vehicles";
-	private static final String BASE_TAG = "Vehicle";
+	private static final String BASE_TAG = "Damage - Vehicle";
 	private static final String BASE_SUCCESS_MESSAGE = "OK";
 
 	@Nested

@@ -2,8 +2,8 @@ package com.carumuch.capstone.support;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.carumuch.capstone.vehicle.application.VehicleService;
-import com.carumuch.capstone.vehicle.presentation.VehicleController;
+import com.carumuch.capstone.damage.application.VehicleService;
+import com.carumuch.capstone.damage.presentation.VehicleController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.carumuch.capstone.identity.application.AccountRecoveryService;
 import com.carumuch.capstone.common.infrastructure.config.SecurityConfig;

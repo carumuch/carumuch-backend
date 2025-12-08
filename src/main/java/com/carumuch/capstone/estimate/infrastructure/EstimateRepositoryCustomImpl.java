@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.carumuch.capstone.estimate.domain.estimate.QEstimate.*;
-import static com.carumuch.capstone.vehicle.domain.QVehicle.*;
+import static com.carumuch.capstone.damage.domain.QVehicle.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository

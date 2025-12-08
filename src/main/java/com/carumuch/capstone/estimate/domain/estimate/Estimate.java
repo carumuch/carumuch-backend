@@ -2,8 +2,8 @@ package com.carumuch.capstone.estimate.domain.estimate;
 
 import com.carumuch.capstone.estimate.domain.bidding.Bid;
 import com.carumuch.capstone.common.domain.BaseEntity;
-import com.carumuch.capstone.vehicle.domain.DamageReport;
-import com.carumuch.capstone.vehicle.domain.Vehicle;
+import com.carumuch.capstone.damage.domain.DamageReport;
+import com.carumuch.capstone.damage.domain.Vehicle;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

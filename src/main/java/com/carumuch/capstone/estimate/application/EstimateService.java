@@ -16,9 +16,9 @@ import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserLegacyRepository;
 import com.carumuch.capstone.estimate.domain.estimate.Estimate;
-import com.carumuch.capstone.vehicle.domain.Vehicle;
+import com.carumuch.capstone.damage.domain.Vehicle;
 import com.carumuch.capstone.estimate.domain.estimate.EstimateStatus;
-import com.carumuch.capstone.vehicle.domain.VehicleRepository;
+import com.carumuch.capstone.damage.domain.VehicleRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

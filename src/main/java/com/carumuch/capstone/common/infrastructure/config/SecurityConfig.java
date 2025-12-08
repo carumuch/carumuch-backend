@@ -34,11 +34,8 @@ public class SecurityConfig {
 
 	private static final String USER_URI = "/users";
 	private static final String AUTH_URI = "/auth";
-	private static final String[] SWAGGER_PATTERNS = {
-		"/swagger-ui/**",
-		"/v3/api-docs/**",
-		"/static/swagger-ui/**"
-	};
+	private static final String VEHICLE_URI = "/vehicles";
+	private static final String[] SWAGGER_PATTERNS = {"/swagger-ui/**", "/v3/api-docs/**", "/static/swagger-ui/**"};
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
@@ -76,6 +73,10 @@ public class SecurityConfig {
 						mvc.matcher(POST, AUTH_URI + "/password/reset")
 					).permitAll()
 
+					.requestMatchers(
+						mvc.matcher(POST, VEHICLE_URI)
+					).permitAll()
+
 					//== 인증 필요 ==//
 					.requestMatchers(
 						mvc.matcher(GET, USER_URI + "/profile"),
@@ -87,6 +88,12 @@ public class SecurityConfig {
 					.requestMatchers(
 						mvc.matcher(POST, AUTH_URI + "/logout")
 					).authenticated()
+
+					.requestMatchers(
+						mvc.matcher(GET, VEHICLE_URI),
+						mvc.matcher(PUT, VEHICLE_URI),
+						mvc.matcher(DELETE, VEHICLE_URI)
+					).permitAll()
 
 					.anyRequest().permitAll()
                 )

@@ -1,6 +1,6 @@
 package com.carumuch.capstone.damage.domain.vehicle;
 
-import com.carumuch.capstone.common.domain.BaseEntity;
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
@@ -24,7 +24,7 @@ import static jakarta.persistence.FetchType.LAZY;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Vehicle extends BaseEntity<Vehicle> {
+public class Vehicle extends AggregateRoot<Vehicle> {
 
 	@Embedded
 	@AttributeOverride(

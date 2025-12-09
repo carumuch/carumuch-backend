@@ -1,7 +1,7 @@
 package com.carumuch.capstone.bidding.domain;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
-import com.carumuch.capstone.common.domain.BaseEntity;
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "bid")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Bid extends BaseEntity<Bid> {
+public class Bid extends AggregateRoot<Bid> {
 
     @Column(name = "cost")
     private int cost; // 수리비

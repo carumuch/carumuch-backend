@@ -1,7 +1,7 @@
 package com.carumuch.capstone.bodyshop.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
-import com.carumuch.capstone.common.domain.BaseEntity;
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -18,7 +18,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 @Table(name = "body_shop")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BodyShop extends BaseEntity<BodyShop> {
+public class BodyShop extends AggregateRoot<BodyShop> {
 
     @Column(name = "name", length = 100)
     private String name; // 샵 이름

@@ -1,6 +1,6 @@
 package com.carumuch.capstone.community.domain;
 
-import com.carumuch.capstone.common.domain.BaseEntity;
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -18,7 +18,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "board")
 @Getter
-public class Board extends BaseEntity<Board> {
+public class Board extends AggregateRoot<Board> {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)

@@ -1,9 +1,9 @@
 package com.carumuch.capstone.identity.domain.user;
 
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.community.domain.Comment;
-import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -22,7 +22,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity<User> {
+public class User extends AggregateRoot<User> {
 
 	@Column(name = "login_id", length = 30, unique = true)
 	private String loginId;

@@ -19,7 +19,7 @@ import lombok.Getter;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity<T extends AbstractAggregateRoot<T>> extends AbstractAggregateRoot<T> {
+public class AggregateRoot<T extends AbstractAggregateRoot<T>> extends AbstractAggregateRoot<T> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class BaseEntity<T extends AbstractAggregateRoot<T>> extends AbstractAggr
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        BaseEntity<?> that = (BaseEntity<?>) o;
+        AggregateRoot<?> that = (AggregateRoot<?>) o;
         return Objects.equals(id, that.id);
     }
 

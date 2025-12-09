@@ -2,7 +2,7 @@ package com.carumuch.capstone.damage.domain.report;
 
 import static jakarta.persistence.FetchType.*;
 
-import com.carumuch.capstone.common.domain.BaseEntity;
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
 
 import jakarta.persistence.Column;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "damage_report")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DamageReport extends BaseEntity<DamageReport> {
+public class DamageReport extends AggregateRoot<DamageReport> {
 
 	@Column(name = "description", length = 300)
 	private String description;

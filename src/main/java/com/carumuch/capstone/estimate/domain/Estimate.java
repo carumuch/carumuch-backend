@@ -1,7 +1,7 @@
 package com.carumuch.capstone.estimate.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
-import com.carumuch.capstone.common.domain.BaseEntity;
+import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -22,7 +22,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "estimate")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Estimate extends BaseEntity<Estimate> {
+public class Estimate extends AggregateRoot<Estimate> {
 
     @Column(name = "description", length = 300)
     private String description; // 상세 설명

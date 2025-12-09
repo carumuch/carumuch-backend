@@ -2,10 +2,10 @@ package com.carumuch.capstone.damage.presentation;
 
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
 import com.carumuch.capstone.identity.domain.user.User;
-import com.carumuch.capstone.damage.presentation.dto.request.RegisterVehicleRequest;
-import com.carumuch.capstone.damage.presentation.dto.request.UpdateVehicleRequest;
+import com.carumuch.capstone.damage.presentation.dto.request.vehicle.RegisterVehicleRequest;
+import com.carumuch.capstone.damage.presentation.dto.request.vehicle.UpdateVehicleRequest;
 import com.carumuch.capstone.damage.application.VehicleService;
-import com.carumuch.capstone.damage.presentation.dto.response.VehicleInfoResponse;
+import com.carumuch.capstone.damage.presentation.dto.response.vehicle.VehicleInfoResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

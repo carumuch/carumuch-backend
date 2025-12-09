@@ -13,45 +13,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-	private final UserJpaRepository userJpaRepository;
+	private final JpaUserRepository jpaUserRepository;
 
 	@Override
 	public User save(User user) {
-		return userJpaRepository.save(user);
+		return jpaUserRepository.save(user);
 	}
 
 	@Override
 	public Optional<User> findById(Long id) {
-		return userJpaRepository.findById(id);
+		return jpaUserRepository.findById(id);
 	}
 
 	@Override
 	public void delete(User user) {
-		userJpaRepository.delete(user);
+		jpaUserRepository.delete(user);
 	}
 
 	@Override
 	public Optional<User> findByLoginId(String loginId) {
-		return userJpaRepository.findByLoginId(loginId);
+		return jpaUserRepository.findByLoginId(loginId);
 	}
 
 	@Override
 	public Optional<User> findByEmail(String email) {
-		return userJpaRepository.findByEmail(email);
+		return jpaUserRepository.findByEmail(email);
 	}
 
 	@Override
 	public boolean existsByLoginId(String loginId) {
-		return userJpaRepository.existsByLoginId(loginId);
+		return jpaUserRepository.existsByLoginId(loginId);
 	}
 
 	@Override
 	public boolean existsByEmail(String email) {
-		return userJpaRepository.existsByEmail(email);
+		return jpaUserRepository.existsByEmail(email);
 	}
 
 	@Override
 	public Optional<User> findByLoginIdAndEmail(String loginId, String email) {
-		return userJpaRepository.findByLoginIdAndEmail(loginId, email);
+		return jpaUserRepository.findByLoginIdAndEmail(loginId, email);
 	}
 }

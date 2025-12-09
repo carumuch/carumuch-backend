@@ -4,7 +4,7 @@ import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.community.domain.Comment;
 import com.carumuch.capstone.common.domain.BaseEntity;
-import com.carumuch.capstone.estimate.domain.estimate.Estimate;
+import com.carumuch.capstone.estimate.domain.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

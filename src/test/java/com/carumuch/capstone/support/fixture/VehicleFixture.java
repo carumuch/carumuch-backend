@@ -1,7 +1,7 @@
 package com.carumuch.capstone.support.fixture;
 
-import com.carumuch.capstone.damage.domain.Vehicle;
-import com.carumuch.capstone.damage.domain.VehicleOwnershipType;
+import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
+import com.carumuch.capstone.damage.domain.vehicle.VehicleOwnershipType;
 
 public enum VehicleFixture {
 	VEHICLE_FIXTURE_1("11가1111", "기아", 2000, "sm3", "홍길동"),

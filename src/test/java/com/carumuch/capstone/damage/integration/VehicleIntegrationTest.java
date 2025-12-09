@@ -19,11 +19,11 @@ import com.carumuch.capstone.support.IntegrationSupportTest;
 import com.carumuch.capstone.support.fixture.UserFixture;
 import com.carumuch.capstone.support.fixture.VehicleFixture;
 import com.carumuch.capstone.damage.application.VehicleService;
-import com.carumuch.capstone.damage.domain.Vehicle;
-import com.carumuch.capstone.damage.domain.VehicleRepository;
-import com.carumuch.capstone.damage.presentation.dto.request.RegisterVehicleRequest;
-import com.carumuch.capstone.damage.presentation.dto.request.UpdateVehicleRequest;
-import com.carumuch.capstone.damage.presentation.dto.response.VehicleInfoResponse;
+import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
+import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
+import com.carumuch.capstone.damage.presentation.dto.request.vehicle.RegisterVehicleRequest;
+import com.carumuch.capstone.damage.presentation.dto.request.vehicle.UpdateVehicleRequest;
+import com.carumuch.capstone.damage.presentation.dto.response.vehicle.VehicleInfoResponse;
 
 public class VehicleIntegrationTest extends IntegrationSupportTest {
 

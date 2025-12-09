@@ -1,6 +1,6 @@
 package com.carumuch.capstone.bodyshop.domain;
 
-import com.carumuch.capstone.estimate.domain.bidding.Bid;
+import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;

@@ -10,6 +10,7 @@ import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,7 +19,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "damage_report")
+@Table(
+	name = "damage_report",
+	indexes = {
+		@Index(name = "idx_damage_report_sigungu", columnList = "preferred_repair_sigungu"),
+		@Index(name = "idx_damage_report_sido_sigungu", columnList = "preferred_repair_sido, preferred_repair_sigungu"),
+		@Index(name = "idx_damage_report_created_date", columnList = "create_date")
+	}
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DamageReport extends AggregateRoot<DamageReport> {

@@ -5,7 +5,10 @@ import static jakarta.persistence.FetchType.*;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,15 +22,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DamageReport extends AggregateRoot<DamageReport> {
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "sido", column = @Column(name = "preferred_repair_sido", length = 100)),
+			@AttributeOverride(name = "sigungu", column = @Column(name = "preferred_repair_sigungu", length = 100))}
+	)
+	private RepairRegion preferredRepairRegion;
 
 	@Column(name = "description", length = 300)
 	private String description;
-
-	@Column(name = "preferred_repair_sido", length = 100)
-	private String preferredRepairSido;
-
-	@Column(name = "preferred_repair_sigungu", length = 100)
-	private String preferredRepairSigungu;
 
 	@Column(name = "is_pickup_required")
 	private boolean isPickupRequired;
@@ -39,10 +42,9 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 	@JoinColumn(name = "vehicle_id")
 	private Vehicle vehicle;
 
-	public DamageReport(String description, String preferredRepairSido, String preferredRepairSigungu, boolean isPickupRequired, String imagePath, Vehicle vehicle) {
+	public DamageReport(String description, RepairRegion preferredRepairRegion, boolean isPickupRequired, String imagePath, Vehicle vehicle) {
+		this.preferredRepairRegion = preferredRepairRegion;
 		this.description = description;
-		this.preferredRepairSido = preferredRepairSido;
-		this.preferredRepairSigungu = preferredRepairSigungu;
 		this.isPickupRequired = isPickupRequired;
 		this.imagePath = imagePath;
 		this.vehicle = vehicle;

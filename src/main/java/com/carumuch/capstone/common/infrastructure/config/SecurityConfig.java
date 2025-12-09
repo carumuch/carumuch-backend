@@ -73,10 +73,6 @@ public class SecurityConfig {
 						mvc.matcher(POST, AUTH_URI + "/password/reset")
 					).permitAll()
 
-					.requestMatchers(
-						mvc.matcher(POST, VEHICLE_URI)
-					).permitAll()
-
 					//== 인증 필요 ==//
 					.requestMatchers(
 						mvc.matcher(GET, USER_URI + "/profile"),
@@ -91,6 +87,7 @@ public class SecurityConfig {
 
 					.requestMatchers(
 						mvc.matcher(GET, VEHICLE_URI),
+						mvc.matcher(POST, VEHICLE_URI),
 						mvc.matcher(PUT, VEHICLE_URI),
 						mvc.matcher(DELETE, VEHICLE_URI)
 					).permitAll()

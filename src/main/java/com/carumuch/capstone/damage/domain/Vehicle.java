@@ -80,7 +80,7 @@ public class Vehicle extends BaseEntity<Vehicle> {
 		String licenseNumber,
 		VehicleOwnershipType ownershipType,
 		String brand,
-		Integer modelYear,
+		int modelYear,
 		String modelName,
 		String ownerName
 	) {

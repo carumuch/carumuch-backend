@@ -51,10 +51,12 @@ public class VehicleService {
 
     @Transactional
     public void update(UpdateVehicleRequest requestDto, Long userId) {
-		checkDuplicateLicenseNumber(requestDto.licenseNumber());
-
 		Vehicle vehicle = vehicleRepository.findByUserId(userId)
 			.orElseThrow(() -> new NotFoundException(Vehicle.class));
+
+		if (!vehicle.getLicenseNumber().getValue().equals(requestDto.licenseNumber())) {
+			checkDuplicateLicenseNumber(requestDto.licenseNumber());
+		}
 		vehicle.update(
 			requestDto.licenseNumber(),
 			VehicleOwnershipType.from(requestDto.ownershipType()),

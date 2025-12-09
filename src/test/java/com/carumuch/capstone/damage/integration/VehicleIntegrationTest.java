@@ -178,6 +178,19 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 		@Test
 		void 이미_등록된_차량번호라면_예외를_반환한다() {
 		    //given
+			Vehicle otherVehicleFixture = VehicleFixture.VEHICLE_FIXTURE_2.create();
+			vehicleRepository.save(
+				new Vehicle(
+					otherVehicleFixture.getLicenseNumber().getValue(),
+					otherVehicleFixture.getOwnershipType(),
+					otherVehicleFixture.getBrand(),
+					otherVehicleFixture.getModelYear(),
+					otherVehicleFixture.getModelName(),
+					otherVehicleFixture.getOwnerName(),
+					user2
+				)
+			);
+
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			vehicleRepository.save(
 				new Vehicle(
@@ -192,7 +205,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			);
 
 			UpdateVehicleRequest updateVehicleRequest = new UpdateVehicleRequest(
-				vehicleFixture.getLicenseNumber().getValue(),
+				otherVehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),

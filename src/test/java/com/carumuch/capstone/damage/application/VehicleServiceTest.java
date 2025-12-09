@@ -42,7 +42,7 @@ class VehicleServiceTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -71,7 +71,7 @@ class VehicleServiceTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -96,7 +96,7 @@ class VehicleServiceTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -126,7 +126,7 @@ class VehicleServiceTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -149,7 +149,7 @@ class VehicleServiceTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -263,7 +263,7 @@ class VehicleServiceTest {
 
 		    //then
 			assertAll(
-				() -> Assertions.assertThat(vehicle.getLicenseNumber()).isEqualTo(changeLicenseNumber),
+				() -> Assertions.assertThat(vehicle.getLicenseNumber().getValue()).isEqualTo(changeLicenseNumber),
 				() -> Assertions.assertThat(vehicle.getOwnershipType().name()).isEqualTo(changeOwnershipType.toUpperCase()),
 				() -> Assertions.assertThat(vehicle.getBrand()).isEqualTo(changeBrand),
 				() -> Assertions.assertThat(vehicle.getModelYear()).isEqualTo(changeModelYear),
@@ -363,7 +363,7 @@ class VehicleServiceTest {
 			//then
 			assertAll(
 				() -> Assertions.assertThat(responseDto.id()).isEqualTo(vehicle.getId()),
-				() -> Assertions.assertThat(responseDto.licenseNumber()).isEqualTo(vehicle.getLicenseNumber()),
+				() -> Assertions.assertThat(responseDto.licenseNumber()).isEqualTo(vehicle.getLicenseNumber().getValue()),
 				() -> Assertions.assertThat(responseDto.ownershipType()).isEqualTo(vehicle.getOwnershipType().name()),
 				() -> Assertions.assertThat(responseDto.brand()).isEqualTo(vehicle.getBrand()),
 				() -> Assertions.assertThat(responseDto.modelYear()).isEqualTo(vehicle.getModelYear()),

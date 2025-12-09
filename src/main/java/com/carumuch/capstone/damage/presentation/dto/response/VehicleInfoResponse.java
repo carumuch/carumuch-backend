@@ -14,7 +14,7 @@ public record VehicleInfoResponse(
 	public static VehicleInfoResponse from(Vehicle vehicle) {
 		return new VehicleInfoResponse(
 			vehicle.getId(),
-			vehicle.getLicenseNumber(),
+			vehicle.getLicenseNumber().getValue(),
 			vehicle.getOwnershipType().name(),
 			vehicle.getBrand(),
 			vehicle.getModelYear(),

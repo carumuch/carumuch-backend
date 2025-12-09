@@ -53,7 +53,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -74,7 +74,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			Vehicle vehicle = vehicleRepository.save(
 				new Vehicle(
-					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getLicenseNumber().getValue(),
 					vehicleFixture.getOwnershipType(),
 					vehicleFixture.getBrand(),
 					vehicleFixture.getModelYear(),
@@ -84,7 +84,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 				)
 			);
 
-			String duplicateLicenseNumber = vehicle.getLicenseNumber();
+			String duplicateLicenseNumber = vehicle.getLicenseNumber().getValue();
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
 				duplicateLicenseNumber,
@@ -106,7 +106,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			vehicleRepository.save(
 				new Vehicle(
-					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getLicenseNumber().getValue(),
 					vehicleFixture.getOwnershipType(),
 					vehicleFixture.getBrand(),
 					vehicleFixture.getModelYear(),
@@ -117,7 +117,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			);
 
 			RegisterVehicleRequest registerVehicleRequest = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -140,7 +140,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			vehicleRepository.save(
 				new Vehicle(
-					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getLicenseNumber().getValue(),
 					vehicleFixture.getOwnershipType(),
 					vehicleFixture.getBrand(),
 					vehicleFixture.getModelYear(),
@@ -152,7 +152,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 
 			Vehicle updateVehicleFixture = VehicleFixture.VEHICLE_FIXTURE_2.create();
 			UpdateVehicleRequest updateVehicleRequest = new UpdateVehicleRequest(
-				updateVehicleFixture.getLicenseNumber(),
+				updateVehicleFixture.getLicenseNumber().getValue(),
 				updateVehicleFixture.getOwnershipType().name(),
 				updateVehicleFixture.getBrand(),
 				updateVehicleFixture.getModelYear(),
@@ -167,7 +167,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicle = vehicleRepository.findByUserId(user1.getId())
 				.orElseThrow(() -> new AssertionFailure("vehicle not found"));
 			assertAll(
-				() -> Assertions.assertThat(vehicle.getLicenseNumber()).isEqualTo(updateVehicleRequest.licenseNumber()),
+				() -> Assertions.assertThat(vehicle.getLicenseNumber().getValue()).isEqualTo(updateVehicleRequest.licenseNumber()),
 				() -> Assertions.assertThat(vehicle.getOwnershipType().name()).isEqualTo(updateVehicleRequest.ownershipType().toUpperCase()),
 				() -> Assertions.assertThat(vehicle.getBrand()).isEqualTo(updateVehicleRequest.brand()),
 				() -> Assertions.assertThat(vehicle.getModelYear()).isEqualTo(updateVehicleRequest.modelYear()),
@@ -182,7 +182,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			vehicleRepository.save(
 				new Vehicle(
-					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getLicenseNumber().getValue(),
 					vehicleFixture.getOwnershipType(),
 					vehicleFixture.getBrand(),
 					vehicleFixture.getModelYear(),
@@ -193,7 +193,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			);
 
 			UpdateVehicleRequest updateVehicleRequest = new UpdateVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -216,7 +216,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			Vehicle vehicle = vehicleRepository.save(
 				new Vehicle(
-					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getLicenseNumber().getValue(),
 					vehicleFixture.getOwnershipType(),
 					vehicleFixture.getBrand(),
 					vehicleFixture.getModelYear(),
@@ -253,7 +253,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			Vehicle vehicle = vehicleRepository.save(
 				new Vehicle(
-					vehicleFixture.getLicenseNumber(),
+					vehicleFixture.getLicenseNumber().getValue(),
 					vehicleFixture.getOwnershipType(),
 					vehicleFixture.getBrand(),
 					vehicleFixture.getModelYear(),

@@ -2,6 +2,7 @@ package com.carumuch.capstone.damage.application;
 
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.damage.domain.LicenseNumber;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.damage.domain.Vehicle;
 import com.carumuch.capstone.damage.domain.VehicleOwnershipType;
@@ -37,7 +38,7 @@ public class VehicleService {
 	}
 
 	private void checkDuplicateLicenseNumber(String licenseNumber) {
-		if (vehicleRepository.existsByLicenseNumber(licenseNumber)) {
+		if (vehicleRepository.existsByLicenseNumber(new LicenseNumber(licenseNumber))) {
 			throw new CustomException(HttpStatus.CONFLICT, LICENSE_NUMBER_DUPLICATE_MESSAGE);
 		}
 	}

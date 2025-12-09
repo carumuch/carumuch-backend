@@ -48,7 +48,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			RegisterVehicleRequest requestDto = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -102,7 +102,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			RegisterVehicleRequest requestDto = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -142,7 +142,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			RegisterVehicleRequest requestDto = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -222,7 +222,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			RegisterVehicleRequest requestDto = new RegisterVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				"stoleMyFriendCar",
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -260,7 +260,7 @@ class VehicleControllerTest extends RestDocsSupport {
 		    //given
 			Vehicle vehicle = VehicleFixture.VEHICLE_FIXTURE_2.create();
 			UpdateVehicleRequest requestDto = new UpdateVehicleRequest(
-				vehicle.getLicenseNumber(),
+				vehicle.getLicenseNumber().getValue(),
 				vehicle.getOwnershipType().name(),
 				vehicle.getBrand(),
 				vehicle.getModelYear(),
@@ -315,7 +315,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			UpdateVehicleRequest requestDto = new UpdateVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -355,7 +355,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			UpdateVehicleRequest requestDto = new UpdateVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				"stoleMyFriendCar",
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -394,7 +394,7 @@ class VehicleControllerTest extends RestDocsSupport {
 
 			Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
 			UpdateVehicleRequest requestDto = new UpdateVehicleRequest(
-				vehicleFixture.getLicenseNumber(),
+				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType().name(),
 				vehicleFixture.getBrand(),
 				vehicleFixture.getModelYear(),
@@ -491,7 +491,7 @@ class VehicleControllerTest extends RestDocsSupport {
 			ReflectionTestUtils.setField(vehicle, "id", 1L);
 			VehicleInfoResponse responseDto = new VehicleInfoResponse(
 				vehicle.getId(),
-				vehicle.getLicenseNumber(),
+				vehicle.getLicenseNumber().getValue(),
 				vehicle.getOwnershipType().name(),
 				vehicle.getBrand(),
 				vehicle.getModelYear(),

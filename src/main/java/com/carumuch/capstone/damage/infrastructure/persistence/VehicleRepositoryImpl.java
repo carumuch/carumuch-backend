@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.carumuch.capstone.damage.domain.LicenseNumber;
 import com.carumuch.capstone.damage.domain.Vehicle;
 import com.carumuch.capstone.damage.domain.VehicleRepository;
 
@@ -16,7 +17,7 @@ public class VehicleRepositoryImpl implements VehicleRepository {
 	private final VehicleJpaRepository vehicleJpaRepository;
 
 	@Override
-	public boolean existsByLicenseNumber(String licenseNumber) {
+	public boolean existsByLicenseNumber(LicenseNumber licenseNumber) {
 		return vehicleJpaRepository.existsByLicenseNumber(licenseNumber);
 	}
 

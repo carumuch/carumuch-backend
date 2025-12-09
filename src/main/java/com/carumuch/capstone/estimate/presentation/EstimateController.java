@@ -7,6 +7,8 @@ import com.carumuch.capstone.estimate.presentation.dto.request.estimate.Estimate
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import com.carumuch.capstone.estimate.application.EstimateService;
+import com.carumuch.capstone.identity.domain.user.User;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -53,12 +55,12 @@ public class EstimateController {
     }
 
     /**
-     * SELECT: 견적 히스토리 리스트 차량별 조회
+     * SELECT: 견적 히스토리 리스트
      */
-    @GetMapping("/history/vehicle/{vehicleId}")
-    public ResponseEntity<?> getEstimateHistoryByVehicleId(@RequestParam(defaultValue = "1") int page, @PathVariable("vehicleId") Long id) {
+    @GetMapping("/history/vehicle")
+    public ResponseEntity<?> getEstimateHistoryByVehicleId(@RequestParam(defaultValue = "1") int page, User user) {
         return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, estimateService.getEstimateHistoryByVehicleId(page, id)));
+                .body(ResponseDto.success(OK, estimateService.getEstimateHistoryByVehicleId(page, user.getId())));
     }
 
     /**

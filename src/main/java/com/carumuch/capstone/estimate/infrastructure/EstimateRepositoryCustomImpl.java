@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.carumuch.capstone.estimate.domain.estimate.QEstimate.*;
-import static com.carumuch.capstone.vehicle.domain.QVehicle.*;
+import static com.carumuch.capstone.damage.domain.QVehicle.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
@@ -47,7 +47,7 @@ public class EstimateRepositoryCustomImpl implements EstimateRepositoryCustom {
                         estimate.isAIEstimate.as("isAIEstimate"),
                         estimate.createDate.as("createDate"),
                         estimate.applicantCount.as("applicantCount"),
-                        vehicle.type.as("type"),
+                        vehicle.ownershipType.as("ownershipType").stringValue(),
                         vehicle.brand.as("brand"),
                         vehicle.modelYear.as("modelYear"),
                         vehicle.modelName.as("modelName"),

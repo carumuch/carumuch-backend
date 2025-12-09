@@ -5,7 +5,6 @@ import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.community.domain.Comment;
 import com.carumuch.capstone.common.domain.BaseEntity;
 import com.carumuch.capstone.estimate.domain.estimate.Estimate;
-import com.carumuch.capstone.vehicle.domain.Vehicle;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -58,10 +57,6 @@ public class User extends BaseEntity<User> {
     @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
     private List<Estimate> estimates = new ArrayList<>();
 
-    @OneToOne(fetch = LAZY, orphanRemoval = true)
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
-
 	@Builder
     public User(String loginId, String password, String email, String name, Role role) {
         this.loginId = loginId;
@@ -94,9 +89,5 @@ public class User extends BaseEntity<User> {
 
     public void registerMechanic() {
         this.isMechanic = true;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 }

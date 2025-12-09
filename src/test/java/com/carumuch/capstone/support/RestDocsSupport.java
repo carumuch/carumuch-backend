@@ -2,6 +2,8 @@ package com.carumuch.capstone.support;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.carumuch.capstone.damage.application.VehicleService;
+import com.carumuch.capstone.damage.presentation.VehicleController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.carumuch.capstone.identity.application.AccountRecoveryService;
 import com.carumuch.capstone.common.infrastructure.config.SecurityConfig;
@@ -33,6 +35,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
@@ -43,7 +46,8 @@ import java.util.Optional;
 @WebMvcTest(controllers = {
 	HealthCheckController.class,
 	UserController.class,
-	AuthController.class
+	AuthController.class,
+	VehicleController.class
 })
 @Import({
 	SecurityConfig.class,
@@ -90,9 +94,13 @@ public abstract class RestDocsSupport {
 	@MockitoBean
 	protected AccountRecoveryService accountRecoveryService;
 
+	@MockitoBean
+	protected VehicleService vehicleService;
+
     @BeforeEach
     void setUp() {
         User userFixture = UserFixture.USER_FIXTURE_1.create();
+		ReflectionTestUtils.setField(userFixture, "id", 1L);
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(userFixture.getLoginId(), null, List.of())

@@ -11,7 +11,7 @@ public record RegisterVehicleRequest(
 	@NotBlank String licenseNumber,
 	@NotBlank String ownershipType,
 	@NotBlank String brand,
-	@NotNull int modelYear,
+	@NotNull Integer modelYear,
 	@NotBlank String modelName,
 	@NotBlank String ownerName
 ) {

@@ -90,7 +90,7 @@ public class SecurityConfig {
 						mvc.matcher(POST, VEHICLE_URI),
 						mvc.matcher(PUT, VEHICLE_URI),
 						mvc.matcher(DELETE, VEHICLE_URI)
-					).permitAll()
+					).authenticated()
 
 					.anyRequest().permitAll()
                 )

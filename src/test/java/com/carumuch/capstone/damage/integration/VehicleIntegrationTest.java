@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.hibernate.AssertionFailure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -165,7 +164,7 @@ public class VehicleIntegrationTest extends IntegrationSupportTest {
 
 		    //then
 			Vehicle vehicle = vehicleRepository.findByUserId(user1.getId())
-				.orElseThrow(() -> new AssertionFailure("vehicle not found"));
+				.orElseThrow(() -> new AssertionError("vehicle not found"));
 			assertAll(
 				() -> Assertions.assertThat(vehicle.getLicenseNumber().getValue()).isEqualTo(updateVehicleRequest.licenseNumber()),
 				() -> Assertions.assertThat(vehicle.getOwnershipType().name()).isEqualTo(updateVehicleRequest.ownershipType().toUpperCase()),

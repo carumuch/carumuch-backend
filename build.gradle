@@ -155,13 +155,10 @@ ext.jacocoExcludes = [
 
         // 리펙토링 대상 패키지 TODO: 진행 완료시 제거한다.
         "**/common/legacy/**",
-        "**/bid/**",
-        "**/board/**",
+        "**/community/**",
+        "**/bidding/**",
         "**/bodyshop/**",
-        "**/comment/**",
         "**/estimate/**",
-        "**/image/**",
-        "**/vehicle/**",
 ]
 
 tasks.named('jacocoTestReport') {

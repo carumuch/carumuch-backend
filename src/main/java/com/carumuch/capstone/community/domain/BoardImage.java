@@ -1,6 +1,7 @@
 package com.carumuch.capstone.community.domain;
 
 import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.domain.DomainEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "board_image")
 @Getter
-public class BoardImage extends AggregateRoot<BoardImage> {
+public class BoardImage extends DomainEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)

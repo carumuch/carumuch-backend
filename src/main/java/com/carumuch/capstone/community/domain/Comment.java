@@ -1,6 +1,7 @@
 package com.carumuch.capstone.community.domain;
 
 import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.domain.DomainEntity;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment")
 @Getter
-public class Comment extends AggregateRoot<Comment> {
+public class Comment extends DomainEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)

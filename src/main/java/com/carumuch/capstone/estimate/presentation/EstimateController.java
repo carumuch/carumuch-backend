@@ -1,9 +1,9 @@
 package com.carumuch.capstone.estimate.presentation;
 
-import com.carumuch.capstone.estimate.presentation.dto.request.estimate.EstimateAIRepairCostReqDto;
-import com.carumuch.capstone.estimate.presentation.dto.request.estimate.EstimateRegistrationReqDto;
-import com.carumuch.capstone.estimate.presentation.dto.request.estimate.EstimateStatusUpdateReqDto;
-import com.carumuch.capstone.estimate.presentation.dto.request.estimate.EstimateUpdateReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateAIRepairCostReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateRegistrationReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateStatusUpdateReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateUpdateReqDto;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
 import com.carumuch.capstone.estimate.application.EstimateService;

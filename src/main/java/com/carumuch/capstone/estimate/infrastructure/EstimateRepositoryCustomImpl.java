@@ -1,13 +1,13 @@
 package com.carumuch.capstone.estimate.infrastructure;
 
 
-import com.carumuch.capstone.estimate.domain.estimate.EstimateRepositoryCustom;
-import com.carumuch.capstone.estimate.presentation.dto.request.estimate.EstimateSearchReqDto;
-import com.carumuch.capstone.estimate.presentation.dto.response.estimate.EstimateSearchResDto;
-import com.carumuch.capstone.estimate.domain.estimate.Estimate;
-import com.carumuch.capstone.estimate.domain.estimate.EstimateStatus;
+import com.carumuch.capstone.estimate.domain.EstimateRepositoryCustom;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateSearchReqDto;
+import com.carumuch.capstone.estimate.presentation.dto.response.EstimateSearchResDto;
+import com.carumuch.capstone.estimate.domain.Estimate;
+import com.carumuch.capstone.estimate.domain.EstimateStatus;
 
-import com.carumuch.capstone.estimate.presentation.dto.response.estimate.QEstimateSearchResDto;
+import com.carumuch.capstone.estimate.presentation.dto.response.QEstimateSearchResDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.carumuch.capstone.estimate.domain.estimate.QEstimate.*;
-import static com.carumuch.capstone.damage.domain.QVehicle.*;
+import static com.carumuch.capstone.damage.domain.vehicle.QVehicle.*;
+import static com.carumuch.capstone.estimate.domain.QEstimate.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository

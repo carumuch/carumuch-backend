@@ -10,6 +10,8 @@ import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -46,6 +48,10 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 	@Column(name = "image_path", length = 500)
 	private String imagePath;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", length = 20, nullable = false)
+	private DamageReportStatus status;
+
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "vehicle_id")
 	private Vehicle vehicle;
@@ -55,6 +61,7 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 		this.description = description;
 		this.isPickupRequired = isPickupRequired;
 		this.imagePath = imagePath;
+		this.status = DamageReportStatus.REGISTERED;
 		this.vehicle = vehicle;
 		registerEvent(new DamageReportRegisteredEvent(this));
 	}

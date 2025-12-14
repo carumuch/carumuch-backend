@@ -63,6 +63,6 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 		this.imagePath = imagePath;
 		this.status = DamageReportStatus.REGISTERED;
 		this.vehicle = vehicle;
-		registerEvent(new DamageReportRegisteredEvent(this));
+		registerEvent(new DamageReportRegisteredEvent(this.getId(), this.imagePath, this.getVehicle().getBrand()));
 	}
 }

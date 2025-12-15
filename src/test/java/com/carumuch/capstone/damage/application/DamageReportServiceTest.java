@@ -1,5 +1,7 @@
 package com.carumuch.capstone.damage.application;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -18,6 +20,7 @@ import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.damage.presentation.dto.request.report.RegisterDamageReportRequest;
+import com.carumuch.capstone.damage.presentation.dto.request.report.UpdateDamageReportRequest;
 import com.carumuch.capstone.support.fixture.DamageReportFixture;
 
 @ExtendWith(MockitoExtension.class)
@@ -102,6 +105,84 @@ class DamageReportServiceTest {
 			Mockito.verify(damageReportRepository, Mockito.times(1))
 				.save(Mockito.any(DamageReport.class));
 			Assertions.assertThat(result).isInstanceOf(Long.class);
+		}
+	}
+
+	@Nested
+	@DisplayName("사고 레포트 수정")
+	class Update {
+		@Test
+		void 사고_레포트를_조회한다() {
+		    //given
+			Long damageReportId = 1L;
+			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+
+			UpdateDamageReportRequest updateDamageReportRequest = new UpdateDamageReportRequest(
+				"설명을 변경합니다.",
+				"부산시",
+				"남구",
+				true
+			);
+
+			Mockito.when(damageReportRepository.findById(damageReportId)).thenReturn(Optional.of(damageReportFixture));
+
+		    //when
+			damageReportService.update(updateDamageReportRequest, damageReportId);
+
+		    //then
+		    Mockito.verify(damageReportRepository, Mockito.times(1))
+				.findById(damageReportId);
+		}
+
+		@Test
+		void 사고_레포트가_존재하지_않는다면_예외를_반환한다() {
+		    //given
+			Long damageReportId = 1L;
+
+			UpdateDamageReportRequest updateDamageReportRequest = new UpdateDamageReportRequest(
+				"설명을 변경합니다.",
+				"부산시",
+				"남구",
+				true
+			);
+
+			Mockito.when(damageReportRepository.findById(damageReportId)).thenReturn(Optional.empty());
+
+		    //when & then
+			Assertions.assertThatThrownBy(() -> damageReportService.update(updateDamageReportRequest, damageReportId))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 사고_레포트를_업데이트한다() {
+		    //given
+			Long damageReportId = 1L;
+			DamageReport damageReport = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+
+			String changeDescription = "설명을 변경합니다.";
+			String changeSido = "부산시";
+			String changeSigungu = "남구";
+			boolean changeIsPickupRequired = true;
+
+			UpdateDamageReportRequest updateDamageReportRequest = new UpdateDamageReportRequest(
+				changeDescription,
+				changeSido,
+				changeSigungu,
+				changeIsPickupRequired
+			);
+
+			Mockito.when(damageReportRepository.findById(damageReportId)).thenReturn(Optional.of(damageReport));
+
+		    //when
+			damageReportService.update(updateDamageReportRequest, damageReportId);
+
+		    //then
+			assertAll(
+				() -> Assertions.assertThat(damageReport.getDescription()).isEqualTo(changeDescription),
+				() -> Assertions.assertThat(damageReport.getPreferredRepairRegion().getSido()).isEqualTo(changeSido),
+				() -> Assertions.assertThat(damageReport.getPreferredRepairRegion().getSigungu()).isEqualTo(changeSigungu),
+				() -> Assertions.assertThat(damageReport.isPickupRequired()).isEqualTo(changeIsPickupRequired)
+			);
 		}
 	}
 }

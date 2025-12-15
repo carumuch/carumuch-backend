@@ -65,4 +65,10 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 		this.vehicle = vehicle;
 		registerEvent(new DamageReportRegisteredEvent(this.getId(), this.imagePath, this.getVehicle().getBrand()));
 	}
+
+	public void update(String description, RepairRegion preferredRepairRegion, boolean isPickupRequired) {
+		this.description = description;
+		this.preferredRepairRegion = preferredRepairRegion;
+		this.isPickupRequired = isPickupRequired;
+	}
 }

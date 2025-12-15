@@ -36,7 +36,7 @@ public class DamageReportService {
 		damageReport.update(
 			requestDto.description(),
 			new RepairRegion(requestDto.preferredRepairSido(), requestDto.preferredRepairSigungu()),
-			requestDto.isisPickupRequired()
+			requestDto.isPickupRequired()
 		);
 	}
 }

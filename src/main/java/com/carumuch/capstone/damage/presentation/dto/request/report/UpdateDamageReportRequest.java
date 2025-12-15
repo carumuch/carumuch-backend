@@ -6,6 +6,6 @@ public record UpdateDamageReportRequest(
 	@NotNull String description,
 	@NotNull String preferredRepairSido,
 	@NotNull String preferredRepairSigungu,
-	@NotNull Boolean isisPickupRequired
+	@NotNull Boolean isPickupRequired
 ) {
 }

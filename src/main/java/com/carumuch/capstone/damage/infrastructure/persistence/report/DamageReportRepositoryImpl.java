@@ -26,11 +26,6 @@ public class DamageReportRepositoryImpl implements DamageReportRepository {
 	}
 
 	@Override
-	public void deleteById(Long id) {
-		jpaDamageRepository.deleteById(id);
-	}
-
-	@Override
 	public Optional<DamageReport> findById(Long id) {
 		return jpaDamageRepository.findById(id);
 	}

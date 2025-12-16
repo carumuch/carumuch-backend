@@ -2,6 +2,7 @@ package com.carumuch.capstone.damage.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -21,6 +22,7 @@ import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.damage.presentation.dto.request.report.RegisterDamageReportRequest;
 import com.carumuch.capstone.damage.presentation.dto.request.report.UpdateDamageReportRequest;
+import com.carumuch.capstone.damage.presentation.dto.response.report.DamageReportInfoResponse;
 import com.carumuch.capstone.support.fixture.DamageReportFixture;
 
 @ExtendWith(MockitoExtension.class)
@@ -182,6 +184,74 @@ class DamageReportServiceTest {
 				() -> Assertions.assertThat(damageReport.getPreferredRepairRegion().getSido()).isEqualTo(changeSido),
 				() -> Assertions.assertThat(damageReport.getPreferredRepairRegion().getSigungu()).isEqualTo(changeSigungu),
 				() -> Assertions.assertThat(damageReport.isPickupRequired()).isEqualTo(changeIsPickupRequired)
+			);
+		}
+	}
+
+	@Nested
+	@DisplayName("최근 사고 레포트 기록 조회")
+	class FindRecentReports {
+
+		DamageReport damageReport1 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+		DamageReport damageReport2 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport3 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport4 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+		DamageReport damageReport5 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport6 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport7 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+		DamageReport damageReport8 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport9 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport10 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+
+		List<DamageReport> damageReports = List.of(
+			damageReport1,
+			damageReport2,
+			damageReport3,
+			damageReport4,
+			damageReport5,
+			damageReport6,
+			damageReport7,
+			damageReport8,
+			damageReport9,
+			damageReport10
+		);
+
+		@Test
+		void 최근_사고_레포트_10개_목록을_조회한다() {
+		    //given
+		    Long userId = 1L;
+			Mockito.when(damageReportRepository.findRecent10ByUserId(userId)).thenReturn(damageReports);
+
+		    //when
+			damageReportService.findRecentReports(userId);
+
+		    //then
+		    Mockito.verify(damageReportRepository, Mockito.times(1))
+				.findRecent10ByUserId(userId);
+		}
+
+		@Test
+		void 최근_사고_레포트_10개_목록을_응답한다() {
+		    //given
+			Long userId = 1L;
+			Mockito.when(damageReportRepository.findRecent10ByUserId(userId)).thenReturn(damageReports);
+
+		    //when
+			List<DamageReportInfoResponse> results = damageReportService.findRecentReports(userId);
+
+			//then
+		    assertAll(
+				() -> Assertions.assertThat(results).hasSize(10),
+				() -> Assertions.assertThat(results.get(0).preferredRepairSido()).isEqualTo(damageReport1.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(1).preferredRepairSido()).isEqualTo(damageReport2.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(2).preferredRepairSido()).isEqualTo(damageReport3.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(3).preferredRepairSido()).isEqualTo(damageReport4.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(4).preferredRepairSido()).isEqualTo(damageReport5.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(5).preferredRepairSido()).isEqualTo(damageReport6.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(6).preferredRepairSido()).isEqualTo(damageReport7.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(7).preferredRepairSido()).isEqualTo(damageReport8.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(8).preferredRepairSido()).isEqualTo(damageReport9.getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(9).preferredRepairSido()).isEqualTo(damageReport10.getPreferredRepairRegion().getSido())
 			);
 		}
 	}

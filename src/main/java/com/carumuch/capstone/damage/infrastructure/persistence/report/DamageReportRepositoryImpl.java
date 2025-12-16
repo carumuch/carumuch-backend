@@ -1,7 +1,10 @@
 package com.carumuch.capstone.damage.infrastructure.persistence.report;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.carumuch.capstone.damage.domain.report.DamageReport;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class DamageReportRepositoryImpl implements DamageReportRepository {
+	private static final int DEFAULT_RECENT_SIZE = 10;
+	private static final String DEFAULT_SORT_FIELD = "createDate";
 
 	private final JpaDamageRepository jpaDamageRepository;
 
@@ -28,5 +33,15 @@ public class DamageReportRepositoryImpl implements DamageReportRepository {
 	@Override
 	public Optional<DamageReport> findById(Long id) {
 		return jpaDamageRepository.findById(id);
+	}
+
+	@Override
+	public List<DamageReport> findRecent10ByUserId(Long userId) {
+		PageRequest pageRequest = PageRequest.of(
+			0,
+			DEFAULT_RECENT_SIZE,
+			Sort.by(Sort.Direction.DESC, DEFAULT_SORT_FIELD)
+		);
+		return jpaDamageRepository.findRecentByUserId(userId, pageRequest);
 	}
 }

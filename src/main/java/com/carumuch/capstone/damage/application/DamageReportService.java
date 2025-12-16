@@ -1,5 +1,7 @@
 package com.carumuch.capstone.damage.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +13,13 @@ import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.damage.presentation.dto.request.report.RegisterDamageReportRequest;
 import com.carumuch.capstone.damage.presentation.dto.request.report.UpdateDamageReportRequest;
+import com.carumuch.capstone.damage.presentation.dto.response.report.DamageReportInfoResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DamageReportService {
 
 	private final DamageReportRepository damageReportRepository;
@@ -38,5 +42,17 @@ public class DamageReportService {
 			new RepairRegion(requestDto.preferredRepairSido(), requestDto.preferredRepairSigungu()),
 			requestDto.isPickupRequired()
 		);
+	}
+
+	public List<DamageReportInfoResponse> findRecentReports(Long userId) {
+		return damageReportRepository.findRecent10ByUserId(userId).stream()
+			.map(dr -> new DamageReportInfoResponse(
+				dr.getId(),
+				dr.getPreferredRepairRegion().getSido(),
+				dr.getPreferredRepairRegion().getSigungu(),
+				dr.isPickupRequired(),
+				dr.getStatus().name(),
+				dr.getCreateDate()
+			)).toList();
 	}
 }

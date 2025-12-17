@@ -14,9 +14,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
@@ -252,6 +257,122 @@ class DamageReportServiceTest {
 				() -> Assertions.assertThat(results.get(7).preferredRepairSido()).isEqualTo(damageReport8.getPreferredRepairRegion().getSido()),
 				() -> Assertions.assertThat(results.get(8).preferredRepairSido()).isEqualTo(damageReport9.getPreferredRepairRegion().getSido()),
 				() -> Assertions.assertThat(results.get(9).preferredRepairSido()).isEqualTo(damageReport10.getPreferredRepairRegion().getSido())
+			);
+		}
+	}
+	
+	@Nested
+	@DisplayName("사고 레포트 페이지 조회 기능")
+	class FindReports {
+		DamageReport damageReport1 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+		DamageReport damageReport2 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport3 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport4 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+		DamageReport damageReport5 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport6 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport7 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+		DamageReport damageReport8 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport9 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport10 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+
+		List<DamageReport> damageReportsFirstPage = List.of(
+			damageReport1,
+			damageReport2,
+			damageReport3,
+			damageReport4,
+			damageReport5,
+			damageReport6,
+			damageReport7,
+			damageReport8,
+			damageReport9,
+			damageReport10
+		);
+
+		DamageReport damageReport11 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_2.create();
+		DamageReport damageReport12 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_3.create();
+		DamageReport damageReport13 = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+
+		List<DamageReport> damageReportsSecondPage = List.of(
+			damageReport11,
+			damageReport12,
+			damageReport13
+		);
+
+		@Test
+		void 사고_레포트_페이지를_조회한다() {
+		    //given
+			Long userId = 1L;
+			PagingRequest pagingRequest = new PagingRequest(1, 10, null);
+			Page<DamageReport> page = new PageImpl<>(
+				damageReportsFirstPage,
+				PageRequest.of(pagingRequest.page(), pagingRequest.size()),
+				13
+			);
+
+			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort()))
+				.thenReturn(page);
+		    
+		    //when
+			damageReportService.findReports(userId, pagingRequest);
+		    
+		    //then
+		    Mockito.verify(damageReportRepository, Mockito.times(1))
+				.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort());
+		}
+		
+		@Test
+		void 사고_레포트_첫번째_페이지를_조회한다() {
+		    //given
+			Long userId = 1L;
+			PagingRequest pagingRequest = new PagingRequest(1, 10, null);
+			Page<DamageReport> page = new PageImpl<>(
+				damageReportsFirstPage,
+				PageRequest.of(pagingRequest.page(), pagingRequest.size()),
+				13
+			);
+
+			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort()))
+				.thenReturn(page);
+		    
+		    //when
+			PagingResponse<DamageReportInfoResponse> results = damageReportService.findReports(userId, pagingRequest);
+
+			//then
+		    assertAll(
+				() -> Assertions.assertThat(results.content()).hasSize(10),
+				() -> Assertions.assertThat(results.page().totalElements()).isEqualTo(13),
+				() -> Assertions.assertThat(results.page().totalPages()).isEqualTo(2),
+				() -> Assertions.assertThat(results.page().hasNext()).isTrue(),
+				() -> Assertions.assertThat(results.page().hasPrevious()).isFalse(),
+				() -> Assertions.assertThat(results.page().number()).isEqualTo(1)
+			);
+		}
+
+		@Test
+		void 사고_레포트_두번째_페이지를_조회한다() {
+			//given
+			Long userId = 1L;
+			PagingRequest pagingRequest = new PagingRequest(2, 10, null);
+			Page<DamageReport> page = new PageImpl<>(
+				damageReportsSecondPage,
+				PageRequest.of(pagingRequest.page(), pagingRequest.size()),
+				13
+			);
+
+			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort()))
+				.thenReturn(page);
+
+			//when
+			PagingResponse<DamageReportInfoResponse> results = damageReportService.findReports(userId, pagingRequest);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(results.content()).hasSize(3),
+				() -> Assertions.assertThat(results.page().totalElements()).isEqualTo(13),
+				() -> Assertions.assertThat(results.page().totalPages()).isEqualTo(2),
+				() -> Assertions.assertThat(results.page().hasNext()).isFalse(),
+				() -> Assertions.assertThat(results.page().hasPrevious()).isTrue(),
+				() -> Assertions.assertThat(results.page().number()).isEqualTo(2)
 			);
 		}
 	}

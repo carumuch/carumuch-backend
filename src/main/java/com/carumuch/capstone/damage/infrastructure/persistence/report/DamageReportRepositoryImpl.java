@@ -3,7 +3,9 @@ package com.carumuch.capstone.damage.infrastructure.persistence.report;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
@@ -38,5 +40,11 @@ public class DamageReportRepositoryImpl implements DamageReportRepository {
 			Sort.by(Sort.Direction.DESC, DEFAULT_SORT_FIELD)
 		);
 		return jpaDamageRepository.findRecentByUserId(userId, pageRequest);
+	}
+
+	@Override
+	public Page<DamageReport> findPageByUserId(Long userId, int page, int size, String sort) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort));
+		return jpaDamageRepository.findPageByUserId(userId, pageRequest);
 	}
 }

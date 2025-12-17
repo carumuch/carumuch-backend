@@ -2,10 +2,13 @@ package com.carumuch.capstone.damage.application;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.report.RepairRegion;
@@ -54,5 +57,18 @@ public class DamageReportService {
 				dr.getStatus().name(),
 				dr.getCreateDate()
 			)).toList();
+	}
+
+	public PagingResponse<DamageReportInfoResponse> findReports(Long userId, PagingRequest requestDto) {
+		Page<DamageReportInfoResponse> page = damageReportRepository.findPageByUserId(userId, requestDto.page(), requestDto.size(), requestDto.sort())
+			.map(dr -> new DamageReportInfoResponse(
+				dr.getId(),
+				dr.getPreferredRepairRegion().getSido(),
+				dr.getPreferredRepairRegion().getSigungu(),
+				dr.isPickupRequired(),
+				dr.getStatus().name(),
+				dr.getCreateDate()
+			));
+		return PagingResponse.from(page);
 	}
 }

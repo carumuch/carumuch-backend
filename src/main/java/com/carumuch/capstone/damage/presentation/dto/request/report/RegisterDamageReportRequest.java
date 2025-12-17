@@ -10,14 +10,14 @@ public record RegisterDamageReportRequest(
 	@NotNull String description,
 	@NotNull String preferredRepairSido,
 	@NotNull String preferredRepairSigungu,
-	@NotNull Boolean isisPickupRequired,
+	@NotNull Boolean isPickupRequired,
 	@NotNull String imagePath
 ) {
 	public DamageReport toEntity(Vehicle vehicle) {
 		return new DamageReport(
 			description,
 			new RepairRegion(preferredRepairSido, preferredRepairSigungu),
-			isisPickupRequired,
+			isPickupRequired,
 			imagePath,
 			vehicle
 		);

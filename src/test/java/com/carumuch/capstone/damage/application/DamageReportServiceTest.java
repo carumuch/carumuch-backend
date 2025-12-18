@@ -121,6 +121,7 @@ class DamageReportServiceTest {
 		@Test
 		void 사고_레포트를_조회한다() {
 		    //given
+			Long userId = 1L;
 			Long damageReportId = 1L;
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 
@@ -131,19 +132,20 @@ class DamageReportServiceTest {
 				true
 			);
 
-			Mockito.when(damageReportRepository.findById(damageReportId)).thenReturn(Optional.of(damageReportFixture));
+			Mockito.when(damageReportRepository.findByIdAndUserId(damageReportId, userId)).thenReturn(Optional.of(damageReportFixture));
 
 		    //when
-			damageReportService.update(updateDamageReportRequest, damageReportId);
+			damageReportService.update(updateDamageReportRequest, damageReportId, userId);
 
 		    //then
 		    Mockito.verify(damageReportRepository, Mockito.times(1))
-				.findById(damageReportId);
+				.findByIdAndUserId(damageReportId, userId);
 		}
 
 		@Test
 		void 사고_레포트가_존재하지_않는다면_예외를_반환한다() {
 		    //given
+			Long userId = 1L;
 			Long damageReportId = 1L;
 
 			UpdateDamageReportRequest updateDamageReportRequest = new UpdateDamageReportRequest(
@@ -153,16 +155,17 @@ class DamageReportServiceTest {
 				true
 			);
 
-			Mockito.when(damageReportRepository.findById(damageReportId)).thenReturn(Optional.empty());
+			Mockito.when(damageReportRepository.findByIdAndUserId(damageReportId, userId)).thenReturn(Optional.empty());
 
 		    //when & then
-			Assertions.assertThatThrownBy(() -> damageReportService.update(updateDamageReportRequest, damageReportId))
+			Assertions.assertThatThrownBy(() -> damageReportService.update(updateDamageReportRequest, damageReportId, userId))
 				.isInstanceOf(NotFoundException.class);
 		}
 
 		@Test
 		void 사고_레포트를_업데이트한다() {
 		    //given
+			Long userId = 1L;
 			Long damageReportId = 1L;
 			DamageReport damageReport = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 
@@ -178,10 +181,10 @@ class DamageReportServiceTest {
 				changeIsPickupRequired
 			);
 
-			Mockito.when(damageReportRepository.findById(damageReportId)).thenReturn(Optional.of(damageReport));
+			Mockito.when(damageReportRepository.findByIdAndUserId(damageReportId, userId)).thenReturn(Optional.of(damageReport));
 
 		    //when
-			damageReportService.update(updateDamageReportRequest, damageReportId);
+			damageReportService.update(updateDamageReportRequest, damageReportId, userId);
 
 		    //then
 			assertAll(

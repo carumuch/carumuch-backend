@@ -37,8 +37,8 @@ public class DamageReportService {
 	}
 
 	@Transactional
-	public void update(UpdateDamageReportRequest requestDto, Long damageReportId) {
-		DamageReport damageReport = damageReportRepository.findById(damageReportId)
+	public void update(UpdateDamageReportRequest requestDto, Long damageReportId, Long userId) {
+		DamageReport damageReport = damageReportRepository.findByIdAndUserId(damageReportId, userId)
 			.orElseThrow(() -> new NotFoundException(DamageReport.class));
 		damageReport.update(
 			requestDto.description(),

@@ -96,7 +96,7 @@ public class SecurityConfig {
 					.requestMatchers(
 						mvc.matcher(GET, DAMAGE_REPORT_URI),
 						mvc.matcher(POST, DAMAGE_REPORT_URI),
-						mvc.matcher(PUT, DAMAGE_REPORT_URI),
+						mvc.matcher(PUT, DAMAGE_REPORT_URI + "/{damageReportId}"),
 						mvc.matcher(GET, DAMAGE_REPORT_URI + "/recent")
 					).authenticated()
 

@@ -14,4 +14,6 @@ public interface DamageReportRepository {
 	List<DamageReport> findRecent10ByUserId(Long userId);
 
 	Page<DamageReport> findPageByUserId(Long userId, int page, int size, String sort);
+
+	Optional<DamageReport> findByIdAndUserId(Long damageReportId, Long userId);
 }

@@ -139,9 +139,11 @@ class DamageReportControllerTest extends RestDocsSupport {
 		@Test
 		void 사고_레포트_수정_2XX() throws Exception {
 			//given
+			Long damageReportId = 1L;
+
 			Mockito.doNothing()
 				.when(damageReportService)
-				.update(Mockito.any(UpdateDamageReportRequest.class), Mockito.anyLong());
+				.update(Mockito.any(UpdateDamageReportRequest.class), Mockito.anyLong(), Mockito.anyLong());
 
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			UpdateDamageReportRequest requestDto = new UpdateDamageReportRequest(
@@ -153,7 +155,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 
 			//when
 			ResultActions actions = mockMvc.perform(
-				put(BASE_URI)
+				put(BASE_URI+ "/{damageReportId}", damageReportId)
 					.content(objectMapper.writeValueAsString(requestDto))
 					.contentType(MediaType.APPLICATION_JSON));
 
@@ -188,9 +190,10 @@ class DamageReportControllerTest extends RestDocsSupport {
 		void 사고_레포트_수정_4XX_등록된_사고_레포트가_없는_경우() throws Exception {
 			//given
 			String errorMessage = DamageReport.class.getSimpleName() + "을(를) 찾을 수 없습니다.";
+			Long damageReportId = 1L;
 
 			Mockito.doThrow(new NotFoundException(DamageReport.class))
-				.when(damageReportService).update(Mockito.any(UpdateDamageReportRequest.class), Mockito.anyLong());
+				.when(damageReportService).update(Mockito.any(UpdateDamageReportRequest.class), Mockito.anyLong(), Mockito.anyLong());
 
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			UpdateDamageReportRequest requestDto = new UpdateDamageReportRequest(
@@ -202,7 +205,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 
 			//when
 			ResultActions actions = mockMvc.perform(
-				put(BASE_URI)
+				put(BASE_URI+ "/{damageReportId}", damageReportId)
 					.content(objectMapper.writeValueAsString(requestDto))
 					.contentType(MediaType.APPLICATION_JSON));
 

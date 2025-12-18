@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +36,13 @@ public class DamageReportController {
 		return ResponseEntity.ok().body(ApiResponse.of(damageReportService.register(requestDto, user.getId())));
 	}
 
-	@PutMapping
-	public ResponseEntity<ApiResponse<Void>> update(@Valid @RequestBody UpdateDamageReportRequest requestDto, User user) {
-		damageReportService.update(requestDto, user.getId());
+	@PutMapping("/{damageReportId}")
+	public ResponseEntity<ApiResponse<Void>> update(
+		@PathVariable Long damageReportId,
+		@Valid @RequestBody UpdateDamageReportRequest requestDto,
+		User user
+	) {
+		damageReportService.update(requestDto, damageReportId, user.getId());
 		return ResponseEntity.ok().body(ApiResponse.of());
 	}
 

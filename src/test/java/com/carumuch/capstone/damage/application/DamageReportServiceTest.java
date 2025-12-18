@@ -250,6 +250,7 @@ class DamageReportServiceTest {
 			//then
 		    assertAll(
 				() -> Assertions.assertThat(results).hasSize(10),
+				() -> Assertions.assertThat(results.get(0).description()).isEqualTo(damageReport1.getDescription()),
 				() -> Assertions.assertThat(results.get(0).preferredRepairSido()).isEqualTo(damageReport1.getPreferredRepairRegion().getSido()),
 				() -> Assertions.assertThat(results.get(1).preferredRepairSido()).isEqualTo(damageReport2.getPreferredRepairRegion().getSido()),
 				() -> Assertions.assertThat(results.get(2).preferredRepairSido()).isEqualTo(damageReport3.getPreferredRepairRegion().getSido()),

@@ -51,6 +51,7 @@ public class DamageReportService {
 		return damageReportRepository.findRecent10ByUserId(userId).stream()
 			.map(dr -> new DamageReportInfoResponse(
 				dr.getId(),
+				dr.getDescription(),
 				dr.getPreferredRepairRegion().getSido(),
 				dr.getPreferredRepairRegion().getSigungu(),
 				dr.isPickupRequired(),
@@ -63,6 +64,7 @@ public class DamageReportService {
 		Page<DamageReportInfoResponse> page = damageReportRepository.findPageByUserId(userId, requestDto.page(), requestDto.size(), requestDto.sort())
 			.map(dr -> new DamageReportInfoResponse(
 				dr.getId(),
+				dr.getDescription(),
 				dr.getPreferredRepairRegion().getSido(),
 				dr.getPreferredRepairRegion().getSigungu(),
 				dr.isPickupRequired(),

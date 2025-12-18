@@ -234,6 +234,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 			DamageReport damageReport = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			DamageReportInfoResponse damageReportInfoResponse = new DamageReportInfoResponse(
 				1L,
+				damageReport.getDescription(),
 				damageReport.getPreferredRepairRegion().getSido(),
 				damageReport.getPreferredRepairRegion().getSigungu(),
 				damageReport.isPickupRequired(),
@@ -270,6 +271,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 							.responseFields(
 								fieldWithPath("message").description("성공 응답 메세지입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data[].id").description("사고 레포트 PK입니다.").type(JsonFieldType.NUMBER),
+								fieldWithPath("data[].description").description("사고 레포트 내용입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data[].preferredRepairSido").description("사고 수리 희망 지역 시/도 입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data[].preferredRepairSigungu").description("사고 수리 희망 지역 시/군/구 입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data[].isPickupRequired").description("사고 수리 차량 픽업 희망 여부입니다.").type(JsonFieldType.BOOLEAN),
@@ -294,6 +296,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 			DamageReport damageReport = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			DamageReportInfoResponse damageReportInfoResponse = new DamageReportInfoResponse(
 				1L,
+				damageReport.getDescription(),
 				damageReport.getPreferredRepairRegion().getSido(),
 				damageReport.getPreferredRepairRegion().getSigungu(),
 				damageReport.isPickupRequired(),
@@ -341,6 +344,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 								fieldWithPath("data.page.hasNext").description("다음 페이지의 여부입니다.").type(JsonFieldType.BOOLEAN),
 								fieldWithPath("data.page.hasPrevious").description("이전 페이지 여부입니다.").type(JsonFieldType.BOOLEAN),
 								fieldWithPath("data.content[].id").description("사고 레포트 PK입니다.").type(JsonFieldType.NUMBER),
+								fieldWithPath("data.content[].description").description("사고 레포트 내용입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data.content[].preferredRepairSido").description("사고 수리 희망 지역 시/도 입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data.content[].preferredRepairSigungu").description("사고 수리 희망 지역 시/군/구 입니다.").type(JsonFieldType.STRING),
 								fieldWithPath("data.content[].isPickupRequired").description("사고 수리 차량 픽업 희망 여부입니다.").type(JsonFieldType.BOOLEAN),
@@ -361,6 +365,7 @@ class DamageReportControllerTest extends RestDocsSupport {
 			DamageReport damageReport = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			DamageReportInfoResponse damageReportInfoResponse = new DamageReportInfoResponse(
 				1L,
+				damageReport.getDescription(),
 				damageReport.getPreferredRepairRegion().getSido(),
 				damageReport.getPreferredRepairRegion().getSigungu(),
 				damageReport.isPickupRequired(),

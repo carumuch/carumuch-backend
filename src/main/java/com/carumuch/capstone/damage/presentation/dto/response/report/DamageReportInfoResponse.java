@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record DamageReportInfoResponse(
 	Long id,
+	String description,
 	String preferredRepairSido,
 	String preferredRepairSigungu,
 	Boolean isPickupRequired,

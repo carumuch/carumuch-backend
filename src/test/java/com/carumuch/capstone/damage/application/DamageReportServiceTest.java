@@ -46,7 +46,7 @@ class DamageReportServiceTest {
 		@Test
 		void 등록된_사용자의_차량을_조회한다() {
 		    //given
-			Long vehicleId = 1L;
+			Long vehicleId = 100L;
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			RegisterDamageReportRequest registerDamageReportRequest = new RegisterDamageReportRequest(
 				damageReportFixture.getDescription(),

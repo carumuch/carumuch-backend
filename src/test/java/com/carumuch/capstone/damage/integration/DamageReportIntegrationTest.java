@@ -188,13 +188,13 @@ public class DamageReportIntegrationTest extends IntegrationSupportTest {
 			//then
 			assertAll(
 				() -> Assertions.assertThat(results.size()).isEqualTo(10),
-				() -> Assertions.assertThat(results.get(0).description()).isEqualTo(damageReports.get(0).getDescription()),
-				() -> Assertions.assertThat(results.get(0).preferredRepairSigungu()).isEqualTo(damageReports.get(0).getPreferredRepairRegion().getSigungu()),
-				() -> Assertions.assertThat(results.get(0).preferredRepairSido()).isEqualTo(damageReports.get(0).getPreferredRepairRegion().getSido()),
-				() -> Assertions.assertThat(results.get(0).isPickupRequired()).isEqualTo(damageReports.get(0).isPickupRequired()),
-				() -> Assertions.assertThat(results.get(9).preferredRepairSigungu()).isEqualTo(damageReports.get(9).getPreferredRepairRegion().getSigungu()),
-				() -> Assertions.assertThat(results.get(9).preferredRepairSido()).isEqualTo(damageReports.get(9).getPreferredRepairRegion().getSido()),
-				() -> Assertions.assertThat(results.get(9).isPickupRequired()).isEqualTo(damageReports.get(9).isPickupRequired())
+				() -> Assertions.assertThat(results.get(0).description()).isEqualTo(damageReports.get(14).getDescription()),
+				() -> Assertions.assertThat(results.get(0).preferredRepairSigungu()).isEqualTo(damageReports.get(14).getPreferredRepairRegion().getSigungu()),
+				() -> Assertions.assertThat(results.get(0).preferredRepairSido()).isEqualTo(damageReports.get(14).getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(0).isPickupRequired()).isEqualTo(damageReports.get(14).isPickupRequired()),
+				() -> Assertions.assertThat(results.get(9).preferredRepairSigungu()).isEqualTo(damageReports.get(5).getPreferredRepairRegion().getSigungu()),
+				() -> Assertions.assertThat(results.get(9).preferredRepairSido()).isEqualTo(damageReports.get(5).getPreferredRepairRegion().getSido()),
+				() -> Assertions.assertThat(results.get(9).isPickupRequired()).isEqualTo(damageReports.get(5).isPickupRequired())
 			);
 		}
 	}

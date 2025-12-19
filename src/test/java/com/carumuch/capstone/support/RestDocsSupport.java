@@ -2,7 +2,9 @@ package com.carumuch.capstone.support;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.carumuch.capstone.damage.application.DamageReportService;
 import com.carumuch.capstone.damage.application.VehicleService;
+import com.carumuch.capstone.damage.presentation.DamageReportController;
 import com.carumuch.capstone.damage.presentation.VehicleController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.carumuch.capstone.identity.application.AccountRecoveryService;
@@ -47,7 +49,8 @@ import java.util.Optional;
 	HealthCheckController.class,
 	UserController.class,
 	AuthController.class,
-	VehicleController.class
+	VehicleController.class,
+	DamageReportController.class
 })
 @Import({
 	SecurityConfig.class,
@@ -96,6 +99,9 @@ public abstract class RestDocsSupport {
 
 	@MockitoBean
 	protected VehicleService vehicleService;
+
+	@MockitoBean
+	protected DamageReportService damageReportService;
 
     @BeforeEach
     void setUp() {

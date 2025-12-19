@@ -257,7 +257,6 @@ public class BodyShopService {
         return bidPage.map(bid -> BodyShopBidPageResDto.builder()
                 .id(bid.getId())
                 .client(bid.getEstimate().getCreateBy())
-                .damageArea(bid.getEstimate().getDamageArea())
                 .bidStatus(bid.getBidStatus().getKey())
                 .createDate(bid.getCreateDate())
                 .build());

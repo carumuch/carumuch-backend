@@ -1,5 +1,7 @@
 package com.carumuch.capstone.estimate.infrastructure.persistence;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.carumuch.capstone.estimate.domain.Estimate;
@@ -16,5 +18,10 @@ public class EstimateRepositoryImpl implements EstimateRepository {
 	@Override
 	public Estimate save(Estimate estimate) {
 		return jpaEstimateRepository.save(estimate);
+	}
+
+	@Override
+	public Optional<Estimate> findById(Long id) {
+		return jpaEstimateRepository.findById(id);
 	}
 }

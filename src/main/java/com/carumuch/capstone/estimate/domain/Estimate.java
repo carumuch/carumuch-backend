@@ -24,8 +24,10 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Estimate extends AggregateRoot<Estimate> {
 
+	// TODO: 손상 부위들을 세팅합니다.
+
     @Column(name = "damage_area", length = 100)
-    private String damageArea;
+    private String damageArea; // TODO 레거시 유지를 위해 남겨둡니다. 이후 삭제 조치 해야합니다.
 
     @Column(name = "ai_estimated_repair_cost")
     private Integer aiEstimatedRepairCost;
@@ -48,10 +50,10 @@ public class Estimate extends AggregateRoot<Estimate> {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    public Estimate(String damageArea, Integer aiEstimatedRepairCost, EstimateStatus estimateStatus) {
-        this.damageArea = damageArea;
+    public Estimate(Integer aiEstimatedRepairCost, EstimateStatus estimateStatus, DamageReport damageReport) {
         this.aiEstimatedRepairCost = aiEstimatedRepairCost;
         this.estimateStatus = estimateStatus;
+		this.damageReport = damageReport;
     }
 
     public void update(EstimateStatus estimateStatus) {

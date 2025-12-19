@@ -46,10 +46,6 @@ public class Estimate extends AggregateRoot<Estimate> {
     @OneToMany(mappedBy = "estimate", cascade = ALL)
     private List<Bid> bids = new ArrayList<>();
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
-
     public Estimate(Integer aiEstimatedRepairCost, EstimateStatus estimateStatus, DamageReport damageReport) {
         this.aiEstimatedRepairCost = aiEstimatedRepairCost;
         this.estimateStatus = estimateStatus;

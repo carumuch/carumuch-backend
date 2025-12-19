@@ -49,9 +49,6 @@ public class Vehicle extends AggregateRoot<Vehicle> {
     @Column(name = "owner_name")
     private String ownerName;
 
-    @OneToMany(mappedBy = "vehicle", cascade = ALL)
-    private List<Estimate> estimates = new ArrayList<>();
-
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
     private User user;

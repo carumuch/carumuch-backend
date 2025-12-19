@@ -7,7 +7,6 @@ import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
-import com.carumuch.capstone.estimate.presentation.dto.request.EstimateSearchReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -75,24 +74,6 @@ public class BodyShopController {
     public ResponseEntity<?> detail(@PathVariable Long bodyShopId) {
         return ResponseEntity.status(OK)
                 .body(ResponseDto.success(OK, bodyShopService.findOne(bodyShopId)));
-    }
-
-    /**
-     * SELECT: 공업사 측 견적 상세 조회
-     */
-    @GetMapping("/estimates/{estimateId}")
-    public ResponseEntity<?> estimateDetail(@PathVariable Long estimateId) {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.estimateDetail(estimateId)));
-    }
-
-    /**
-     * SELECT: 공업사 측 견적 목록 상세 검색
-     */
-    @GetMapping("/estimates")
-    public ResponseEntity<?> estimateSearch(EstimateSearchReqDto estimateSearchReqDto) {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.searchEstimateList(estimateSearchReqDto)));
     }
 
     /**

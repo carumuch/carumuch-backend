@@ -45,6 +45,12 @@ spring:
       cloudfront:
         domainName: ${AWS_CLOUDFRONT_DOMAIN}
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
 jwt:
   access-secret-key: ${ACCESS_SECRET_KEY}
   refresh-secret-key: ${REFRESH_SECRET_KEY}
@@ -116,6 +122,12 @@ spring:
       cloudfront:
         domainName: ${AWS_CLOUDFRONT_DOMAIN}
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
 jwt:
   access-secret-key: ${ACCESS_SECRET_KEY}
   refresh-secret-key: ${REFRESH_SECRET_KEY}
@@ -185,6 +197,11 @@ spring:
         auto: false
       cloudfront:
         domainName: domainName
+
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
 
 jwt:
   access-secret-key: accessabcdefghijklmnopqrstuvwxyz

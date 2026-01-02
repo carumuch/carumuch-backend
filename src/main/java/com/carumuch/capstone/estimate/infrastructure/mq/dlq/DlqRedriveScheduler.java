@@ -66,7 +66,10 @@ public class DlqRedriveScheduler {
 
 				dlqMessage.markResolved();
 
-			} catch (Exception ex) {
+			} catch (Exception e) {
+				log.warn("DLQ 메시지 재전송 실패: messageId={}, attempt={}, error={}",
+					dlqMessage.getId(), dlqMessage.getAttemptCount(), e.getMessage());
+
 				LocalDateTime next = now.plusSeconds(30L * (dlqMessage.getAttemptCount() + 1));
 				dlqMessage.markPending(next);
 			}

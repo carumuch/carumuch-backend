@@ -199,6 +199,10 @@ spring:
         domainName: domainName
 
   rabbitmq:
+    host: localhost
+    port: 5672
+    username: test
+    password: test
     listener:
       simple:
         auto-startup: false

@@ -4,7 +4,6 @@ import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.community.domain.Comment;
-import com.carumuch.capstone.estimate.domain.Estimate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -54,9 +53,6 @@ public class User extends AggregateRoot<User> {
     @JoinColumn(name = "body_shop_id")
     private BodyShop bodyShop;
 
-    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE})
-    private List<Estimate> estimates = new ArrayList<>();
-
 	@Builder
     public User(String loginId, String password, String email, String name, Role role) {
         this.loginId = loginId;
@@ -66,7 +62,6 @@ public class User extends AggregateRoot<User> {
         this.role = role;
         this.isMechanic = false;
 		registerEvent(new UserRegisteredEvent(this));
-
     }
 
 	public void updateInfo(String name) {

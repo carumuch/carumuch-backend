@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
+import com.carumuch.capstone.damage.domain.report.DamageReportRegisteredEvent;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.damage.presentation.dto.request.report.RegisterDamageReportRequest;
@@ -39,10 +41,37 @@ class DamageReportServiceTest {
 	DamageReportRepository damageReportRepository;
 	@Mock
 	VehicleRepository vehicleRepository;
+	@Mock
+	ApplicationEventPublisher eventPublisher;
 
 	@Nested
 	@DisplayName("사고 레포트 등록")
 	class Register {
+		@Test
+		void 사고_레포트_이벤트를_발행한다() {
+			Long vehicleId = 100L;
+			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+			RegisterDamageReportRequest registerDamageReportRequest = new RegisterDamageReportRequest(
+				damageReportFixture.getDescription(),
+				damageReportFixture.getPreferredRepairRegion().getSido(),
+				damageReportFixture.getPreferredRepairRegion().getSigungu(),
+				damageReportFixture.isPickupRequired(),
+				damageReportFixture.getImagePath()
+			);
+			Mockito.when(vehicleRepository.findByUserId(vehicleId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
+			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle());
+			ReflectionTestUtils.setField(damageReport, "id", 1L);
+			Mockito.when(damageReportRepository.save(Mockito.any(DamageReport.class))).thenReturn(damageReport);
+			Mockito.doNothing().when(eventPublisher).publishEvent(Mockito.any(DamageReportRegisteredEvent.class));
+
+			//when
+			damageReportService.register(registerDamageReportRequest, vehicleId);
+
+			//then
+			Mockito.verify(eventPublisher, Mockito.times(1))
+				.publishEvent(Mockito.any(DamageReportRegisteredEvent.class));
+		}
+
 		@Test
 		void 등록된_사용자의_차량을_조회한다() {
 		    //given

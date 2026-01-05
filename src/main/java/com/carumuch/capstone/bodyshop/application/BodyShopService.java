@@ -18,11 +18,7 @@ import com.carumuch.capstone.common.legacy.exception.CustomException;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserLegacyRepository;
 import com.carumuch.capstone.estimate.domain.Estimate;
-import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResDto;
-import com.carumuch.capstone.estimate.presentation.dto.request.EstimateSearchReqDto;
-import com.carumuch.capstone.estimate.presentation.dto.response.EstimateSearchResDto;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
-import com.carumuch.capstone.estimate.domain.EstimateRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,7 +37,6 @@ public class BodyShopService {
     private final UserLegacyRepository userLegacyRepository;
     private final EstimateRepository estimateRepository;
     private final BidRepository bidRepository;
-    private final EstimateRepositoryCustom estimateRepositoryCustom;
 
     /**
      * 공업사 직업 여부
@@ -170,33 +165,6 @@ public class BodyShopService {
     }
 
     /**
-     * Select: 공업사 측 사용자 견적 상세 조회
-     */
-    public EstimateDetailResDto estimateDetail(Long id) {
-
-        /* 공업사 측인지 확인 */
-        validateMechanicUser();
-
-        Estimate estimate = estimateRepository.findByIdWithVehicle(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        return EstimateDetailResDto.builder()
-                .estimate(estimate)
-                .build();
-    }
-
-    /**
-     * Select: 공업사 측 사용자 견적 목록 상세 조회
-     */
-    public Page<EstimateSearchResDto> searchEstimateList(EstimateSearchReqDto estimateSearchReqDto) {
-        /* 공업사 측인지 확인 */
-        validateMechanicUser();
-
-        return estimateRepositoryCustom.searchPage(estimateSearchReqDto,
-                PageRequest.of(estimateSearchReqDto.getPage() != null ? estimateSearchReqDto.getPage() - 1 : 0, 10)); // 1페이지를 위한 -1 수행
-    }
-
-    /**
      * Create: 공업사 측 특정 견적서에 대해 입찰 신청
      */
     @Transactional
@@ -289,7 +257,6 @@ public class BodyShopService {
         return bidPage.map(bid -> BodyShopBidPageResDto.builder()
                 .id(bid.getId())
                 .client(bid.getEstimate().getCreateBy())
-                .damageArea(bid.getEstimate().getDamageArea())
                 .bidStatus(bid.getBidStatus().getKey())
                 .createDate(bid.getCreateDate())
                 .build());

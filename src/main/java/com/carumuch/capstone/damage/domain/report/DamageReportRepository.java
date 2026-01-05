@@ -16,4 +16,6 @@ public interface DamageReportRepository {
 	Page<DamageReport> findPageByUserId(Long userId, int page, int size, String sort);
 
 	Optional<DamageReport> findByIdAndUserId(Long damageReportId, Long userId);
+
+	DamageReport getReferenceById(Long id);
 }

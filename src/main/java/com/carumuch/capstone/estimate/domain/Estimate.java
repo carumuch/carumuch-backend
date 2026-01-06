@@ -36,6 +36,9 @@ public class Estimate extends AggregateRoot<Estimate> {
     @Column(name = "applicant_count")
     private int applicantCount;
 
+	@Column(name = "image_path", length = 500)
+	private String imagePath;
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "damage_report_id", unique = true)
 	private DamageReport damageReport;
@@ -43,10 +46,17 @@ public class Estimate extends AggregateRoot<Estimate> {
     @OneToMany(mappedBy = "estimate", cascade = ALL)
     private List<Bid> bids = new ArrayList<>();
 
-    public Estimate(Integer repairCost, Set<String> repairParts, EstimateStatus estimateStatus, DamageReport damageReport) {
+    public Estimate(
+		Integer repairCost,
+		Set<String> repairParts,
+		EstimateStatus estimateStatus,
+		String imagePath,
+		DamageReport damageReport
+	) {
         this.repairCost = repairCost;
 		this.repairParts = repairParts;
         this.estimateStatus = estimateStatus;
+		this.imagePath = imagePath;
 		this.damageReport = damageReport;
     }
 

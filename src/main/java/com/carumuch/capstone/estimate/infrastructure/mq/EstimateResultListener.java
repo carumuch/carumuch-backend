@@ -32,7 +32,13 @@ public class EstimateResultListener {
 
 		DamageReport damageReportRef = damageReportRepository.getReferenceById(message.damageReportId());
 		estimateRepository.save(
-			new Estimate(message.repairCost(), message.repairParts(), EstimateStatus.OPEN, damageReportRef)
+			new Estimate(
+				message.repairCost(),
+				message.repairParts(),
+				EstimateStatus.OPEN,
+				message.imagePath(),
+				damageReportRef
+			)
 		);
 	}
 }

@@ -61,6 +61,9 @@ import java.util.Optional;
 @AutoConfigureRestDocs
 public abstract class RestDocsSupport {
 
+	protected static final String BASE_SUCCESS_MESSAGE = "OK";
+	protected static final String BASE_FIELD_ERROR_MESSAGE = "의 필드 값 유효하지 않습니다.";
+
     @Value("${cookie.name}")
     protected String REFRESH_TOKEN_COOKIE_NAME;
 

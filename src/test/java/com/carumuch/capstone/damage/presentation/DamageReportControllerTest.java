@@ -40,7 +40,6 @@ class DamageReportControllerTest extends RestDocsSupport {
 
 	private static final String BASE_URI = "/damage-reports";
 	private static final String BASE_TAG = "Damage - Report";
-	private static final String BASE_SUCCESS_MESSAGE = "OK";
 
 	@Nested
 	@DisplayName("사고 레포트 등록 API 테스트")

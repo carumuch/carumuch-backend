@@ -32,7 +32,7 @@ public record EstimateDetailResponse(
 		);
 	}
 
-	private record VehicleInfo(
+	public record VehicleInfo(
 		String licenseNumber,
 		String ownershipType,
 		String brand,
@@ -52,7 +52,7 @@ public record EstimateDetailResponse(
 		}
 	}
 
-	private record DamageReportInfo(
+	public record DamageReportInfo(
 		String preferredRepairSido,
 		String preferredRepairSigungu,
 		String description,

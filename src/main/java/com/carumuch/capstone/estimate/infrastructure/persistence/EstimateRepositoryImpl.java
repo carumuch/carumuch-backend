@@ -24,4 +24,9 @@ public class EstimateRepositoryImpl implements EstimateRepository {
 	public Optional<Estimate> findById(Long id) {
 		return jpaEstimateRepository.findById(id);
 	}
+
+	@Override
+	public Optional<Estimate> findDetailById(Long id) {
+		return jpaEstimateRepository.findDetailById(id);
+	}
 }

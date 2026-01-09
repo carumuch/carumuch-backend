@@ -13,7 +13,7 @@ public record EstimateDetailResponse(
 	List<String> repairParts,
 	String estimateStatus,
 	String imagePath,
-	LocalDateTime createdDate,
+	LocalDateTime createdAt,
 	VehicleInfo vehicleInfo,
 	DamageReportInfo damageReportInfo
 ) {

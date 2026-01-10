@@ -1,18 +1,24 @@
 package com.carumuch.capstone.estimate.application;
 
+import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
+import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EstimateService {
     private final EstimateRepository estimateRepository;
 
+	public EstimateDetailResponse findEstimateDetail(Long estimateId) {
+		return estimateRepository.findDetailById(estimateId)
+			.map(EstimateDetailResponse::new)
+			.orElseThrow(() -> new NotFoundException(Estimate.class));
+	}
 }

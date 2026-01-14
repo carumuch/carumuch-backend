@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
+import com.carumuch.capstone.estimate.domain.EstimateStatus;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
 
@@ -106,4 +109,71 @@ class EstimateServiceTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("견적서 상태 업데이트 기능")
+	class UpdateEstimateStatus {
+		@Test
+		void 견적서_PK로_견적서를_조회한다() {
+		    //given
+			Long estimateId = 300L;
+			String estimateStatus = EstimateStatus.PRIVATE.name();
+
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			Mockito.when(estimateRepository.findById(estimateId))
+				.thenReturn(Optional.of(estimateFixture));
+
+		    //when
+			estimateService.changeStatus(estimateId, estimateStatus);
+
+		    //then
+			Mockito.verify(estimateRepository, Mockito.times(1))
+				.findById(estimateId);
+		}
+
+		@Test
+		void 견적서를_찾지_못하면_예외를_반환한다() {
+		    //given
+			Long estimateId = 300L;
+			String estimateStatus = EstimateStatus.PRIVATE.name();
+			Mockito.when(estimateRepository.findById(estimateId))
+				.thenReturn(Optional.empty());
+
+		    //when & then
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 견적서_상태를_업데이트_한다() {
+		    //given
+			Long estimateId = 300L;
+			String estimateStatus = EstimateStatus.PRIVATE.name();
+
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+
+			Mockito.when(estimateRepository.findById(estimateId))
+				.thenReturn(Optional.of(estimateFixture));
+
+		    //when
+			estimateService.changeStatus(estimateId, estimateStatus);
+
+		    //then
+			Assertions.assertThat(estimateFixture.getEstimateStatus()).isEqualTo(EstimateStatus.valueOf(estimateStatus));
+		}
+
+		@Test
+		void 이미_매칭된_견적서의_상태를_변경하면_예외를_반환한다() {
+		    //given
+			Long estimateId = 300L;
+			String estimateStatus = EstimateStatus.PRIVATE.name();
+
+			Estimate alreadyMatchedEstimateFixture = EstimateFixture.ESTIMATE_FIXTURE_2.create();
+			Mockito.when(estimateRepository.findById(estimateId))
+				.thenReturn(Optional.of(alreadyMatchedEstimateFixture));
+
+		    //when & then
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus))
+				.isInstanceOf(CustomException.class);
+		}
+	}
 }

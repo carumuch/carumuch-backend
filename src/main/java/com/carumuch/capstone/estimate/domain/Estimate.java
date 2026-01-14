@@ -2,6 +2,7 @@ package com.carumuch.capstone.estimate.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.ALL;
+
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "estimate")
@@ -60,7 +63,10 @@ public class Estimate extends AggregateRoot<Estimate> {
 		this.damageReport = damageReport;
     }
 
-    public void update(EstimateStatus estimateStatus) {
+    public void updateStatus(EstimateStatus estimateStatus) {
+		if (this.estimateStatus == EstimateStatus.CLOSED) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, "이미 매칭된 견적서 입니다.");
+		}
         this.estimateStatus = estimateStatus;
     }
 

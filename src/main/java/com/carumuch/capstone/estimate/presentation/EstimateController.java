@@ -20,4 +20,10 @@ public class EstimateController {
 	public ResponseEntity<ApiResponse<EstimateDetailResponse>> findEstimateDetail(@PathVariable Long estimateId) {
 		return ResponseEntity.ok().body(ApiResponse.of(estimateService.findEstimateDetail(estimateId)));
 	}
+
+	@PutMapping( "/{estimateId}/status")
+	public ResponseEntity<ApiResponse<Void>> changeStatus(@PathVariable Long estimateId, @RequestParam String status) {
+		estimateService.changeStatus(estimateId, status);
+		return ResponseEntity.ok().body(ApiResponse.of());
+	}
 }

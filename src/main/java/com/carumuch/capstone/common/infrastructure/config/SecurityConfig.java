@@ -102,7 +102,8 @@ public class SecurityConfig {
 					).authenticated()
 
 					.requestMatchers(
-						mvc.matcher(GET, ESTIMATE_URI + "/{estimateId}")
+						mvc.matcher(GET, ESTIMATE_URI + "/{estimateId}"),
+						mvc.matcher(PUT, ESTIMATE_URI + "/{estimateId}/status")
 					).authenticated()
 
 					.anyRequest().permitAll()

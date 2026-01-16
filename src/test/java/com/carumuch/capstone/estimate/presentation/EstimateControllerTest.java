@@ -12,14 +12,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.ApiErrorResponse;
+import com.carumuch.capstone.common.presentation.dto.ApiResponse;
 import com.carumuch.capstone.damage.presentation.dto.response.vehicle.VehicleInfoResponse;
 import com.carumuch.capstone.estimate.domain.Estimate;
+import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 import com.carumuch.capstone.support.RestDocsSupport;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
@@ -36,7 +42,7 @@ class EstimateControllerTest extends RestDocsSupport {
 	private static final String BASE_TAG = "Estimate";
 
 	@Nested
-	@DisplayName("견적서 상세 조회 기능")
+	@DisplayName("견적서 상세 조회 API 테스트")
 	class FindEstimateDetail {
 		@Test
 		void 견적서_상세_조회_2XX() throws Exception {
@@ -139,6 +145,143 @@ class EstimateControllerTest extends RestDocsSupport {
 			actions
 				.andExpect(status().isNotFound())
 				.andExpect(result -> Assertions.assertInstanceOf(NotFoundException.class, result.getResolvedException()))
+				.andExpect(jsonPath("$.message").value(errorMessage))
+				.andDo(restDocsHandler.document(
+						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+							.tag(BASE_TAG)
+							.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+							.build())
+					)
+				);
+		}
+	}
+	
+	@Nested
+	@DisplayName("견적서 상태 변경 API 테스트")
+	class UpdateEstimateStatus {
+		@Test
+		void 견적서_상태_변경_기능_2XX() throws Exception {
+		    //given
+			Long estimateId = 300L;
+			String changeEstimateStatus = EstimateStatus.PRIVATE.name();
+			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+
+			Mockito.doNothing().when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+		    
+		    //when
+			ResultActions actions = mockMvc.perform(
+				put(BASE_URI + "/{estimateId}/status", estimateId)
+					.content(objectMapper.writeValueAsString(requestDto))
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
+				.andExpect(jsonPath("$.data").isEmpty())
+				.andDo(restDocsHandler.document(
+						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+							.tag(BASE_TAG)
+							.summary("견적서 상태 변경")
+							.description("## 견적서 상태 변경 기능 \n"
+								+ "### 사용법 \n"
+								+ "- PRIVATE, OPEN 중 선택하여, 작성해주세요. \n"
+								+ "- 대문자, 소문자 모두 수용합니다."
+								+ "- 이미 매칭된 견적서는 상태를 수정할 수 없습니다."
+							)
+							.requestSchema(Schema.schema(UpdateEstimateStatusRequest.class.getSimpleName()))
+							.requestFields(
+								fieldWithPath("status").description("변경할 견적서의 상태입니다. (PRIVATE, OPEN 중에 선택해야합니다.)").type(JsonFieldType.STRING)
+							)
+							.responseSchema(Schema.schema(ApiResponse.class.getSimpleName()))
+							.build())
+					)
+				);
+		}
+
+		@Test
+		void 견적서_상태_변경_기능_4XX_견적서를_찾을_수_없는_경우() throws Exception {
+			//given
+			String errorMessage = Estimate.class.getSimpleName() + "을(를) 찾을 수 없습니다.";
+
+			Long estimateId = 300L;
+			String changeEstimateStatus = EstimateStatus.PRIVATE.name();
+			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+			Mockito.doThrow(new NotFoundException(Estimate.class))
+				.when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				put(BASE_URI + "/{estimateId}/status", estimateId)
+					.content(objectMapper.writeValueAsString(requestDto))
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isNotFound())
+				.andExpect(result -> Assertions.assertInstanceOf(NotFoundException.class, result.getResolvedException()))
+				.andExpect(jsonPath("$.message").value(errorMessage))
+				.andDo(restDocsHandler.document(
+						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+							.tag(BASE_TAG)
+							.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+							.build())
+					)
+				);
+		}
+
+		@Test
+		void 견적서_상태_변경_기능_4XX_이미_매칭_완료된_견적서인_경우() throws Exception {
+			//given
+			String errorMessage = "이미 매칭된 견적서 입니다.";
+
+			Long estimateId = 300L;
+			String changeEstimateStatus = EstimateStatus.OPEN.name();
+			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+			Mockito.doThrow(new CustomException(HttpStatus.BAD_REQUEST, errorMessage))
+				.when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				put(BASE_URI + "/{estimateId}/status", estimateId)
+					.content(objectMapper.writeValueAsString(requestDto))
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isBadRequest())
+				.andExpect(result -> Assertions.assertInstanceOf(CustomException.class, result.getResolvedException()))
+				.andExpect(jsonPath("$.message").value(errorMessage))
+				.andDo(restDocsHandler.document(
+						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+							.tag(BASE_TAG)
+							.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+							.build())
+					)
+				);
+		}
+
+		@Test
+		void 견적서_상태_변경_기능_4XX_수용할_수_없는_견적서_상태인_경우() throws Exception {
+			//given
+			String errorMessage = "올바른 견적서 상태가 아닙니다.";
+
+			Long estimateId = 300L;
+			String changeEstimateStatus = EstimateStatus.OPEN.name();
+			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+			Mockito.doThrow(new CustomException(HttpStatus.BAD_REQUEST, errorMessage))
+				.when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				put(BASE_URI + "/{estimateId}/status", estimateId)
+					.content(objectMapper.writeValueAsString(requestDto))
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isBadRequest())
+				.andExpect(result -> Assertions.assertInstanceOf(CustomException.class, result.getResolvedException()))
 				.andExpect(jsonPath("$.message").value(errorMessage))
 				.andDo(restDocsHandler.document(
 						ResourceDocumentation.resource(ResourceSnippetParameters.builder()

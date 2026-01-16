@@ -2,6 +2,7 @@ package com.carumuch.capstone.estimate.presentation;
 
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
 import com.carumuch.capstone.estimate.application.EstimateService;
+import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class EstimateController {
 	}
 
 	@PutMapping( "/{estimateId}/status")
-	public ResponseEntity<ApiResponse<Void>> changeStatus(@PathVariable Long estimateId, @RequestParam String status) {
-		estimateService.changeStatus(estimateId, status);
+	public ResponseEntity<ApiResponse<Void>> changeStatus(@PathVariable Long estimateId, @RequestBody UpdateEstimateStatusRequest updateEstimateStatusRequest) {
+		estimateService.changeStatus(estimateId, updateEstimateStatusRequest.status());
 		return ResponseEntity.ok().body(ApiResponse.of());
 	}
 }

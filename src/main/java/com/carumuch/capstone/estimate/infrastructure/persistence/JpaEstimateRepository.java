@@ -17,4 +17,13 @@ public interface JpaEstimateRepository extends JpaRepository<Estimate, Long> {
 			+ "WHERE e.id = :estimateId"
 	)
 	Optional<Estimate> findDetailById(@Param("estimateId") Long estimateId);
+
+	@Query(
+		"SELECT DISTINCT e FROM Estimate e "
+			+ "JOIN FETCH e.damageReport dr "
+			+ "JOIN FETCH dr.vehicle "
+			+ "LEFT JOIN FETCH e.repairParts "
+			+ "WHERE dr.id = :damageReportId"
+	)
+	Optional<Estimate> findDetailByDamageReportId(@Param("damageReportId") Long damageReportId);
 }

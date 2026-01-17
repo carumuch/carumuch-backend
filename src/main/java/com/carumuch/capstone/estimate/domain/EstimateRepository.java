@@ -9,4 +9,6 @@ public interface EstimateRepository {
 	Optional<Estimate> findById(Long id);
 
 	Optional<Estimate> findDetailById(Long id);
+
+	Optional<Estimate> findDetailByDamageReportId(Long damageReportId);
 }

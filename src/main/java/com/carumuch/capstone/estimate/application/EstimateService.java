@@ -23,6 +23,12 @@ public class EstimateService {
 			.orElseThrow(() -> new NotFoundException(Estimate.class));
 	}
 
+	public EstimateDetailResponse findEstimateDetailByDamageReportId(Long damageReportId) {
+		return estimateRepository.findDetailByDamageReportId(damageReportId)
+			.map(EstimateDetailResponse::new)
+			.orElseThrow(() -> new NotFoundException(Estimate.class));
+	}
+
 	@Transactional
 	public void changeStatus(Long estimateId, String status) {
 		Estimate estimate = estimateRepository.findById(estimateId)

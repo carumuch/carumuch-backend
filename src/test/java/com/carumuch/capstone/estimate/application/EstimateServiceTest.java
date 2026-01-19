@@ -110,6 +110,84 @@ class EstimateServiceTest {
 	}
 
 	@Nested
+	@DisplayName("사고 레포트를 통한 견적서 상세 조회 기능")
+	class FindEstimateDetailByDamageReportId {
+		@Test
+		void 사고레포트_PK로_견적서를_조회한다() {
+			//given
+			Long damageReportId = 200L;
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			Mockito.when(estimateRepository.findDetailByDamageReportId(damageReportId))
+				.thenReturn(Optional.of(estimateFixture));
+
+			//when
+			estimateService.findEstimateDetailByDamageReportId(damageReportId);
+
+			//then
+			Mockito.verify(estimateRepository, Mockito.times(1))
+				.findDetailByDamageReportId(damageReportId);
+		}
+
+		@Test
+		void 견적서가_존재하지_않는다면_예외를_반환한다() {
+			//given
+			Long damageReportId = 200L;
+			Mockito.when(estimateRepository.findDetailByDamageReportId(damageReportId))
+				.thenReturn(Optional.empty());
+
+			//when & then
+			assertThatThrownBy(() -> estimateService.findEstimateDetailByDamageReportId(damageReportId))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 견적서_상세_정보를_응답한다() {
+			//given
+			Long damageReportId = 200L;
+
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+
+			Long estimateId = 300L;
+			ReflectionTestUtils.setField(estimateFixture, "id", estimateId);
+
+			Mockito.when(estimateRepository.findDetailByDamageReportId(damageReportId))
+				.thenReturn(Optional.of(estimateFixture));
+
+			EstimateDetailResponse estimateDetailResponse = new EstimateDetailResponse(estimateFixture);
+
+			//when
+			EstimateDetailResponse result = estimateService.findEstimateDetailByDamageReportId(damageReportId);
+
+			//then
+			assertAll(
+				() -> assertThat(result.estimateId()).isEqualTo(estimateDetailResponse.estimateId()),
+				() -> assertThat(result.repairCost()).isEqualTo(estimateDetailResponse.repairCost()),
+				() -> assertThat(result.repairParts().get(0)).isEqualTo(estimateDetailResponse.repairParts().get(0)),
+				() -> assertThat(result.repairParts().get(1)).isEqualTo(estimateDetailResponse.repairParts().get(1)),
+				() -> assertThat(result.repairParts().get(2)).isEqualTo(estimateDetailResponse.repairParts().get(2)),
+				() -> assertThat(result.estimateStatus()).isEqualTo(estimateDetailResponse.estimateStatus()),
+				() -> assertThat(result.imagePath()).isEqualTo(estimateDetailResponse.imagePath())
+			);
+
+			assertAll(
+				() -> assertThat(result.vehicleInfo().brand()).isEqualTo(estimateDetailResponse.vehicleInfo().brand()),
+				() -> assertThat(result.vehicleInfo().licenseNumber()).isEqualTo(estimateDetailResponse.vehicleInfo().licenseNumber()),
+				() -> assertThat(result.vehicleInfo().modelName()).isEqualTo(estimateDetailResponse.vehicleInfo().modelName()),
+				() -> assertThat(result.vehicleInfo().modelYear()).isEqualTo(estimateDetailResponse.vehicleInfo().modelYear()),
+				() -> assertThat(result.vehicleInfo().ownerName()).isEqualTo(estimateDetailResponse.vehicleInfo().ownerName()),
+				() -> assertThat(result.vehicleInfo().ownershipType()).isEqualTo(estimateDetailResponse.vehicleInfo().ownershipType())
+			);
+
+			assertAll(
+				() -> assertThat(result.damageReportInfo().description()).isEqualTo(estimateDetailResponse.damageReportInfo().description()),
+				() -> assertThat(result.damageReportInfo().preferredRepairSido()).isEqualTo(estimateDetailResponse.damageReportInfo().preferredRepairSido()),
+				() -> assertThat(result.damageReportInfo().preferredRepairSigungu()).isEqualTo(estimateDetailResponse.damageReportInfo().preferredRepairSigungu()),
+				() -> assertThat(result.damageReportInfo().isPickupRequired()).isEqualTo(estimateDetailResponse.damageReportInfo().isPickupRequired())
+			);
+		}
+	}
+
+	@Nested
 	@DisplayName("견적서 상태 업데이트 기능")
 	class UpdateEstimateStatus {
 		@Test

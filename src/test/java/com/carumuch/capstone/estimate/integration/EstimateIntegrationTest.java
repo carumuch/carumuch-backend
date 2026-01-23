@@ -61,7 +61,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 		);
 
 		Vehicle vehicleFixture = VehicleFixture.VEHICLE_FIXTURE_1.create();
-		Vehicle vehicle = vehicleRepository.save(
+		vehicle = vehicleRepository.save(
 			new Vehicle(
 				vehicleFixture.getLicenseNumber().getValue(),
 				vehicleFixture.getOwnershipType(),
@@ -74,7 +74,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 		);
 
 		DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
-		DamageReport damageReport = damageReportRepository.save(
+		damageReport = damageReportRepository.save(
 			new DamageReport(
 				damageReportFixture.getDescription(),
 				damageReportFixture.getPreferredRepairRegion(),
@@ -141,6 +141,55 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 
 		    //when & then
 			assertThatThrownBy(() -> estimateService.findEstimateDetail(noSavedEstimateId))
+				.isInstanceOf(NotFoundException.class);
+		}
+	}
+
+	@Nested
+	@DisplayName("사고 레포트를 통한 견적서 상세 조회 기능")
+	class FindEstimateDetailByDamageReportId {
+		@Test
+		void 사고_레포트를_통한_견적서_상세_조회_기능() {
+			//given
+			Long damageReportId = damageReport.getId();
+
+			//when
+			EstimateDetailResponse estimateDetail = estimateService.findEstimateDetailByDamageReportId(damageReportId);
+
+			//then
+			Estimate result = estimateRepository.findDetailByDamageReportId(damageReportId)
+				.orElseThrow(() -> new AssertionError("estimate not found"));
+
+			assertAll(
+				() -> assertThat(estimateDetail.estimateId()).isEqualTo(result.getId()),
+				() -> assertThat(estimateDetail.estimateStatus()).isEqualTo(result.getEstimateStatus().name()),
+				() -> assertThat(estimateDetail.estimateId()).isEqualTo(result.getId()),
+				() -> assertThat(estimateDetail.repairCost()).isEqualTo(result.getRepairCost()),
+				() -> assertThat(estimateDetail.repairParts().size()).isEqualTo(result.getRepairParts().size())
+			);
+			assertAll(
+				() -> assertThat(estimateDetail.damageReportInfo().isPickupRequired()).isEqualTo(result.getDamageReport().isPickupRequired()),
+				() -> assertThat(estimateDetail.damageReportInfo().preferredRepairSido()).isEqualTo(result.getDamageReport().getPreferredRepairRegion().getSido()),
+				() -> assertThat(estimateDetail.damageReportInfo().preferredRepairSigungu()).isEqualTo(result.getDamageReport().getPreferredRepairRegion().getSigungu()),
+				() -> assertThat(estimateDetail.damageReportInfo().description()).isEqualTo(result.getDamageReport().getDescription())
+			);
+			assertAll(
+				() -> assertThat(estimateDetail.vehicleInfo().brand()).isEqualTo(result.getDamageReport().getVehicle().getBrand()),
+				() -> assertThat(estimateDetail.vehicleInfo().ownershipType()).isEqualTo(result.getDamageReport().getVehicle().getOwnershipType().name()),
+				() -> assertThat(estimateDetail.vehicleInfo().ownerName()).isEqualTo(result.getDamageReport().getVehicle().getOwnerName()),
+				() -> assertThat(estimateDetail.vehicleInfo().modelName()).isEqualTo(result.getDamageReport().getVehicle().getModelName()),
+				() -> assertThat(estimateDetail.vehicleInfo().modelYear()).isEqualTo(result.getDamageReport().getVehicle().getModelYear()),
+				() -> assertThat(estimateDetail.vehicleInfo().licenseNumber()).isEqualTo(result.getDamageReport().getVehicle().getLicenseNumber().getValue())
+			);
+		}
+
+		@Test
+		void 견적서를_찾을_수_없다면_예외를_반환한다() {
+			//given
+			Long noSavedDamageReportId = 200L;
+
+			//when & then
+			assertThatThrownBy(() -> estimateService.findEstimateDetailByDamageReportId(noSavedDamageReportId))
 				.isInstanceOf(NotFoundException.class);
 		}
 	}

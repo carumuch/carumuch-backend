@@ -12,7 +12,7 @@ public record EstimateSearchCondition(
 	Integer modelYear,
 	String modelName
 ) {
-	public EstimateSearchCondition from(SearchEstimateRequest request) {
+	public static EstimateSearchCondition from(SearchEstimateRequest request) {
 		return new EstimateSearchCondition(
 			request.minRepairCost(),
 			request.maxRepairCost(),

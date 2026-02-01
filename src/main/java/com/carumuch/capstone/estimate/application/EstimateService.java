@@ -1,12 +1,20 @@
 package com.carumuch.capstone.estimate.application;
 
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
+import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,5 +42,13 @@ public class EstimateService {
 		Estimate estimate = estimateRepository.findById(estimateId)
 			.orElseThrow(() -> new NotFoundException(Estimate.class));
 		estimate.updateStatus(EstimateStatus.from(status));
+	}
+
+	public PagingResponse<EstimateDetailResponse> searchEstimates(SearchEstimateRequest searchEstimateRequest, PagingRequest pagingRequest) {
+		Page<Estimate> estimates = estimateRepository.searchEstimates(
+			EstimateSearchCondition.from(searchEstimateRequest),
+			PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort()))
+		);
+		return PagingResponse.from(estimates.map(EstimateDetailResponse::new));
 	}
 }

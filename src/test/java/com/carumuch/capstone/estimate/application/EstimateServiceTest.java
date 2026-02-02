@@ -3,6 +3,7 @@ package com.carumuch.capstone.estimate.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -14,13 +15,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
+import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
 
@@ -252,6 +261,88 @@ class EstimateServiceTest {
 		    //when & then
 			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus))
 				.isInstanceOf(CustomException.class);
+		}
+	}
+
+	@Nested
+	@DisplayName("견적서 조건 검색 기능")
+	class SearchEstimates {
+		@Test
+		void 견적서를_조회한다() {
+		    //given
+			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+				null, null, null, null, null, null, null, null
+			);
+
+			EstimateSearchCondition estimateSearchCondition = EstimateSearchCondition.from(searchEstimateRequest);
+
+			PagingRequest pagingRequest = new PagingRequest(null, null, null);
+			PageRequest pageRequest = PageRequest.of(pagingRequest.page(), pagingRequest.size(),
+				Sort.by(pagingRequest.sort()));
+
+			List<Estimate> estimateList = List.of(
+				EstimateFixture.ESTIMATE_FIXTURE_1.create(),
+				EstimateFixture.ESTIMATE_FIXTURE_2.create()
+			);
+			PageImpl<Estimate> estimates = new PageImpl<>(estimateList, pageRequest, estimateList.size());
+
+			Mockito.when(estimateRepository.searchEstimates(estimateSearchCondition, pageRequest))
+				.thenReturn(estimates);
+
+			//when
+			estimateService.searchEstimates(searchEstimateRequest, pagingRequest);
+
+		    //then
+			Mockito.verify(estimateRepository, Mockito.times(1))
+				.searchEstimates(estimateSearchCondition, pageRequest);
+		}
+
+		@Test
+		void 견적서를_인기순으로_조회한다() {
+			//given
+			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+				null, null, null, null, null, null, null, null
+			);
+
+			EstimateSearchCondition estimateSearchCondition = EstimateSearchCondition.from(searchEstimateRequest);
+
+			PagingRequest pagingRequest = new PagingRequest(null, null, "POPULOR");
+			PageRequest pageRequest = PageRequest.of(pagingRequest.page(), pagingRequest.size(),
+				Sort.by(pagingRequest.sort()));
+
+			Estimate midPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			ReflectionTestUtils.setField(midPopularityEstimate, "id", 1_000L);
+			ReflectionTestUtils.setField(midPopularityEstimate, "applicantCount", 100);
+
+			Estimate lowPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			ReflectionTestUtils.setField(midPopularityEstimate, "id", 2_000L);
+			ReflectionTestUtils.setField(lowPopularityEstimate, "applicantCount", 50);
+
+			Estimate highPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			ReflectionTestUtils.setField(midPopularityEstimate, "id", 3_000L);
+			ReflectionTestUtils.setField(highPopularityEstimate, "applicantCount", 200);
+
+			List<Estimate> estimateList = List.of(
+				highPopularityEstimate,
+				midPopularityEstimate,
+				lowPopularityEstimate
+			);
+			PageImpl<Estimate> estimates = new PageImpl<>(estimateList, pageRequest, estimateList.size());
+
+			Mockito.when(estimateRepository.searchEstimates(estimateSearchCondition, pageRequest))
+				.thenReturn(estimates);
+
+			//when
+			PagingResponse<EstimateDetailResponse> result = estimateService.searchEstimates(
+				searchEstimateRequest, pagingRequest);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.content().size()).isEqualTo(3),
+				() -> Assertions.assertThat(result.content().get(0).estimateId()).isEqualTo(highPopularityEstimate.getId()),
+				() -> Assertions.assertThat(result.content().get(1).estimateId()).isEqualTo(midPopularityEstimate.getId()),
+				() -> Assertions.assertThat(result.content().get(2).estimateId()).isEqualTo(lowPopularityEstimate.getId())
+			);
 		}
 	}
 }

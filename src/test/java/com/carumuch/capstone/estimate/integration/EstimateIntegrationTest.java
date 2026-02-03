@@ -11,14 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.estimate.application.EstimateService;
+import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
@@ -243,6 +247,56 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			//when & then
 			assertThatThrownBy(() -> estimateService.changeStatus(closedEstimate.getId(), EstimateStatus.PRIVATE.name()))
 				.isInstanceOf(CustomException.class);
+		}
+	}
+
+	@Nested
+	@DisplayName("견적서 조건 검색 기능")
+	class SearchEstimates {
+		@Test
+		void 견적서를_조회한다() {
+		    //given
+			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
+			DamageReport damageReport = damageReportRepository.save(
+				new DamageReport(
+					damageReportFixture.getDescription(),
+					damageReportFixture.getPreferredRepairRegion(),
+					damageReportFixture.isPickupRequired(),
+					damageReportFixture.getImagePath(),
+					vehicle
+				)
+			);
+
+			Estimate estimateFixture2 = EstimateFixture.ESTIMATE_FIXTURE_4.create();
+			Estimate estimate2 = estimateRepository.save(
+				new Estimate(
+					estimateFixture2.getRepairCost(),
+					estimateFixture2.getRepairParts(),
+					estimateFixture2.getEstimateStatus(),
+					estimateFixture2.getImagePath(),
+					damageReport
+				)
+			);
+
+			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+				null, null, null, null, null, null, null, null
+			);
+
+			EstimateSearchCondition estimateSearchCondition = EstimateSearchCondition.from(searchEstimateRequest);
+			PagingRequest pagingRequest = new PagingRequest(null, null, null);
+
+
+		    //when
+			PagingResponse<EstimateDetailResponse> result = estimateService.searchEstimates(
+				searchEstimateRequest, pagingRequest);
+
+			//then
+			assertAll(
+				() -> assertThat(result.content().get(0).estimateId()).isEqualTo(estimate.getId()),
+				() -> assertThat(result.content().get(0).imagePath()).isEqualTo(estimate.getImagePath()),
+				() -> assertThat(result.content().get(1).estimateId()).isEqualTo(estimate2.getId()),
+				() -> assertThat(result.content().get(1).imagePath()).isEqualTo(estimate2.getImagePath())
+			);
 		}
 	}
 }

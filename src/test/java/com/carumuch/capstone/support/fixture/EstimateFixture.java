@@ -23,6 +23,12 @@ public enum EstimateFixture {
 		Set.of("백휠 (우)", "백도어 (우)", "사이드미러 (좌)"),
 		EstimateStatus.PRIVATE,
 		"http://test-image3.com"
+	),
+	ESTIMATE_FIXTURE_4(
+		30_000,
+		Set.of("백휠 (우)", "백도어 (우)", "사이드미러 (좌)"),
+		EstimateStatus.OPEN,
+		"http://test-image4.com"
 	);
 
 	private final Integer repairCost;

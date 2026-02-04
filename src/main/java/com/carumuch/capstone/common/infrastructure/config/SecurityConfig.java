@@ -104,6 +104,7 @@ public class SecurityConfig {
 					.requestMatchers(
 						mvc.matcher(GET, ESTIMATE_URI + "/{estimateId}"),
 						mvc.matcher(GET, ESTIMATE_URI),
+						mvc.matcher(GET, ESTIMATE_URI + "/search"),
 						mvc.matcher(PUT, ESTIMATE_URI + "/{estimateId}/status")
 					).authenticated()
 

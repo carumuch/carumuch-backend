@@ -1,17 +1,20 @@
 package com.carumuch.capstone.estimate.presentation;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -22,8 +25,12 @@ import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.ApiErrorResponse;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
+import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
 import com.carumuch.capstone.support.RestDocsSupport;
@@ -404,6 +411,167 @@ class EstimateControllerTest extends RestDocsSupport {
 							.build())
 					)
 				);
+		}
+	}
+	
+	@Nested
+	@DisplayName("견적서 조건 검색 API 테스트")
+	class SearchEstimates {
+		@Test
+		void 견적서_조건_검색_기능_2XX() throws Exception {
+			//given
+			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+				null, null, null, null, null, null, null, null
+			);
+			PagingRequest pagingRequest = new PagingRequest(null, null, null);
+
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			ReflectionTestUtils.setField(estimateFixture, "id", 404L);
+			ReflectionTestUtils.setField(estimateFixture, "createDate", LocalDateTime.now());
+
+			Estimate estimateFixture2 = EstimateFixture.ESTIMATE_FIXTURE_4.create();
+			ReflectionTestUtils.setField(estimateFixture2, "id", 500L);
+			ReflectionTestUtils.setField(estimateFixture2, "createDate", LocalDateTime.now());
+
+
+			PagingResponse<EstimateDetailResponse> responseDto = PagingResponse.from(
+				new PageImpl<>(List.of(estimateFixture, estimateFixture2)).map(EstimateDetailResponse::new));
+
+			Mockito.when(estimateService.searchEstimates(searchEstimateRequest, pagingRequest))
+				.thenReturn(responseDto);
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+			);
+
+			//then
+			actions
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
+
+				// paging meta
+				.andExpect(jsonPath("$.data.page.number").value(1))
+
+				// content[0] = 견적서 정보
+				.andExpect(jsonPath("$.data.content[0].estimateId").value(responseDto.content().get(0).estimateId()))
+				.andExpect(jsonPath("$.data.content[0].repairCost").value(responseDto.content().get(0).repairCost()))
+				.andExpect(jsonPath("$.data.content[0].repairParts").isArray())
+				.andExpect(
+					jsonPath("$.data.content[0].estimateStatus").value(responseDto.content().get(0).estimateStatus()))
+				.andExpect(jsonPath("$.data.content[0].imagePath").value(responseDto.content().get(0).imagePath()))
+
+				// 사고 레포트 정보
+				.andExpect(jsonPath("$.data.content[0].damageReportInfo.description")
+					.value(responseDto.content().get(0).damageReportInfo().description()))
+				.andExpect(jsonPath("$.data.content[0].damageReportInfo.preferredRepairSido")
+					.value(responseDto.content().get(0).damageReportInfo().preferredRepairSido()))
+				.andExpect(jsonPath("$.data.content[0].damageReportInfo.preferredRepairSigungu")
+					.value(responseDto.content().get(0).damageReportInfo().preferredRepairSigungu()))
+				.andExpect(jsonPath("$.data.content[0].damageReportInfo.isPickupRequired")
+					.value(responseDto.content().get(0).damageReportInfo().isPickupRequired()))
+
+				// 차량 정보
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.brand")
+					.value(responseDto.content().get(0).vehicleInfo().brand()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.licenseNumber")
+					.value(responseDto.content().get(0).vehicleInfo().licenseNumber()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.modelName")
+					.value(responseDto.content().get(0).vehicleInfo().modelName()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.modelYear")
+					.value(responseDto.content().get(0).vehicleInfo().modelYear()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.ownerName")
+					.value(responseDto.content().get(0).vehicleInfo().ownerName()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.ownershipType")
+					.value(responseDto.content().get(0).vehicleInfo().ownershipType()))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.summary("견적서 조건 검색")
+						.description("## 견적서 조건 검색 기능 \n"
+							+ "### 설명 \n"
+							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)"
+						)
+						.queryParameters(
+							parameterWithName("size").description(
+								"페이지에 표시할 size입니다. 10 ~ 100입니다. 만약 다른 값이 들어오면 10개로 고정합니다.").optional(),
+							parameterWithName("page").description("page가 없거나, 음수라면 첫 페이지로 고정합니다.").optional(),
+							parameterWithName("size").description("'POPULOR' or 'populor'시 공업사 수리 희망 수가 높은 순으로 제공합니다.(기본: 생성일 기준 내림차순)").optional(),
+							parameterWithName("minRepairCost").description("최소 산정 금액").optional(),
+							parameterWithName("maxRepairCost").description("최대 산정 금액").optional(),
+							parameterWithName("sido").description("수리 희망 시/도").optional(),
+							parameterWithName("sigungu").description("수리 희망 시/군/구").optional(),
+							parameterWithName("isPickupRequired").description("수리 시 픽업 희망 유무").optional(),
+							parameterWithName("brand").description("사고 차량의 브랜드").optional(),
+							parameterWithName("modelYear").description("사고 차량의 연식").optional(),
+							parameterWithName("modelName").description("사고 차량의 이름").optional()
+						)
+						.responseSchema(Schema.schema(PagingResponse.class.getSimpleName()))
+						.responseFields(
+							fieldWithPath("message").description("성공 응답 메세지입니다.").type(JsonFieldType.STRING),
+
+							// paging wrapper
+							fieldWithPath("data.content").description("페이징된 견적서 목록입니다.").type(JsonFieldType.ARRAY),
+							fieldWithPath("data.page").description("페이지 메타데이터입니다.").type(JsonFieldType.OBJECT),
+
+							// page meta
+							fieldWithPath("data.page.number").description("현재 페이지 번호(1부터 시작)입니다.")
+								.type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.size").description("페이지 크기입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.totalElements").description("전체 요소 개수입니다.")
+								.type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.totalPages").description("전체 페이지 수입니다.")
+								.type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.hasNext").description("다음 페이지 존재 여부입니다.")
+								.type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.page.hasPrevious").description("이전 페이지 존재 여부입니다.")
+								.type(JsonFieldType.BOOLEAN),
+
+							// content
+							fieldWithPath("data.content[].estimateId").description("견적서 식별자입니다.")
+								.type(JsonFieldType.NUMBER),
+							fieldWithPath("data.content[].repairCost").description("사고 견적 분석 금액입니다.")
+								.type(JsonFieldType.NUMBER),
+							fieldWithPath("data.content[].repairParts").description("사고 수리 예상 부위입니다.")
+								.type(JsonFieldType.ARRAY),
+							fieldWithPath("data.content[].estimateStatus").description("견적서의 상태입니다.")
+								.type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].imagePath").description("견적서의 사고 분석 사진 주소입니다.")
+								.type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].createdAt").description("견적서 생성일 입니다.")
+								.type(JsonFieldType.STRING),
+
+							// 사고 레포트 정보
+							fieldWithPath("data.content[].damageReportInfo").description("사고 레포트 정보입니다.")
+								.type(JsonFieldType.OBJECT),
+							fieldWithPath("data.content[].damageReportInfo.description").description(
+								"사용자가 기술한 사고 레포트의 내용입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].damageReportInfo.preferredRepairSido").description(
+								"수리 희망 시/도 입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].damageReportInfo.preferredRepairSigungu").description(
+								"수리 희망 시/군/구 입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].damageReportInfo.isPickupRequired").description(
+								"사고 수리 픽업 희망 유무입니다.").type(JsonFieldType.BOOLEAN),
+
+							// 차량 정보
+							fieldWithPath("data.content[].vehicleInfo").description("사고 차량 정보입니다.")
+								.type(JsonFieldType.OBJECT),
+							fieldWithPath("data.content[].vehicleInfo.brand").description("사고 차량의 브랜드입니다.")
+								.type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].vehicleInfo.licenseNumber").description("차량의 번호입니다.")
+								.type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].vehicleInfo.modelName").description("사고 차량의 모델명입니다.")
+								.type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].vehicleInfo.modelYear").description("사고 차량의 연식입니다.")
+								.type(JsonFieldType.NUMBER),
+							fieldWithPath("data.content[].vehicleInfo.ownerName").description("사고 차량의 실소유자명입니다.")
+								.type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].vehicleInfo.ownershipType").description("차량의 유형입니다.")
+								.type(JsonFieldType.STRING)
+						)
+						.build()
+					)
+				));
 		}
 	}
 }

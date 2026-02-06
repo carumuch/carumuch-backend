@@ -496,7 +496,7 @@ class EstimateControllerTest extends RestDocsSupport {
 							parameterWithName("size").description(
 								"페이지에 표시할 size입니다. 10 ~ 100입니다. 만약 다른 값이 들어오면 10개로 고정합니다.").optional(),
 							parameterWithName("page").description("page가 없거나, 음수라면 첫 페이지로 고정합니다.").optional(),
-							parameterWithName("size").description("'POPULOR' or 'populor'시 공업사 수리 희망 수가 높은 순으로 제공합니다.(기본: 생성일 기준 내림차순)").optional(),
+							parameterWithName("sort").description("'POPULAR' or 'popular' 시 공업사 수리 희망 수가 높은 순으로 제공합니다.(기본: 생성일 기준 내림차순)").optional(),
 							parameterWithName("minRepairCost").description("최소 산정 금액").optional(),
 							parameterWithName("maxRepairCost").description("최대 산정 금액").optional(),
 							parameterWithName("sido").description("수리 희망 시/도").optional(),

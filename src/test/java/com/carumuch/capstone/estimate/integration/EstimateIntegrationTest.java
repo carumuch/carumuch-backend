@@ -221,10 +221,10 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 		@Test
 		void 견적서를_찾지_못하면_예외를_반환한다() {
 			//given
-			Long noSavedDamageReportId = 200L;
+			Long estimateId = 300L;
 
 			//when & then
-			assertThatThrownBy(() -> estimateService.findEstimateDetailByDamageReportId(noSavedDamageReportId))
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, EstimateStatus.PRIVATE.name()))
 				.isInstanceOf(NotFoundException.class);
 		}
 

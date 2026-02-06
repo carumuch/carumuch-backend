@@ -169,7 +169,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			assertAll(
 				() -> assertThat(estimateDetail.estimateId()).isEqualTo(result.getId()),
 				() -> assertThat(estimateDetail.estimateStatus()).isEqualTo(result.getEstimateStatus().name()),
-				() -> assertThat(estimateDetail.estimateId()).isEqualTo(result.getId()),
+				() -> assertThat(estimateDetail.imagePath()).isEqualTo(result.getImagePath()),
 				() -> assertThat(estimateDetail.repairCost()).isEqualTo(result.getRepairCost()),
 				() -> assertThat(estimateDetail.repairParts().size()).isEqualTo(result.getRepairParts().size())
 			);

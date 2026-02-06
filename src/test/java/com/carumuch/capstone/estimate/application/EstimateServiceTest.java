@@ -306,7 +306,7 @@ class EstimateServiceTest {
 
 			EstimateSearchCondition estimateSearchCondition = EstimateSearchCondition.from(searchEstimateRequest);
 
-			PagingRequest pagingRequest = new PagingRequest(null, null, "POPULOR");
+			PagingRequest pagingRequest = new PagingRequest(null, null, "POPULAR");
 			PageRequest pageRequest = PageRequest.of(pagingRequest.page(), pagingRequest.size(),
 				Sort.by(pagingRequest.sort()));
 
@@ -315,11 +315,11 @@ class EstimateServiceTest {
 			ReflectionTestUtils.setField(midPopularityEstimate, "applicantCount", 100);
 
 			Estimate lowPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
-			ReflectionTestUtils.setField(midPopularityEstimate, "id", 2_000L);
+			ReflectionTestUtils.setField(lowPopularityEstimate, "id", 2_000L);
 			ReflectionTestUtils.setField(lowPopularityEstimate, "applicantCount", 50);
 
 			Estimate highPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
-			ReflectionTestUtils.setField(midPopularityEstimate, "id", 3_000L);
+			ReflectionTestUtils.setField(highPopularityEstimate, "id", 3_000L);
 			ReflectionTestUtils.setField(highPopularityEstimate, "applicantCount", 200);
 
 			List<Estimate> estimateList = List.of(

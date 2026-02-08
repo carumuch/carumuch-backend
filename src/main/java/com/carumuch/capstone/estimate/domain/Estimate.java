@@ -5,7 +5,6 @@ import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
-import com.carumuch.capstone.identity.domain.user.User;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -78,8 +77,8 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
     }
 
 	@Override
-	public boolean canAccess(User user) {
-		return user.getId().equals(this.userId);
+	public boolean canAccess(Long userId) {
+		return userId.equals(this.userId);
 	}
 
 	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요

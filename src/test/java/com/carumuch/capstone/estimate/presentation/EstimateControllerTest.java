@@ -33,8 +33,10 @@ import com.carumuch.capstone.estimate.domain.EstimateStatus;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.support.RestDocsSupport;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
+import com.carumuch.capstone.support.fixture.UserFixture;
 import com.epages.restdocs.apispec.ResourceDocumentation;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
@@ -284,10 +286,11 @@ class EstimateControllerTest extends RestDocsSupport {
 		void 견적서_상태_변경_기능_2XX() throws Exception {
 		    //given
 			Long estimateId = 300L;
+
 			String changeEstimateStatus = EstimateStatus.PRIVATE.name();
 			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
 
-			Mockito.doNothing().when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+			Mockito.doNothing().when(estimateService).changeStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong());
 		    
 		    //when
 			ResultActions actions = mockMvc.perform(
@@ -328,8 +331,9 @@ class EstimateControllerTest extends RestDocsSupport {
 			Long estimateId = 300L;
 			String changeEstimateStatus = EstimateStatus.PRIVATE.name();
 			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+
 			Mockito.doThrow(new NotFoundException(Estimate.class))
-				.when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+				.when(estimateService).changeStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong());
 
 			//when
 			ResultActions actions = mockMvc.perform(
@@ -359,8 +363,9 @@ class EstimateControllerTest extends RestDocsSupport {
 			Long estimateId = 300L;
 			String changeEstimateStatus = EstimateStatus.OPEN.name();
 			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+
 			Mockito.doThrow(new CustomException(HttpStatus.BAD_REQUEST, errorMessage))
-				.when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+				.when(estimateService).changeStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong());
 
 			//when
 			ResultActions actions = mockMvc.perform(
@@ -390,8 +395,9 @@ class EstimateControllerTest extends RestDocsSupport {
 			Long estimateId = 300L;
 			String changeEstimateStatus = EstimateStatus.OPEN.name();
 			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
+
 			Mockito.doThrow(new CustomException(HttpStatus.BAD_REQUEST, errorMessage))
-				.when(estimateService).changeStatus(estimateId, changeEstimateStatus);
+				.when(estimateService).changeStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong());
 
 			//when
 			ResultActions actions = mockMvc.perform(

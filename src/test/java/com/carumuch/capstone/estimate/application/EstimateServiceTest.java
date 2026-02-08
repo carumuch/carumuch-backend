@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.carumuch.capstone.common.exception.CustomException;
+import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
@@ -31,7 +32,9 @@ import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
+import com.carumuch.capstone.support.fixture.UserFixture;
 
 @ExtendWith(MockitoExtension.class)
 class EstimateServiceTest {
@@ -209,8 +212,8 @@ class EstimateServiceTest {
 			Mockito.when(estimateRepository.findById(estimateId))
 				.thenReturn(Optional.of(estimateFixture));
 
-		    //when
-			estimateService.changeStatus(estimateId, estimateStatus);
+			//when
+			estimateService.changeStatus(estimateId, estimateStatus, estimateFixture.getUserId());
 
 		    //then
 			Mockito.verify(estimateRepository, Mockito.times(1))
@@ -221,12 +224,13 @@ class EstimateServiceTest {
 		void 견적서를_찾지_못하면_예외를_반환한다() {
 		    //given
 			Long estimateId = 300L;
+			Long userId = 10L;
 			String estimateStatus = EstimateStatus.PRIVATE.name();
 			Mockito.when(estimateRepository.findById(estimateId))
 				.thenReturn(Optional.empty());
 
 		    //when & then
-			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus))
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus, userId))
 				.isInstanceOf(NotFoundException.class);
 		}
 
@@ -242,7 +246,7 @@ class EstimateServiceTest {
 				.thenReturn(Optional.of(estimateFixture));
 
 		    //when
-			estimateService.changeStatus(estimateId, estimateStatus);
+			estimateService.changeStatus(estimateId, estimateStatus, estimateFixture.getUserId());
 
 		    //then
 			Assertions.assertThat(estimateFixture.getEstimateStatus()).isEqualTo(EstimateStatus.valueOf(estimateStatus));
@@ -259,8 +263,24 @@ class EstimateServiceTest {
 				.thenReturn(Optional.of(alreadyMatchedEstimateFixture));
 
 		    //when & then
-			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus))
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus, alreadyMatchedEstimateFixture.getUserId()))
 				.isInstanceOf(CustomException.class);
+		}
+
+		@Test
+		void 자신의_견적서가_아니라면_수정할_수_없다() {
+			//given
+			Long estimateId = 300L;
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			String estimateStatus = EstimateStatus.PRIVATE.name();
+			Mockito.when(estimateRepository.findById(estimateId))
+				.thenReturn(Optional.of(estimateFixture));
+
+			Long anotherUserId = 20L;
+
+			//when & then
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus, anotherUserId))
+				.isInstanceOf(ForbiddenException.class);
 		}
 	}
 

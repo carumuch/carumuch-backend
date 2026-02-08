@@ -1,5 +1,6 @@
 package com.carumuch.capstone.estimate.application;
 
+import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
@@ -9,6 +10,7 @@ import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.identity.domain.user.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,9 +40,12 @@ public class EstimateService {
 	}
 
 	@Transactional
-	public void changeStatus(Long estimateId, String status) {
+	public void changeStatus(Long estimateId, String status, Long userId) {
 		Estimate estimate = estimateRepository.findById(estimateId)
 			.orElseThrow(() -> new NotFoundException(Estimate.class));
+		if (!estimate.canAccess(userId)) {
+			throw new ForbiddenException();
+		}
 		estimate.updateStatus(EstimateStatus.from(status));
 	}
 

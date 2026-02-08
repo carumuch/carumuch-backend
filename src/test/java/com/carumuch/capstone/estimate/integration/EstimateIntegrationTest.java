@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.carumuch.capstone.common.exception.CustomException;
+import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
@@ -212,7 +213,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			String estimateStatus = EstimateStatus.PRIVATE.name();
 
 			//when
-			estimateService.changeStatus(estimateId, estimateStatus);
+			estimateService.changeStatus(estimateId, estimateStatus, user.getId());
 
 		    //then
 			Estimate result = estimateRepository.findById(estimateId)
@@ -226,7 +227,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			Long estimateId = 300L;
 
 			//when & then
-			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, EstimateStatus.PRIVATE.name()))
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, EstimateStatus.PRIVATE.name(), user.getId()))
 				.isInstanceOf(NotFoundException.class);
 		}
 
@@ -237,7 +238,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			String estimateStatus = "WRONG_STATUS";
 
 		    //when & then
-			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus))
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus, user.getId()))
 				.isInstanceOf(CustomException.class);
 		}
 
@@ -247,8 +248,18 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			Estimate closedEstimate = estimateRepository.save(EstimateFixture.ESTIMATE_FIXTURE_2.create());
 
 			//when & then
-			assertThatThrownBy(() -> estimateService.changeStatus(closedEstimate.getId(), EstimateStatus.PRIVATE.name()))
+			assertThatThrownBy(() -> estimateService.changeStatus(closedEstimate.getId(), EstimateStatus.PRIVATE.name(), user.getId()))
 				.isInstanceOf(CustomException.class);
+		}
+
+		@Test
+		void 자신의_견적서가_이니라면_수정할_수_없다() {
+			//given
+			Long anotherUserId = 20L;
+
+			//when & then
+			assertThatThrownBy(() -> estimateService.changeStatus(estimate.getId(), EstimateStatus.PRIVATE.name(), anotherUserId))
+				.isInstanceOf(ForbiddenException.class);
 		}
 	}
 

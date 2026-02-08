@@ -1,9 +1,12 @@
 package com.carumuch.capstone.estimate.domain;
 
 import com.carumuch.capstone.bidding.domain.Bid;
+import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
+import com.carumuch.capstone.identity.domain.user.User;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +25,7 @@ import org.springframework.http.HttpStatus;
 @Table(name = "estimate")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Estimate extends AggregateRoot<Estimate> {
+public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 
 	@Column(name = "ai_estimated_repair_cost")
 	private Integer repairCost;
@@ -49,6 +52,9 @@ public class Estimate extends AggregateRoot<Estimate> {
     @OneToMany(mappedBy = "estimate", cascade = ALL)
     private List<Bid> bids = new ArrayList<>();
 
+	@Column(name = "user_id")
+	private Long userId;
+
     public Estimate(
 		Integer repairCost,
 		Set<String> repairParts,
@@ -61,6 +67,7 @@ public class Estimate extends AggregateRoot<Estimate> {
         this.estimateStatus = estimateStatus;
 		this.imagePath = imagePath;
 		this.damageReport = damageReport;
+		this.userId = damageReport.getUserId();
     }
 
     public void updateStatus(EstimateStatus estimateStatus) {
@@ -70,7 +77,12 @@ public class Estimate extends AggregateRoot<Estimate> {
         this.estimateStatus = estimateStatus;
     }
 
-    // TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요
+	@Override
+	public boolean canAccess(User user) {
+		return user.getId().equals(this.userId);
+	}
+
+	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요
     public void increaseApplicant() {
         this.applicantCount += 1;
     }

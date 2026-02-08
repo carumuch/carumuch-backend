@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class EstimateResultListener {
+	private static final String INVALID_MESSAGE = RabbitMqConfig.ESTIMATE_RESULT_Q + ": 유효하지 않은 메시지입니다.";
+
 	private final EstimateRepository estimateRepository;
 	private final DamageReportRepository damageReportRepository;
 
@@ -25,19 +27,19 @@ public class EstimateResultListener {
 	@RabbitListener(queues = RabbitMqConfig.ESTIMATE_RESULT_Q)
 	public void onResult(EstimateResultMessage message) {
 		if (message == null || message.damageReportId() == null) {
-			throw new AmqpRejectAndDontRequeueException(
-				RabbitMqConfig.ESTIMATE_RESULT_Q + ": 유효하지 않는 메세지입니다."
-			);
+			throw new AmqpRejectAndDontRequeueException(INVALID_MESSAGE);
 		}
 
-		DamageReport damageReportRef = damageReportRepository.getReferenceById(message.damageReportId());
+		DamageReport damageReport = damageReportRepository.findById(message.damageReportId())
+			.orElseThrow(() -> new AmqpRejectAndDontRequeueException(INVALID_MESSAGE));
+
 		estimateRepository.save(
 			new Estimate(
 				message.repairCost(),
 				message.repairParts(),
 				EstimateStatus.OPEN,
 				message.imagePath(),
-				damageReportRef
+				damageReport
 			)
 		);
 	}

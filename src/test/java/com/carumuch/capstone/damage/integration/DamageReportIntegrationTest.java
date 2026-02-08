@@ -119,7 +119,8 @@ public class DamageReportIntegrationTest extends IntegrationSupportTest {
 					damageReport.getPreferredRepairRegion(),
 					damageReport.isPickupRequired(),
 					damageReport.getImagePath(),
-					vehicle
+					vehicle,
+					user.getId()
 				)
 			).getId();
 
@@ -178,7 +179,8 @@ public class DamageReportIntegrationTest extends IntegrationSupportTest {
 						damageReport.getPreferredRepairRegion(),
 						damageReport.isPickupRequired(),
 						damageReport.getImagePath(),
-						vehicle
+						vehicle,
+						user.getId()
 					))
 				).toList();
 
@@ -217,7 +219,8 @@ public class DamageReportIntegrationTest extends IntegrationSupportTest {
 						damageReport.getPreferredRepairRegion(),
 						damageReport.isPickupRequired(),
 						damageReport.getImagePath(),
-						vehicle
+						vehicle,
+						user.getId()
 					))
 				).toList();
 

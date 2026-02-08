@@ -56,13 +56,17 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 	@JoinColumn(name = "vehicle_id")
 	private Vehicle vehicle;
 
-	public DamageReport(String description, RepairRegion preferredRepairRegion, boolean isPickupRequired, String imagePath, Vehicle vehicle) {
+	@Column(name = "userId", nullable = false)
+	private Long userId;
+
+	public DamageReport(String description, RepairRegion preferredRepairRegion, boolean isPickupRequired, String imagePath, Vehicle vehicle, Long userId) {
 		this.preferredRepairRegion = preferredRepairRegion;
 		this.description = description;
 		this.isPickupRequired = isPickupRequired;
 		this.imagePath = imagePath;
 		this.status = DamageReportStatus.REGISTERED;
 		this.vehicle = vehicle;
+		this.userId = userId;
 	}
 
 	public void update(String description, RepairRegion preferredRepairRegion, boolean isPickupRequired) {

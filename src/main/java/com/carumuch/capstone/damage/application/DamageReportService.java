@@ -35,7 +35,7 @@ public class DamageReportService {
 	public Long register(RegisterDamageReportRequest requestDto, Long userId) {
 		Vehicle vehicle = vehicleRepository.findByUserId(userId)
 			.orElseThrow(() -> new NotFoundException(Vehicle.class));
-		DamageReport damageReport = damageReportRepository.save(requestDto.toEntity(vehicle));
+		DamageReport damageReport = damageReportRepository.save(requestDto.toEntity(vehicle, userId));
 
 		eventPublisher.publishEvent(new DamageReportRegisteredEvent(
 			damageReport.getId(),

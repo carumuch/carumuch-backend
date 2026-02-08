@@ -52,11 +52,12 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 	Estimate estimate;
 	DamageReport damageReport;
 	Vehicle vehicle;
+	User user;
 
 	@BeforeEach
 	void setUp() {
 		User userFixture = UserFixture.USER_FIXTURE_1.create();
-		User user = userRepository.save(
+		user = userRepository.save(
 			new User(
 				userFixture.getLoginId(),
 				userFixture.getPassword(),
@@ -86,7 +87,8 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 				damageReportFixture.getPreferredRepairRegion(),
 				damageReportFixture.isPickupRequired(),
 				damageReportFixture.getImagePath(),
-				vehicle
+				vehicle,
+				user.getId()
 			)
 		);
 
@@ -263,7 +265,8 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 					damageReportFixture.getPreferredRepairRegion(),
 					damageReportFixture.isPickupRequired(),
 					damageReportFixture.getImagePath(),
-					vehicle
+					vehicle,
+					user.getId()
 				)
 			);
 

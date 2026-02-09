@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -78,7 +79,7 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 
 	@Override
 	public boolean canAccess(Long userId) {
-		return userId.equals(this.userId);
+		return Objects.equals(this.userId, userId);
 	}
 
 	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요

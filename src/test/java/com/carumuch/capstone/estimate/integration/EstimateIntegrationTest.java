@@ -253,7 +253,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 		}
 
 		@Test
-		void 자신의_견적서가_이니라면_수정할_수_없다() {
+		void 자신의_견적서가_아니라면_수정할_수_없다() {
 			//given
 			Long anotherUserId = 20L;
 

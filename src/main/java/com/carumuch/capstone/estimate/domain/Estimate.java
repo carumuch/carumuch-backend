@@ -70,12 +70,19 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 		this.userId = damageReport.getUserId();
     }
 
-    public void updateStatus(EstimateStatus estimateStatus) {
+    public void changeStatus(EstimateStatus estimateStatus) {
+		if (estimateStatus == EstimateStatus.CLOSED) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, "CLOSED 상태로는 변경할 수 없습니다.");
+		}
+		validateStatus();
+        this.estimateStatus = estimateStatus;
+    }
+
+	private void validateStatus() {
 		if (this.estimateStatus == EstimateStatus.CLOSED) {
 			throw new CustomException(HttpStatus.BAD_REQUEST, "이미 매칭된 견적서 입니다.");
 		}
-        this.estimateStatus = estimateStatus;
-    }
+	}
 
 	@Override
 	public boolean canAccess(Long userId) {

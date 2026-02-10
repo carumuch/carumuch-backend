@@ -10,7 +10,6 @@ import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
-import com.carumuch.capstone.identity.domain.user.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,7 +45,7 @@ public class EstimateService {
 		if (!estimate.canAccess(userId)) {
 			throw new ForbiddenException();
 		}
-		estimate.updateStatus(EstimateStatus.from(status));
+		estimate.changeStatus(EstimateStatus.from(status));
 	}
 
 	public PagingResponse<EstimateDetailResponse> searchEstimates(SearchEstimateRequest searchEstimateRequest, PagingRequest pagingRequest) {

@@ -261,6 +261,16 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			assertThatThrownBy(() -> estimateService.changeStatus(estimate.getId(), EstimateStatus.PRIVATE.name(), anotherUserId))
 				.isInstanceOf(ForbiddenException.class);
 		}
+
+		@Test
+		void 견적서를_낙찰된_상태로_변경할_수_없다() {
+		    //given
+			String estimateStatus = EstimateStatus.CLOSED.name();
+
+		    //when & then
+		    assertThatThrownBy(() -> estimateService.changeStatus(estimate.getId(), estimateStatus, user.getId()))
+				.isInstanceOf(CustomException.class);
+		}
 	}
 
 	@Nested

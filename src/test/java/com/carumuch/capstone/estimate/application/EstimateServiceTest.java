@@ -282,6 +282,21 @@ class EstimateServiceTest {
 			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus, anotherUserId))
 				.isInstanceOf(ForbiddenException.class);
 		}
+
+		@Test
+		void 견적서를_낙찰된_상태로_변경할_수_없다() {
+		    //given
+			Long estimateId = 300L;
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+			String estimateStatus = EstimateStatus.CLOSED.name();
+
+			Mockito.when(estimateRepository.findById(estimateId))
+				.thenReturn(Optional.of(estimateFixture));
+
+		    //when & then
+			assertThatThrownBy(() -> estimateService.changeStatus(estimateId, estimateStatus, estimateFixture.getUserId()))
+				.isInstanceOf(CustomException.class);
+		}
 	}
 
 	@Nested

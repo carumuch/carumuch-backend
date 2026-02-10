@@ -62,7 +62,7 @@ public class BiddingService {
         // 견적서를 공개에서 비공개로 전환
         Estimate estimate = estimateRepository.findById(bid.getEstimate().getId())
                 .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND));
-        estimate.updateStatus(EstimateStatus.PRIVATE);
+        estimate.changeStatus(EstimateStatus.PRIVATE);
         return bid.getId();
     }
 }

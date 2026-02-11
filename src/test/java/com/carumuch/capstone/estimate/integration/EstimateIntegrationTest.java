@@ -19,7 +19,6 @@ import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.estimate.application.EstimateService;
-import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
@@ -306,7 +305,6 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 				null, null, null, null, null, null, null, null
 			);
 
-			EstimateSearchCondition estimateSearchCondition = EstimateSearchCondition.from(searchEstimateRequest);
 			PagingRequest pagingRequest = new PagingRequest(null, null, null);
 
 

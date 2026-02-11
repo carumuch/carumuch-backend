@@ -244,10 +244,10 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 		@Test
 		void 이미_매칭된_견적서의_상태를_변경하면_예외를_반환한다() {
 		    //given
-			Estimate closedEstimate = estimateRepository.save(EstimateFixture.ESTIMATE_FIXTURE_2.create());
+			estimate.closeBidding();
 
 			//when & then
-			assertThatThrownBy(() -> estimateService.changeStatus(closedEstimate.getId(), EstimateStatus.PRIVATE.name(), user.getId()))
+			assertThatThrownBy(() -> estimateService.changeStatus(estimate.getId(), EstimateStatus.PRIVATE.name(), user.getId()))
 				.isInstanceOf(CustomException.class);
 		}
 

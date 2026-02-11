@@ -78,6 +78,11 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
         this.estimateStatus = estimateStatus;
     }
 
+	public void closeBidding() {
+		validateStatus();
+		this.estimateStatus = EstimateStatus.CLOSED;
+	}
+
 	private void validateStatus() {
 		if (this.estimateStatus == EstimateStatus.CLOSED) {
 			throw new CustomException(HttpStatus.BAD_REQUEST, "이미 매칭된 견적서 입니다.");

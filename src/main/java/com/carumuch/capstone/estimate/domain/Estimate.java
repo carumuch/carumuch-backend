@@ -27,7 +27,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 
-	@Column(name = "ai_estimated_repair_cost")
+	@Column(name = "ai_estimated_repair_cost", nullable = false)
 	private Integer repairCost;
 
 	@ElementCollection(fetch = FetchType.LAZY)
@@ -36,24 +36,24 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 	private Set<String> repairParts = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 20, nullable = false)
     private EstimateStatus estimateStatus;
 
     @Column(name = "applicant_count")
     private int applicantCount;
 
-	@Column(name = "image_path", length = 500)
+	@Column(name = "image_path", length = 500, nullable = false)
 	private String imagePath;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "damage_report_id", unique = true)
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "damage_report_id", unique = true, nullable = false)
 	private DamageReport damageReport;
+
+	@Column(name = "user_id", nullable = false)
+	private Long userId;
 
     @OneToMany(mappedBy = "estimate", cascade = ALL)
     private List<Bid> bids = new ArrayList<>();
-
-	@Column(name = "user_id")
-	private Long userId;
 
     public Estimate(
 		Integer repairCost,

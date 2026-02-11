@@ -52,8 +52,8 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 	@Column(name = "status", length = 20, nullable = false)
 	private DamageReportStatus status;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "vehicle_id")
+	@ManyToOne(fetch = LAZY, optional = false)
+	@JoinColumn(name = "vehicle_id", nullable = false)
 	private Vehicle vehicle;
 
 	@Column(name = "userId", nullable = false)

@@ -56,7 +56,7 @@ public class DamageReport extends AggregateRoot<DamageReport> {
 	@JoinColumn(name = "vehicle_id", nullable = false)
 	private Vehicle vehicle;
 
-	@Column(name = "userId", nullable = false)
+	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
 	public DamageReport(String description, RepairRegion preferredRepairRegion, boolean isPickupRequired, String imagePath, Vehicle vehicle, Long userId) {

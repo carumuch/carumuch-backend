@@ -393,7 +393,7 @@ class EstimateControllerTest extends RestDocsSupport {
 			String errorMessage = "올바른 견적서 상태가 아닙니다.";
 
 			Long estimateId = 300L;
-			String changeEstimateStatus = EstimateStatus.OPEN.name();
+			String changeEstimateStatus = "wrongStatus";
 			UpdateEstimateStatusRequest requestDto = new UpdateEstimateStatusRequest(changeEstimateStatus);
 
 			Mockito.doThrow(new CustomException(HttpStatus.BAD_REQUEST, errorMessage))

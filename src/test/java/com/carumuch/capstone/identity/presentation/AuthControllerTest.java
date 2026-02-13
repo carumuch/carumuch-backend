@@ -44,8 +44,6 @@ class AuthControllerTest extends RestDocsSupport {
 
 	private static final String BASE_URI = "/auth";
 	private static final String BASE_TAG = "Identity - Auth";
-	private static final String BASE_SUCCESS_MESSAGE = "OK";
-	private static final String BASE_FIELD_ERROR_MESSAGE = "의 필드 값 유효하지 않습니다.";
 
     private static final String TEST_ACCESS_TOKEN = "accessabcdefghijklmnopqrstuvwxyz";
     private static final String TEST_REFRESH_TOKEN = "refreshabcdefghijklmnopqrstuvwxyz";

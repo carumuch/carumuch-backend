@@ -42,8 +42,6 @@ class UserControllerTest extends RestDocsSupport {
 
 	private static final String BASE_URI = "/users";
 	private static final String BASE_TAG = "Identity - User";
-	private static final String BASE_SUCCESS_MESSAGE = "OK";
-	private static final String BASE_FIELD_ERROR_MESSAGE = "의 필드 값 유효하지 않습니다.";
 
 	@Nested
 	@DisplayName("회원가입 API 테스트")

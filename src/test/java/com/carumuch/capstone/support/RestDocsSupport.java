@@ -6,6 +6,8 @@ import com.carumuch.capstone.damage.application.DamageReportService;
 import com.carumuch.capstone.damage.application.VehicleService;
 import com.carumuch.capstone.damage.presentation.DamageReportController;
 import com.carumuch.capstone.damage.presentation.VehicleController;
+import com.carumuch.capstone.estimate.application.EstimateService;
+import com.carumuch.capstone.estimate.presentation.EstimateController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.carumuch.capstone.identity.application.AccountRecoveryService;
 import com.carumuch.capstone.common.infrastructure.config.SecurityConfig;
@@ -50,7 +52,8 @@ import java.util.Optional;
 	UserController.class,
 	AuthController.class,
 	VehicleController.class,
-	DamageReportController.class
+	DamageReportController.class,
+	EstimateController.class
 })
 @Import({
 	SecurityConfig.class,
@@ -60,6 +63,9 @@ import java.util.Optional;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 public abstract class RestDocsSupport {
+
+	protected static final String BASE_SUCCESS_MESSAGE = "OK";
+	protected static final String BASE_FIELD_ERROR_MESSAGE = "의 필드 값 유효하지 않습니다.";
 
     @Value("${cookie.name}")
     protected String REFRESH_TOKEN_COOKIE_NAME;
@@ -102,6 +108,9 @@ public abstract class RestDocsSupport {
 
 	@MockitoBean
 	protected DamageReportService damageReportService;
+
+	@MockitoBean
+	protected EstimateService estimateService;
 
     @BeforeEach
     void setUp() {

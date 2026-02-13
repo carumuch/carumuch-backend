@@ -49,7 +49,7 @@ class DamageReportServiceTest {
 	class Register {
 		@Test
 		void 사고_레포트_이벤트를_발행한다() {
-			Long vehicleId = 100L;
+			Long userId = 10L;
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			RegisterDamageReportRequest registerDamageReportRequest = new RegisterDamageReportRequest(
 				damageReportFixture.getDescription(),
@@ -58,14 +58,14 @@ class DamageReportServiceTest {
 				damageReportFixture.isPickupRequired(),
 				damageReportFixture.getImagePath()
 			);
-			Mockito.when(vehicleRepository.findByUserId(vehicleId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
-			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle());
+			Mockito.when(vehicleRepository.findByUserId(userId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
+			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle(), userId);
 			ReflectionTestUtils.setField(damageReport, "id", 1L);
 			Mockito.when(damageReportRepository.save(Mockito.any(DamageReport.class))).thenReturn(damageReport);
 			Mockito.doNothing().when(eventPublisher).publishEvent(Mockito.any(DamageReportRegisteredEvent.class));
 
 			//when
-			damageReportService.register(registerDamageReportRequest, vehicleId);
+			damageReportService.register(registerDamageReportRequest, userId);
 
 			//then
 			Mockito.verify(eventPublisher, Mockito.times(1))
@@ -75,7 +75,7 @@ class DamageReportServiceTest {
 		@Test
 		void 등록된_사용자의_차량을_조회한다() {
 		    //given
-			Long vehicleId = 100L;
+			Long userId = 10L;
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			RegisterDamageReportRequest registerDamageReportRequest = new RegisterDamageReportRequest(
 				damageReportFixture.getDescription(),
@@ -84,17 +84,17 @@ class DamageReportServiceTest {
 				damageReportFixture.isPickupRequired(),
 				damageReportFixture.getImagePath()
 			);
-			Mockito.when(vehicleRepository.findByUserId(vehicleId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
-			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle());
+			Mockito.when(vehicleRepository.findByUserId(userId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
+			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle(), userId);
 			ReflectionTestUtils.setField(damageReport, "id", 1L);
 			Mockito.when(damageReportRepository.save(Mockito.any(DamageReport.class))).thenReturn(damageReport);
 
 		    //when
-			damageReportService.register(registerDamageReportRequest, vehicleId);
+			damageReportService.register(registerDamageReportRequest, userId);
 
 		    //then
 		    Mockito.verify(vehicleRepository, Mockito.times(1))
-				.findByUserId(vehicleId);
+				.findByUserId(userId);
 		}
 
 		@Test
@@ -119,7 +119,7 @@ class DamageReportServiceTest {
 		@Test
 		void 사고_레포트를_등록한다() {
 		    //given
-			Long vehicleId = 1L;
+			Long userId = 10L;
 			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
 			RegisterDamageReportRequest registerDamageReportRequest = new RegisterDamageReportRequest(
 				damageReportFixture.getDescription(),
@@ -128,14 +128,14 @@ class DamageReportServiceTest {
 				damageReportFixture.isPickupRequired(),
 				damageReportFixture.getImagePath()
 			);
-			Mockito.when(vehicleRepository.findByUserId(vehicleId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
+			Mockito.when(vehicleRepository.findByUserId(userId)).thenReturn(Optional.of(damageReportFixture.getVehicle()));
 
-			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle());
+			DamageReport damageReport = registerDamageReportRequest.toEntity(damageReportFixture.getVehicle(), userId);
 			ReflectionTestUtils.setField(damageReport, "id", 1L);
 			Mockito.when(damageReportRepository.save(Mockito.any(DamageReport.class))).thenReturn(damageReport);
 
 		    //when
-			Long result = damageReportService.register(registerDamageReportRequest, vehicleId);
+			Long result = damageReportService.register(registerDamageReportRequest, userId);
 
 			//then
 			Mockito.verify(damageReportRepository, Mockito.times(1))

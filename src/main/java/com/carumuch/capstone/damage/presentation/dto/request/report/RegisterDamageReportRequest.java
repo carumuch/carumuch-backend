@@ -13,13 +13,14 @@ public record RegisterDamageReportRequest(
 	@NotNull Boolean isPickupRequired,
 	@NotNull String imagePath
 ) {
-	public DamageReport toEntity(Vehicle vehicle) {
+	public DamageReport toEntity(Vehicle vehicle, Long userId) {
 		return new DamageReport(
 			description,
 			new RepairRegion(preferredRepairSido, preferredRepairSigungu),
 			isPickupRequired,
 			imagePath,
-			vehicle
+			vehicle,
+			userId
 		);
 	}
 }

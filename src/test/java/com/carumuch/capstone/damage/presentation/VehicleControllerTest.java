@@ -35,7 +35,6 @@ class VehicleControllerTest extends RestDocsSupport {
 
 	private static final String BASE_URI = "/vehicles";
 	private static final String BASE_TAG = "Damage - Vehicle";
-	private static final String BASE_SUCCESS_MESSAGE = "OK";
 
 	@Nested
 	@DisplayName("차량 등록 API 테스트")

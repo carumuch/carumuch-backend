@@ -349,6 +349,7 @@ class EstimateControllerTest extends RestDocsSupport {
 				.andDo(restDocsHandler.document(
 						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
 							.tag(BASE_TAG)
+							.requestSchema(Schema.schema(UpdateEstimateStatusRequest.class.getSimpleName()))
 							.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
 							.build())
 					)
@@ -381,6 +382,7 @@ class EstimateControllerTest extends RestDocsSupport {
 				.andDo(restDocsHandler.document(
 						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
 							.tag(BASE_TAG)
+							.requestSchema(Schema.schema(UpdateEstimateStatusRequest.class.getSimpleName()))
 							.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
 							.build())
 					)
@@ -413,6 +415,7 @@ class EstimateControllerTest extends RestDocsSupport {
 				.andDo(restDocsHandler.document(
 						ResourceDocumentation.resource(ResourceSnippetParameters.builder()
 							.tag(BASE_TAG)
+							.requestSchema(Schema.schema(UpdateEstimateStatusRequest.class.getSimpleName()))
 							.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
 							.build())
 					)

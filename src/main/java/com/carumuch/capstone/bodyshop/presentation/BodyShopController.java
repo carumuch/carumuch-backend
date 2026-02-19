@@ -5,6 +5,8 @@ import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
+import com.carumuch.capstone.identity.domain.user.User;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,9 +22,9 @@ public class BodyShopController {
     private final BodyShopService bodyShopService;
 
     @PostMapping
-    public ResponseEntity<?> register(@Validated(ValidationSequence.class) @RequestBody BodyShopRegistrationReqDto bodyShopRegistrationReqDto) {
+    public ResponseEntity<?> register(@Validated(ValidationSequence.class) @RequestBody BodyShopRegistrationReqDto bodyShopRegistrationReqDto, User user) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.register(bodyShopRegistrationReqDto)));
+                .body(ResponseDto.success(CREATED, bodyShopService.register(bodyShopRegistrationReqDto, user.getId())));
     }
 
     @GetMapping("/search")
@@ -33,9 +35,9 @@ public class BodyShopController {
 
     @PutMapping("/{bodyShopId}")
     public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody BodyShopUpdateReqDto bodyShopUpdateReqDto,
-                                    @PathVariable Long bodyShopId) {
+                                    @PathVariable Long bodyShopId, User user) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.update(bodyShopId,bodyShopUpdateReqDto)));
+                .body(ResponseDto.success(CREATED, bodyShopService.update(bodyShopId,bodyShopUpdateReqDto, user.getId())));
     }
 
     @GetMapping("/{bodyShopId}")

@@ -1,11 +1,11 @@
 package com.carumuch.capstone.bodyshop.application;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopInfoResDto;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopPageResDto;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopRegistrationReqDto;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
-import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;

@@ -93,9 +93,4 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 	public boolean canAccess(Long userId) {
 		return Objects.equals(this.userId, userId);
 	}
-
-	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요
-    public void increaseApplicant() {
-        this.applicantCount += 1;
-    }
 }

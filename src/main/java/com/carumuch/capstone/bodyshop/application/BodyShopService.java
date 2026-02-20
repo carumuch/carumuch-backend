@@ -2,8 +2,8 @@ package com.carumuch.capstone.bodyshop.application;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopInfoResDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopPageResDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.common.exception.ForbiddenException;
@@ -43,16 +43,17 @@ public class BodyShopService {
                 .build()).getId();
     }
 
-    public Page<BodyShopPageResDto> searchKeyword(int page, String keyword) {
+    public Page<BodyShopListResponse> searchKeyword(int page, String keyword) {
         Page<BodyShop> bodyShopPage = bodyShopRepository
                 .findPageByNameLikeKeyword(keyword, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
-        return bodyShopPage.map(bodyShop -> BodyShopPageResDto.builder()
-                        .id(bodyShop.getId())
-                        .name(bodyShop.getName())
-                        .acceptCount(bodyShop.getAcceptCount())
-                        .pickupAvailability(bodyShop.isPickupAvailability())
-                        .location(bodyShop.getLocation())
-                        .build());
+        return bodyShopPage.map(bodyShop -> new BodyShopListResponse(
+			bodyShop.getId(),
+			bodyShop.getName(),
+			bodyShop.getAcceptCount(),
+			bodyShop.isPickupAvailability(),
+			bodyShop.getLocation()
+			)
+		);
     }
 
     @Transactional
@@ -90,15 +91,15 @@ public class BodyShopService {
     public BodyShopInfoResDto findOne(Long id) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
-        return BodyShopInfoResDto.builder()
-                .id(bodyShop.getId())
-                .name(bodyShop.getName())
-                .description(bodyShop.getDescription())
-                .phoneNumber(bodyShop.getPhoneNumber())
-                .link(bodyShop.getLink())
-                .acceptCount(bodyShop.getAcceptCount())
-                .pickupAvailability(bodyShop.isPickupAvailability())
-                .location(bodyShop.getLocation())
-                .build();
+        return new BodyShopInfoResDto(
+			bodyShop.getId(),
+			bodyShop.getName(),
+			bodyShop.getLocation(),
+			bodyShop.getDescription(),
+			bodyShop.getPhoneNumber(),
+			bodyShop.getLink(),
+			bodyShop.getAcceptCount(),
+			bodyShop.isPickupAvailability()
+		);
     }
 }

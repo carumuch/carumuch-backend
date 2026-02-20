@@ -4,8 +4,8 @@ import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopInfoResDto;
 import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopPageResDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopRegistrationReqDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -26,19 +26,19 @@ public class BodyShopService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long register(BodyShopRegistrationReqDto requestDto, Long userId) {
+    public Long register(RegisterBodyShopRequest requestDto, Long userId) {
         User user = userRepository.findById(userId)
 			.orElseThrow(() -> new NotFoundException(User.class));
 
         user.registerMechanic();
 
         return bodyShopRepository.save(BodyShop.builder()
-                .name(requestDto.getName())
-                .description(requestDto.getDescription())
-                .location(requestDto.getLocation())
-                .link(requestDto.getLink())
-                .phoneNumber(requestDto.getPhoneNumber())
-                .pickupAvailability(requestDto.isPickupAvailability())
+                .name(requestDto.name())
+                .description(requestDto.description())
+                .location(requestDto.location())
+                .link(requestDto.link())
+                .phoneNumber(requestDto.phoneNumber())
+                .pickupAvailability(requestDto.pickupAvailability())
                 .user(user)
                 .build()).getId();
     }
@@ -68,19 +68,19 @@ public class BodyShopService {
     }
 
     @Transactional
-    public Long update(Long id, BodyShopUpdateReqDto requestDto, Long userId) {
+    public Long update(Long id, UpdateBodyShopRequest requestDto, Long userId) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new NotFoundException(User.class));
 
         if (user.getBodyShop().getId().equals(id)) {
-            bodyShop.update(requestDto.getName(),
-                    requestDto.getLocation(),
-                    requestDto.getDescription(),
-                    requestDto.getLink(),
-                    requestDto.getPhoneNumber(),
-                    requestDto.isPickupAvailability());
+            bodyShop.update(requestDto.name(),
+                    requestDto.location(),
+                    requestDto.description(),
+                    requestDto.link(),
+                    requestDto.phoneNumber(),
+                    requestDto.pickupAvailability());
             return bodyShop.getId();
         } else {
             throw new ForbiddenException();

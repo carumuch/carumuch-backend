@@ -1,7 +1,7 @@
 package com.carumuch.capstone.bodyshop.presentation;
 
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopRegistrationReqDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
@@ -22,9 +22,9 @@ public class BodyShopController {
     private final BodyShopService bodyShopService;
 
     @PostMapping
-    public ResponseEntity<?> register(@Validated(ValidationSequence.class) @RequestBody BodyShopRegistrationReqDto bodyShopRegistrationReqDto, User user) {
+    public ResponseEntity<?> register(@Validated(ValidationSequence.class) @RequestBody RegisterBodyShopRequest registerBodyShopRequest, User user) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.register(bodyShopRegistrationReqDto, user.getId())));
+                .body(ResponseDto.success(CREATED, bodyShopService.register(registerBodyShopRequest, user.getId())));
     }
 
     @GetMapping("/search")
@@ -34,10 +34,10 @@ public class BodyShopController {
     }
 
     @PutMapping("/{bodyShopId}")
-    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody BodyShopUpdateReqDto bodyShopUpdateReqDto,
+    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody UpdateBodyShopRequest updateBodyShopRequest,
                                     @PathVariable Long bodyShopId, User user) {
         return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.update(bodyShopId,bodyShopUpdateReqDto, user.getId())));
+                .body(ResponseDto.success(CREATED, bodyShopService.update(bodyShopId, updateBodyShopRequest, user.getId())));
     }
 
     @GetMapping("/{bodyShopId}")

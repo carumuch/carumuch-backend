@@ -1,47 +1,50 @@
 package com.carumuch.capstone.bidding.presentation.dto.response;
 
 import com.carumuch.capstone.bidding.domain.Bid;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopInfoResDto;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.bodyshop.domain.Location;
+
 import lombok.Getter;
 
-import java.util.List;
 
 @Getter
 public class BidResDto {
-
-    @Schema(description = "입찰 식별자", example = "1")
     private final Long id;
-
-    @Schema(description = "입찰 가격", example = "50000")
     private final int cost;
-
-    @Schema(description = "공업사 측 수리 방법",
-            example = "앞 범퍼를 탈거 하여 수리 후, 도색 작업을 거쳐 다시 차량에 장착할 예정입니다.")
     private final String repairMethod;
-
-    @Schema(description = "입찰 상태", example = "ACCEPTED")
     private final String bidStatus;
-
-    @Schema(description = "신청 공업사 정보")
-    private final List<BodyShopInfoResDto> bodyShop;
+    private final BodyShopInfo bodyShop;
 
     public BidResDto(Bid bid) {
         this.id = bid.getId();
         this.cost = bid.getCost();
         this.repairMethod = bid.getRepairMethod();
         this.bidStatus = bid.getBidStatus().getKey();
-
-        this.bodyShop = List.of(
-                BodyShopInfoResDto.builder()
-                        .id(bid.getBodyShop().getId())
-                        .name(bid.getBodyShop().getName())
-                        .location(bid.getBodyShop().getLocation())
-                        .description(bid.getBodyShop().getDescription())
-                        .phoneNumber(String.valueOf(bid.getBodyShop().getPhoneNumber()))
-                        .acceptCount(bid.getBodyShop().getAcceptCount())
-                        .link(bid.getBodyShop().getLink())
-                        .pickupAvailability(bid.getBodyShop().isPickupAvailability())
-                .build());
+        this.bodyShop = new BodyShopInfo(bid.getBodyShop());
     }
+
+	//TODO: BodyShop의 레거시 Dto의 연관을 끊기 위해 임의로 작성한 Record입니다. 개선 작업이 필요합니다.
+	public record BodyShopInfo(
+		Long id,
+		String name,
+		Location location,
+		String description,
+		String phoneNumber,
+		int acceptCount,
+		String link,
+		boolean pickupAvailability
+	) {
+		private BodyShopInfo(BodyShop bodyShop) {
+			this(
+				bodyShop.getId(),
+				bodyShop.getName(),
+				bodyShop.getLocation(),
+				bodyShop.getDescription(),
+				bodyShop.getPhoneNumber(),
+				bodyShop.getAcceptCount(),
+				bodyShop.getLink(),
+				bodyShop.isPickupAvailability()
+			);
+		}
+	}
 }

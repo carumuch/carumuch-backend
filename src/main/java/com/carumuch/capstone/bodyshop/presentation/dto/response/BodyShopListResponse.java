@@ -1,5 +1,6 @@
 package com.carumuch.capstone.bodyshop.presentation.dto.response;
 
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.Location;
 
 public record BodyShopListResponse(
@@ -9,5 +10,13 @@ public record BodyShopListResponse(
 	boolean pickupAvailability,
 	Location location
 ) {
-
+	public BodyShopListResponse(BodyShop bodyShop) {
+		this(
+			bodyShop.getId(),
+			bodyShop.getName(),
+			bodyShop.getAcceptCount(),
+			bodyShop.isPickupAvailability(),
+			bodyShop.getLocation()
+		);
+	}
 }

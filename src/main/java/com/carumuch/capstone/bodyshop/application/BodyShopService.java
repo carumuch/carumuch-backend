@@ -2,12 +2,13 @@ package com.carumuch.capstone.bodyshop.application;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
-import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResDto;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
-import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 
@@ -35,17 +36,10 @@ public class BodyShopService {
         return bodyShopRepository.save(requestDto.toEntity()).getId();
     }
 
-    public Page<BodyShopListResponse> searchKeyword(int page, String keyword) {
-        Page<BodyShop> bodyShopPage = bodyShopRepository
-                .findPageByNameLikeKeyword(keyword, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
-        return bodyShopPage.map(bodyShop -> new BodyShopListResponse(
-			bodyShop.getId(),
-			bodyShop.getName(),
-			bodyShop.getAcceptCount(),
-			bodyShop.isPickupAvailability(),
-			bodyShop.getLocation()
-			)
-		);
+    public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {
+        Page<BodyShop> bodyShops = bodyShopRepository
+                .findPageByNameLikeKeyword(keyword, PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort())));
+		return PagingResponse.from(bodyShops.map(BodyShopListResponse::new));
     }
 
     @Transactional
@@ -66,10 +60,10 @@ public class BodyShopService {
 		return bodyShop.getId();
     }
 
-    public BodyShopInfoResDto findOne(Long id) {
+    public BodyShopInfoResponse findOne(Long id) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
-        return new BodyShopInfoResDto(
+        return new BodyShopInfoResponse(
 			bodyShop.getId(),
 			bodyShop.getName(),
 			bodyShop.getLocation(),

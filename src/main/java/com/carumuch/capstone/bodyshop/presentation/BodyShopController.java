@@ -3,17 +3,19 @@ package com.carumuch.capstone.bodyshop.presentation;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
-import com.carumuch.capstone.common.legacy.dto.ResponseDto;
-import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
+import com.carumuch.capstone.common.presentation.dto.ApiResponse;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/body-shops")
@@ -22,27 +24,22 @@ public class BodyShopController {
     private final BodyShopService bodyShopService;
 
     @PostMapping
-    public ResponseEntity<?> register(@Validated(ValidationSequence.class) @RequestBody RegisterBodyShopRequest registerBodyShopRequest, User user) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.register(registerBodyShopRequest, user.getId())));
+    public ResponseEntity<ApiResponse<Long>> register(@RequestBody RegisterBodyShopRequest requestDto, User user) {
+        return ResponseEntity.status(CREATED).body(ApiResponse.of(bodyShopService.register(requestDto, user.getId())));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchKeyword(@RequestParam(defaultValue = "1") int page, @RequestParam String keyword) {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.searchKeyword(page,keyword)));
+    public ResponseEntity<ApiResponse<PagingResponse<BodyShopListResponse>>> searchKeyword(@ModelAttribute PagingRequest pagingRequest, @RequestParam String keyword) {
+        return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.searchKeyword(pagingRequest, keyword)));
     }
 
     @PutMapping("/{bodyShopId}")
-    public ResponseEntity<?> update(@Validated(ValidationSequence.class) @RequestBody UpdateBodyShopRequest updateBodyShopRequest,
-                                    @PathVariable Long bodyShopId, User user) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, bodyShopService.update(bodyShopId, updateBodyShopRequest, user.getId())));
+    public ResponseEntity<ApiResponse<Long>> update(@RequestBody UpdateBodyShopRequest requestDto, @PathVariable Long bodyShopId, User user) {
+        return ResponseEntity.status(CREATED).body(ApiResponse.of(bodyShopService.update(bodyShopId, requestDto, user.getId())));
     }
 
     @GetMapping("/{bodyShopId}")
-    public ResponseEntity<?> detail(@PathVariable Long bodyShopId) {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, bodyShopService.findOne(bodyShopId)));
+    public ResponseEntity<ApiResponse<BodyShopInfoResponse>> detail(@PathVariable Long bodyShopId) {
+        return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.findOne(bodyShopId)));
     }
 }

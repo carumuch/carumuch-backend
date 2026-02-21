@@ -32,15 +32,7 @@ public class BodyShopService {
 
         user.registerMechanic();
 
-        return bodyShopRepository.save(BodyShop.builder()
-                .name(requestDto.name())
-                .description(requestDto.description())
-                .location(requestDto.location())
-                .link(requestDto.link())
-                .phoneNumber(requestDto.phoneNumber())
-                .pickupAvailability(requestDto.pickupAvailability())
-                .user(user)
-                .build()).getId();
+        return bodyShopRepository.save(requestDto.toEntity()).getId();
     }
 
     public Page<BodyShopListResponse> searchKeyword(int page, String keyword) {
@@ -57,35 +49,21 @@ public class BodyShopService {
     }
 
     @Transactional
-    public Long join(Long id, Long userId) {
-        BodyShop bodyShop = bodyShopRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(BodyShop.class));
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NotFoundException(User.class));
-
-        user.registerMechanic();
-        user.setBodyShop(bodyShop);
-        return user.getId();
-    }
-
-    @Transactional
     public Long update(Long id, UpdateBodyShopRequest requestDto, Long userId) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NotFoundException(User.class));
 
-        if (user.getBodyShop().getId().equals(id)) {
-            bodyShop.update(requestDto.name(),
-                    requestDto.location(),
-                    requestDto.description(),
-                    requestDto.link(),
-                    requestDto.phoneNumber(),
-                    requestDto.pickupAvailability());
-            return bodyShop.getId();
-        } else {
-            throw new ForbiddenException();
-        }
+		// todo: 권한 확인이 필요합니다.
+        // if (!user.getBodyShop().getId().equals(id)) {
+		// 	throw new ForbiddenException();
+        // }
+		bodyShop.update(requestDto.name(),
+			requestDto.location(),
+			requestDto.description(),
+			requestDto.link(),
+			requestDto.phoneNumber(),
+			requestDto.pickupAvailability());
+		return bodyShop.getId();
     }
 
     public BodyShopInfoResDto findOne(Long id) {

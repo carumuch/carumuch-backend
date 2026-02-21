@@ -2,9 +2,7 @@ package com.carumuch.capstone.identity.domain.user;
 
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.community.domain.Board;
-import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.community.domain.Comment;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "users")
@@ -48,11 +45,6 @@ public class User extends AggregateRoot<User> {
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @JsonIgnore
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "body_shop_id")
-    private BodyShop bodyShop;
-
 	@Builder
     public User(String loginId, String password, String email, String name, Role role) {
         this.loginId = loginId;
@@ -75,12 +67,6 @@ public class User extends AggregateRoot<User> {
 	public void withdraw() {
 		registerEvent(new UserWithdrawnEvent(this.loginId));
 	}
-
-	//== 레거시 도메인 로직==// TODO: 사용되지 않을 때 삭제합니다.
-    public void setBodyShop(BodyShop bodyShop) {
-        this.bodyShop = bodyShop;
-        bodyShop.getUsers().add(this);
-    }
 
     public void registerMechanic() {
         this.isMechanic = true;

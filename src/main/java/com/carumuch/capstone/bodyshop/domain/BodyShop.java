@@ -1,18 +1,17 @@
 package com.carumuch.capstone.bodyshop.domain;
 
+import static jakarta.persistence.CascadeType.*;
+
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Table(name = "body_shop")
@@ -41,22 +40,19 @@ public class BodyShop extends AggregateRoot<BodyShop> {
     @Column(name = "pickup_availability")
     private boolean pickupAvailability;
 
-    @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
+    @OneToMany(mappedBy = "bodyShop", cascade = ALL)
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
     private List<Bid> bids = new ArrayList<>();
 
-    @Builder
-    public BodyShop(String name, Location location, String description, String link, String phoneNumber, User user, int acceptCount, boolean pickupAvailability) {
+    public BodyShop(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.link = link;
         this.phoneNumber = phoneNumber;
-        this.acceptCount = acceptCount;
         this.pickupAvailability = pickupAvailability;
-        user.setBodyShop(this);
     }
 
     public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {

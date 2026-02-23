@@ -43,16 +43,26 @@ public class BodyShop extends AggregateRoot<BodyShop> {
     @OneToMany(mappedBy = "bodyShop", cascade = ALL)
     private List<User> users = new ArrayList<>();
 
+	// TODO: 레거시 입찰 테이블 연관관계는 수정이 필요합니다.
     @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
     private List<Bid> bids = new ArrayList<>();
 
-    public BodyShop(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
+    public BodyShop(
+		String name,
+		Location location,
+		String description,
+		String link,
+		String phoneNumber,
+		boolean pickupAvailability,
+		User user
+	) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.link = link;
         this.phoneNumber = phoneNumber;
         this.pickupAvailability = pickupAvailability;
+		this.users.add(user);
     }
 
     public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {

@@ -33,7 +33,7 @@ public class BodyShopService {
 
         user.registerMechanic();
 
-        return bodyShopRepository.save(requestDto.toEntity()).getId();
+        return bodyShopRepository.save(requestDto.toEntity(user)).getId();
     }
 
     public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {

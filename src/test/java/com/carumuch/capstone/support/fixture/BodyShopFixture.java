@@ -5,7 +5,7 @@ import com.carumuch.capstone.bodyshop.domain.Location;
 
 public enum BodyShopFixture {
 
-	BODY_SHOP_FIXTURE(
+	BODY_SHOP_FIXTURE_1(
 		"차박고 차량 수리 전문",
 		"확실하게 처리해드립니다.",
 		"https:test.com",

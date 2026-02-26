@@ -25,10 +25,6 @@ public class AggregateRoot<T extends AbstractAggregateRoot<T>> extends AbstractA
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@CreatedBy //TODO: 레거시 코드 유지를 위해 존재합니다. AuditorAware를 구현하지 않아서 동작하지 않습니다.
-	@Column(updatable = false)
-	private String createBy;
-
 	@CreatedDate
 	@Column(updatable = false)
 	private LocalDateTime createDate;

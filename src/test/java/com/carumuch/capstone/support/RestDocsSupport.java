@@ -35,6 +35,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,6 +79,9 @@ public abstract class RestDocsSupport {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+	@MockitoBean
+	protected JpaMetamodelMappingContext jpaMetamodelMappingContext;
 
     @MockitoBean
     protected JwtTokenProvider jwtTokenProvider;

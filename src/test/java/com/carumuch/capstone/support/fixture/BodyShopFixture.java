@@ -68,6 +68,6 @@ public enum BodyShopFixture {
 	}
 
 	public BodyShop create() {
-		return new BodyShop(name, location, description, link, phoneNumber, pickupAvailability, UserFixture.USER_FIXTURE_1.create());
+		return new BodyShop(name, location, description, link, phoneNumber, pickupAvailability);
 	}
 }

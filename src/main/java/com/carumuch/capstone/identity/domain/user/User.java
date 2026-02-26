@@ -1,5 +1,6 @@
 package com.carumuch.capstone.identity.domain.user;
 
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.community.domain.Comment;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Table(name = "users")
@@ -36,8 +38,9 @@ public class User extends AggregateRoot<User> {
 	@Column(name = "role", length = 20, nullable = false)
 	private Role role;
 
-    @Column(name = "is_mechanic")
-    private boolean isMechanic;
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "body_shop_id")
+	private BodyShop bodyShop;
 
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Board> boards = new ArrayList<>();
@@ -52,7 +55,6 @@ public class User extends AggregateRoot<User> {
         this.email = email;
         this.name = name;
         this.role = role;
-        this.isMechanic = false;
 		registerEvent(new UserRegisteredEvent(this));
     }
 
@@ -68,7 +70,11 @@ public class User extends AggregateRoot<User> {
 		registerEvent(new UserWithdrawnEvent(this.loginId));
 	}
 
-    public void registerMechanic() {
-        this.isMechanic = true;
-    }
+	public void assignBodyShop(BodyShop bodyShop) {
+		this.bodyShop = bodyShop;
+	}
+
+	public boolean isMechanic() {
+		return bodyShop != null;
+	}
 }

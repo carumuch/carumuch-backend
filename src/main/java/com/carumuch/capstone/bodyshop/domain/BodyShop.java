@@ -4,7 +4,6 @@ import static jakarta.persistence.CascadeType.*;
 
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.AggregateRoot;
-import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,9 +39,6 @@ public class BodyShop extends AggregateRoot<BodyShop> {
     @Column(name = "pickup_availability")
     private boolean pickupAvailability;
 
-    @OneToMany(mappedBy = "bodyShop", cascade = ALL)
-    private List<User> users = new ArrayList<>();
-
 	// TODO: 레거시 입찰 테이블 연관관계는 수정이 필요합니다.
     @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
     private List<Bid> bids = new ArrayList<>();
@@ -53,8 +49,7 @@ public class BodyShop extends AggregateRoot<BodyShop> {
 		String description,
 		String link,
 		String phoneNumber,
-		boolean pickupAvailability,
-		User user
+		boolean pickupAvailability
 	) {
         this.name = name;
         this.location = location;
@@ -62,7 +57,6 @@ public class BodyShop extends AggregateRoot<BodyShop> {
         this.link = link;
         this.phoneNumber = phoneNumber;
         this.pickupAvailability = pickupAvailability;
-		this.users.add(user);
     }
 
     public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {

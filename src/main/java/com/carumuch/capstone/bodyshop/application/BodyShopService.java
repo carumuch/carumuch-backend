@@ -31,9 +31,10 @@ public class BodyShopService {
         User user = userRepository.findById(userId)
 			.orElseThrow(() -> new NotFoundException(User.class));
 
-        user.registerMechanic();
+		BodyShop bodyShop = bodyShopRepository.save(requestDto.toEntity());
+		user.assignBodyShop(bodyShop);
 
-        return bodyShopRepository.save(requestDto.toEntity(user)).getId();
+		return bodyShop.getId();
     }
 
     public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {

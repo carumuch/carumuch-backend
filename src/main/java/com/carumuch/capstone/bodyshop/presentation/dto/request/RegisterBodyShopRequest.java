@@ -2,7 +2,6 @@ package com.carumuch.capstone.bodyshop.presentation.dto.request;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.Location;
-import com.carumuch.capstone.identity.domain.user.User;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -14,7 +13,7 @@ public record RegisterBodyShopRequest(
 	String link,
 	Boolean pickupAvailability
 ) {
-	public BodyShop toEntity(User user) {
-		return new BodyShop(name, location, description, link, phoneNumber, pickupAvailability, user);
+	public BodyShop toEntity() {
+		return new BodyShop(name, location, description, link, phoneNumber, pickupAvailability);
 	}
 }

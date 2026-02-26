@@ -55,7 +55,7 @@ class BodyShopServiceTest {
 				bodyShopFixture.isPickupAvailability()
 			);
 
-			BodyShop bodyShop = requestDto.toEntity(userFixture);
+			BodyShop bodyShop = requestDto.toEntity();
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -86,7 +86,7 @@ class BodyShopServiceTest {
 				bodyShopFixture.isPickupAvailability()
 			);
 
-			BodyShop bodyShop = requestDto.toEntity(userFixture);
+			BodyShop bodyShop = requestDto.toEntity();
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -114,7 +114,7 @@ class BodyShopServiceTest {
 			ReflectionTestUtils.setField(userFixture, "id", userId);
 			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
 
-			BodyShop bodyShop = requestDto.toEntity(userFixture);
+			BodyShop bodyShop = requestDto.toEntity();
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -143,7 +143,7 @@ class BodyShopServiceTest {
 			ReflectionTestUtils.setField(userFixture, "id", userId);
 			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
 
-			BodyShop bodyShop = requestDto.toEntity(userFixture);
+			BodyShop bodyShop = requestDto.toEntity();
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);

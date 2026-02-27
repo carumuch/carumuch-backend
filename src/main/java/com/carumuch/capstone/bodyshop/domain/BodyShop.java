@@ -1,16 +1,10 @@
 package com.carumuch.capstone.bodyshop.domain;
 
-import static jakarta.persistence.CascadeType.*;
-
-import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "body_shop")
@@ -38,10 +32,6 @@ public class BodyShop extends AggregateRoot<BodyShop> {
 
     @Column(name = "pickup_availability")
     private boolean pickupAvailability;
-
-	// TODO: 레거시 입찰 테이블 연관관계는 수정이 필요합니다.
-    @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
-    private List<Bid> bids = new ArrayList<>();
 
     public BodyShop(
 		String name,

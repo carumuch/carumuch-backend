@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -67,7 +68,14 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -86,7 +94,14 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -109,7 +124,14 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -126,12 +148,12 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				() -> Assertions.assertThat(result.getDescription()).isEqualTo(registerBodyShopRequest.description()),
 				() -> Assertions.assertThat(result.getPhoneNumber()).isEqualTo(registerBodyShopRequest.phoneNumber()),
 				() -> Assertions.assertThat(result.getLink()).isEqualTo(registerBodyShopRequest.link()),
-				() -> Assertions.assertThat(result.getLocation().getSido()).isEqualTo(registerBodyShopRequest.location().getSido()),
-				() -> Assertions.assertThat(result.getLocation().getBname()).isEqualTo(registerBodyShopRequest.location().getBname()),
-				() -> Assertions.assertThat(result.getLocation().getJibunAddress()).isEqualTo(registerBodyShopRequest.location().getJibunAddress()),
-				() -> Assertions.assertThat(result.getLocation().getSangse()).isEqualTo(registerBodyShopRequest.location().getSangse()),
-				() -> Assertions.assertThat(result.getLocation().getSiqungu()).isEqualTo(registerBodyShopRequest.location().getSiqungu()),
-				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(registerBodyShopRequest.location().getRoadAddress()),
+				() -> Assertions.assertThat(result.getLocation().getSido()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getSido()),
+				() -> Assertions.assertThat(result.getLocation().getBname()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getBname()),
+				() -> Assertions.assertThat(result.getLocation().getJibunAddress()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getJibunAddress()),
+				() -> Assertions.assertThat(result.getLocation().getDetail()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getDetail()),
+				() -> Assertions.assertThat(result.getLocation().getSiqungu()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getSiqungu()),
+				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getRoadAddress()),
 				() -> Assertions.assertThat(result.isPickupAvailability()).isEqualTo(registerBodyShopRequest.pickupAvailability())
 			);
 		}

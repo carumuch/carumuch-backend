@@ -15,6 +15,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -50,7 +51,14 @@ class BodyShopServiceTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -81,7 +89,14 @@ class BodyShopServiceTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -110,7 +125,14 @@ class BodyShopServiceTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -140,7 +162,14 @@ class BodyShopServiceTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
@@ -167,7 +196,14 @@ class BodyShopServiceTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);

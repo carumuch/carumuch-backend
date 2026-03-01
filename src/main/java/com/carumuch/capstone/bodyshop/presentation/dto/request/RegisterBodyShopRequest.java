@@ -9,14 +9,14 @@ public record RegisterBodyShopRequest(
 	@NotBlank String name,
 	@NotBlank String description,
 	@NotBlank String phoneNumber,
-	Location location,
+	LocationRequest locationRequest,
 	String link,
 	Boolean pickupAvailability
 ) {
 	public BodyShop toEntity(Long managerUserId) {
 		return new BodyShop(
 			name,
-			location,
+			locationRequest.toLocation(),
 			description,
 			link,
 			phoneNumber,

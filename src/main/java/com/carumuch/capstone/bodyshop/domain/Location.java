@@ -26,14 +26,22 @@ public class Location {
     @Column(name = "roadAddress")
     private String roadAddress;
 
-    private String sangse;
+	@Column(name = "detail")
+    private String detail;
 
-    public Location(String sido, String siqungu, String bname, String jibunAddress, String roadAddress, String sangse) {
+    public Location(
+		String sido,
+		String siqungu,
+		String bname,
+		String jibunAddress,
+		String roadAddress,
+		String detail
+	) {
         this.sido = sido;
         this.siqungu = siqungu;
         this.bname = bname;
         this.jibunAddress = jibunAddress;
         this.roadAddress = roadAddress;
-        this.sangse = sangse;
+        this.detail = detail;
     }
 }

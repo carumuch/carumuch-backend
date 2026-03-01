@@ -13,7 +13,15 @@ public record RegisterBodyShopRequest(
 	String link,
 	Boolean pickupAvailability
 ) {
-	public BodyShop toEntity() {
-		return new BodyShop(name, location, description, link, phoneNumber, pickupAvailability);
+	public BodyShop toEntity(Long managerUserId) {
+		return new BodyShop(
+			name,
+			location,
+			description,
+			link,
+			phoneNumber,
+			pickupAvailability,
+			managerUserId
+		);
 	}
 }

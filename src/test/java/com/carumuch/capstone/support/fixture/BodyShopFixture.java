@@ -67,7 +67,15 @@ public enum BodyShopFixture {
 		this.location = location;
 	}
 
-	public BodyShop create() {
-		return new BodyShop(name, location, description, link, phoneNumber, pickupAvailability);
+	public BodyShop create(Long managerUserId) {
+		return new BodyShop(
+			name,
+			location,
+			description,
+			link,
+			phoneNumber,
+			pickupAvailability,
+			managerUserId
+		);
 	}
 }

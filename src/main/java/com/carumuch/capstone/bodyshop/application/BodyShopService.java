@@ -6,6 +6,7 @@ import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResp
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
@@ -31,7 +32,7 @@ public class BodyShopService {
         User user = userRepository.findById(userId)
 			.orElseThrow(() -> new NotFoundException(User.class));
 
-		BodyShop bodyShop = bodyShopRepository.save(requestDto.toEntity());
+		BodyShop bodyShop = bodyShopRepository.save(requestDto.toEntity(userId));
 		user.assignBodyShop(bodyShop);
 
 		return bodyShop.getId();
@@ -48,10 +49,9 @@ public class BodyShopService {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
 
-		// todo: 권한 확인이 필요합니다.
-        // if (!user.getBodyShop().getId().equals(id)) {
-		// 	throw new ForbiddenException();
-        // }
+        if (!bodyShop.canAccess(userId)) {
+			throw new ForbiddenException();
+        }
 		bodyShop.update(requestDto.name(),
 			requestDto.location(),
 			requestDto.description(),

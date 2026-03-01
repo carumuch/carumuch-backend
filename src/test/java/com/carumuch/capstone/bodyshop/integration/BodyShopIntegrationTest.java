@@ -39,7 +39,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 		User mechanicUserFixture = UserFixture.USER_FIXTURE_2.create();
 		mechanicUser = userRepository.save(mechanicUserFixture);
 
-		BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+		BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(mechanicUser.getId());
 		bodyShop = bodyShopRepository.save(
 			new BodyShop(
 				bodyShopFixture.getName(),
@@ -47,7 +47,8 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailability(),
+				bodyShopFixture.getManagerUserId()
 			)
 		);
 		mechanicUser.assignBodyShop(bodyShop);
@@ -61,7 +62,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 		void 사용자를_찾지_못하면_예외를_반환한다() {
 			//given
 			Long userId = 99999L;
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -80,7 +81,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 		void 사용자를_공업사_사용자로_변경한다() {
 		    //given
 			Long userId = customerUser.getId();
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -103,7 +104,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 		void 공업사를_등록한다() {
 			//given
 			Long userId = customerUser.getId();
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),

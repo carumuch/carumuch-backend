@@ -1,5 +1,8 @@
 package com.carumuch.capstone.bodyshop.domain;
 
+import java.util.Objects;
+
+import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "body_shop")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BodyShop extends AggregateRoot<BodyShop> {
+public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
 
     @Column(name = "name", length = 100)
     private String name;
@@ -33,13 +36,17 @@ public class BodyShop extends AggregateRoot<BodyShop> {
     @Column(name = "pickup_availability")
     private boolean pickupAvailability;
 
+	@Column(name = "manager_user_id", nullable = false, updatable = false)
+	private Long managerUserId;
+
     public BodyShop(
 		String name,
 		Location location,
 		String description,
 		String link,
 		String phoneNumber,
-		boolean pickupAvailability
+		boolean pickupAvailability,
+		Long managerUserId
 	) {
         this.name = name;
         this.location = location;
@@ -47,6 +54,7 @@ public class BodyShop extends AggregateRoot<BodyShop> {
         this.link = link;
         this.phoneNumber = phoneNumber;
         this.pickupAvailability = pickupAvailability;
+		this.managerUserId = managerUserId;
     }
 
     public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
@@ -62,4 +70,9 @@ public class BodyShop extends AggregateRoot<BodyShop> {
     public void acceptCount() {
         this.acceptCount += 1;
     }
+
+	@Override
+	public boolean canAccess(Long userId) {
+		return Objects.equals(this.managerUserId, userId);
+	}
 }

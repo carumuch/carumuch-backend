@@ -45,7 +45,7 @@ class BodyShopServiceTest {
 			ReflectionTestUtils.setField(userFixture, "id", userId);
 			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
 
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -55,7 +55,7 @@ class BodyShopServiceTest {
 				bodyShopFixture.isPickupAvailability()
 			);
 
-			BodyShop bodyShop = requestDto.toEntity();
+			BodyShop bodyShop = requestDto.toEntity(userId);
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -76,7 +76,7 @@ class BodyShopServiceTest {
 			ReflectionTestUtils.setField(userFixture, "id", userId);
 			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
 
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -86,7 +86,7 @@ class BodyShopServiceTest {
 				bodyShopFixture.isPickupAvailability()
 			);
 
-			BodyShop bodyShop = requestDto.toEntity();
+			BodyShop bodyShop = requestDto.toEntity(userId);
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -100,7 +100,12 @@ class BodyShopServiceTest {
 
 		@Test
 		void 사용자를_조회한다() {
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			User userFixture = UserFixture.USER_FIXTURE_1.create();
+			Long userId = 1L;
+			ReflectionTestUtils.setField(userFixture, "id", userId);
+			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
+
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -109,12 +114,8 @@ class BodyShopServiceTest {
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
-			User userFixture = UserFixture.USER_FIXTURE_1.create();
-			Long userId = 1L;
-			ReflectionTestUtils.setField(userFixture, "id", userId);
-			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
 
-			BodyShop bodyShop = requestDto.toEntity();
+			BodyShop bodyShop = requestDto.toEntity(userId);
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -129,7 +130,12 @@ class BodyShopServiceTest {
 
 		@Test
 		void 사용자를_공업사_직원으로_변경한다() {
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			User userFixture = UserFixture.USER_FIXTURE_1.create();
+			Long userId = 1L;
+			ReflectionTestUtils.setField(userFixture, "id", userId);
+			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
+
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -138,12 +144,8 @@ class BodyShopServiceTest {
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
-			User userFixture = UserFixture.USER_FIXTURE_1.create();
-			Long userId = 1L;
-			ReflectionTestUtils.setField(userFixture, "id", userId);
-			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
 
-			BodyShop bodyShop = requestDto.toEntity();
+			BodyShop bodyShop = requestDto.toEntity(userId);
 			Long bodyShopId = 400L;
 			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
 			Mockito.when(bodyShopRepository.save(Mockito.any(BodyShop.class))).thenReturn(bodyShop);
@@ -158,7 +160,9 @@ class BodyShopServiceTest {
 		@Test
 		void 사용자를_찾지_못하면_예외를_반환한다() {
 		    //given
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create();
+			Long userId = 1L;
+
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
@@ -167,7 +171,7 @@ class BodyShopServiceTest {
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailability()
 			);
-			Long userId = 1L;
+
 			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
 		    //when & then

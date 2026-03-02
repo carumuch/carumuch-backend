@@ -2,6 +2,7 @@ package com.carumuch.capstone.bodyshop.application;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
+import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
@@ -56,7 +57,7 @@ public class BodyShopService {
 			requestDto.location(),
 			requestDto.description(),
 			requestDto.link(),
-			requestDto.phoneNumber(),
+			new PhoneNumber(requestDto.phoneNumber()),
 			requestDto.pickupAvailability());
 		return bodyShop.getId();
     }
@@ -69,7 +70,7 @@ public class BodyShopService {
 			bodyShop.getName(),
 			bodyShop.getLocation(),
 			bodyShop.getDescription(),
-			bodyShop.getPhoneNumber(),
+			bodyShop.getPhoneNumber().getValue(),
 			bodyShop.getLink(),
 			bodyShop.getAcceptCount(),
 			bodyShop.isPickupAvailability()

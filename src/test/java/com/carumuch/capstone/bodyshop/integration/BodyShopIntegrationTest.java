@@ -67,7 +67,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -93,7 +93,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -123,7 +123,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -146,7 +146,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			assertAll(
 				() -> Assertions.assertThat(result.getName()).isEqualTo(registerBodyShopRequest.name()),
 				() -> Assertions.assertThat(result.getDescription()).isEqualTo(registerBodyShopRequest.description()),
-				() -> Assertions.assertThat(result.getPhoneNumber()).isEqualTo(registerBodyShopRequest.phoneNumber()),
+				() -> Assertions.assertThat(result.getPhoneNumber().getValue()).isEqualTo(registerBodyShopRequest.phoneNumber()),
 				() -> Assertions.assertThat(result.getLink()).isEqualTo(registerBodyShopRequest.link()),
 				() -> Assertions.assertThat(result.getLocation().getSido()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getSido()),
 				() -> Assertions.assertThat(result.getLocation().getBname()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getBname()),

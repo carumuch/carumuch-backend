@@ -40,7 +40,7 @@ public class BidResDto {
 				bodyShop.getName(),
 				bodyShop.getLocation(),
 				bodyShop.getDescription(),
-				bodyShop.getPhoneNumber(),
+				bodyShop.getPhoneNumber().getValue(),
 				bodyShop.getAcceptCount(),
 				bodyShop.getLink(),
 				bodyShop.isPickupAvailability()

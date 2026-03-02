@@ -24,8 +24,12 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
     @Column(name = "description", length = 200)
     private String description;
 
-    @Column(name = "phone_number", length = 15)
-    private String phoneNumber;
+	@Embedded
+	@AttributeOverride(
+		name = "value",
+		column = @Column(name = "phone_number", length = 15, nullable = false)
+	)
+    private PhoneNumber phoneNumber;
 
     @Column(name = "link", length = 200)
     private String link;
@@ -44,7 +48,7 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
 		Location location,
 		String description,
 		String link,
-		String phoneNumber,
+		PhoneNumber phoneNumber,
 		boolean pickupAvailability,
 		Long managerUserId
 	) {
@@ -57,7 +61,14 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
 		this.managerUserId = managerUserId;
     }
 
-    public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
+    public void update(
+		String name,
+		Location location,
+		String description,
+		String link,
+		PhoneNumber phoneNumber,
+		boolean pickupAvailability
+	) {
         this.name = name;
         this.location = location;
         this.description = description;

@@ -2,6 +2,7 @@ package com.carumuch.capstone.support.fixture;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
 
 public enum BodyShopFixture {
 
@@ -73,7 +74,7 @@ public enum BodyShopFixture {
 			location,
 			description,
 			link,
-			phoneNumber,
+			new PhoneNumber(phoneNumber),
 			pickupAvailability,
 			managerUserId
 		);

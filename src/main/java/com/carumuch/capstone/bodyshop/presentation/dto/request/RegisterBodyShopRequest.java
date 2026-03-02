@@ -1,7 +1,7 @@
 package com.carumuch.capstone.bodyshop.presentation.dto.request;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
-import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -19,7 +19,7 @@ public record RegisterBodyShopRequest(
 			locationRequest.toLocation(),
 			description,
 			link,
-			phoneNumber,
+			new PhoneNumber(phoneNumber),
 			pickupAvailability,
 			managerUserId
 		);

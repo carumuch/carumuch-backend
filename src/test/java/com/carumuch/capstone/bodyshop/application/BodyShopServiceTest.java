@@ -50,7 +50,7 @@ class BodyShopServiceTest {
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -88,7 +88,7 @@ class BodyShopServiceTest {
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -124,7 +124,7 @@ class BodyShopServiceTest {
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -161,7 +161,7 @@ class BodyShopServiceTest {
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),
@@ -195,7 +195,7 @@ class BodyShopServiceTest {
 			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
-				bodyShopFixture.getPhoneNumber(),
+				bodyShopFixture.getPhoneNumber().getValue(),
 				new LocationRequest(
 					bodyShopFixture.getLocation().getSido(),
 					bodyShopFixture.getLocation().getSiqungu(),

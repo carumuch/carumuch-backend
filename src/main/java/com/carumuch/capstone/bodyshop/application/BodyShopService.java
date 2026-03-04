@@ -58,7 +58,7 @@ public class BodyShopService {
 			requestDto.description(),
 			requestDto.link(),
 			new PhoneNumber(requestDto.phoneNumber()),
-			requestDto.pickupAvailability());
+			requestDto.pickupAvailable());
 		return bodyShop.getId();
     }
 
@@ -73,7 +73,7 @@ public class BodyShopService {
 			bodyShop.getPhoneNumber().getValue(),
 			bodyShop.getLink(),
 			bodyShop.getAcceptCount(),
-			bodyShop.isPickupAvailability()
+			bodyShop.isPickupAvailable()
 		);
     }
 }

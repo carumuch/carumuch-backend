@@ -10,7 +10,7 @@ public record BodyShopInfoResponse(
 	String phoneNumber,
 	String link,
 	int acceptCount,
-	boolean pickupAvailability
+	boolean pickupAvailable
 ) {
 
 }

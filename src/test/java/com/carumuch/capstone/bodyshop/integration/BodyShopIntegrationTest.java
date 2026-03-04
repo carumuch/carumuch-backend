@@ -48,7 +48,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.getPhoneNumber(),
-				bodyShopFixture.isPickupAvailability(),
+				bodyShopFixture.isPickupAvailable(),
 				bodyShopFixture.getManagerUserId()
 			)
 		);
@@ -77,7 +77,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			//when & then
@@ -103,7 +103,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 		    //when
@@ -133,7 +133,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			//when
@@ -154,7 +154,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				() -> Assertions.assertThat(result.getLocation().getDetail()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getDetail()),
 				() -> Assertions.assertThat(result.getLocation().getSiqungu()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getSiqungu()),
 				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getRoadAddress()),
-				() -> Assertions.assertThat(result.isPickupAvailability()).isEqualTo(registerBodyShopRequest.pickupAvailability())
+				() -> Assertions.assertThat(result.isPickupAvailable()).isEqualTo(registerBodyShopRequest.pickupAvailable())
 			);
 		}
 	}

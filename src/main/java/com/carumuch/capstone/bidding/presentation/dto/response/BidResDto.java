@@ -43,7 +43,7 @@ public class BidResDto {
 				bodyShop.getPhoneNumber().getValue(),
 				bodyShop.getAcceptCount(),
 				bodyShop.getLink(),
-				bodyShop.isPickupAvailability()
+				bodyShop.isPickupAvailable()
 			);
 		}
 	}

@@ -37,8 +37,8 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
     @Column(name = "accept_count")
     private int acceptCount;
 
-    @Column(name = "pickup_availability")
-    private boolean pickupAvailability;
+    @Column(name = "pickup_available")
+    private boolean pickupAvailable;
 
 	@Column(name = "manager_user_id", nullable = false, updatable = false)
 	private Long managerUserId;
@@ -49,7 +49,7 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
 		String description,
 		String link,
 		PhoneNumber phoneNumber,
-		boolean pickupAvailability,
+		boolean pickupAvailable,
 		Long managerUserId
 	) {
         this.name = name;
@@ -57,7 +57,7 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
         this.description = description;
         this.link = link;
         this.phoneNumber = phoneNumber;
-        this.pickupAvailability = pickupAvailability;
+        this.pickupAvailable = pickupAvailable;
 		this.managerUserId = managerUserId;
     }
 
@@ -74,7 +74,7 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
         this.description = description;
         this.link = link;
         this.phoneNumber = phoneNumber;
-        this.pickupAvailability = pickupAvailability;
+        this.pickupAvailable = pickupAvailability;
     }
 
 	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요

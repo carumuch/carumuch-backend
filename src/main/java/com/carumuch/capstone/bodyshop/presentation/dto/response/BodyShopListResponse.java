@@ -7,7 +7,7 @@ public record BodyShopListResponse(
 	Long id,
 	String name,
 	int acceptCount,
-	boolean pickupAvailability,
+	boolean pickupAvailable,
 	Location location
 ) {
 	public BodyShopListResponse(BodyShop bodyShop) {
@@ -15,7 +15,7 @@ public record BodyShopListResponse(
 			bodyShop.getId(),
 			bodyShop.getName(),
 			bodyShop.getAcceptCount(),
-			bodyShop.isPickupAvailability(),
+			bodyShop.isPickupAvailable(),
 			bodyShop.getLocation()
 		);
 	}

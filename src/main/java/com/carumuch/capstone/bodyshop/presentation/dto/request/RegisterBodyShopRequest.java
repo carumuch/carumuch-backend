@@ -11,7 +11,7 @@ public record RegisterBodyShopRequest(
 	@NotBlank String phoneNumber,
 	LocationRequest locationRequest,
 	String link,
-	Boolean pickupAvailability
+	Boolean pickupAvailable
 ) {
 	public BodyShop toEntity(Long managerUserId) {
 		return new BodyShop(
@@ -20,7 +20,7 @@ public record RegisterBodyShopRequest(
 			description,
 			link,
 			new PhoneNumber(phoneNumber),
-			pickupAvailability,
+			pickupAvailable,
 			managerUserId
 		);
 	}

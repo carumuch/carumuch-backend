@@ -60,7 +60,7 @@ class BodyShopServiceTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			BodyShop bodyShop = requestDto.toEntity(userId);
@@ -98,7 +98,7 @@ class BodyShopServiceTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			BodyShop bodyShop = requestDto.toEntity(userId);
@@ -134,7 +134,7 @@ class BodyShopServiceTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			BodyShop bodyShop = requestDto.toEntity(userId);
@@ -171,7 +171,7 @@ class BodyShopServiceTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			BodyShop bodyShop = requestDto.toEntity(userId);
@@ -205,7 +205,7 @@ class BodyShopServiceTest {
 					bodyShopFixture.getLocation().getDetail()
 				),
 				bodyShopFixture.getLink(),
-				bodyShopFixture.isPickupAvailability()
+				bodyShopFixture.isPickupAvailable()
 			);
 
 			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());

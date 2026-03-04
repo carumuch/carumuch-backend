@@ -9,7 +9,7 @@ public record UpdateBodyShopRequest(
 	@NotBlank String phoneNumber,
 	Location location,
 	String link,
-	Boolean pickupAvailability
+	Boolean pickupAvailable
 ) {
 
 }

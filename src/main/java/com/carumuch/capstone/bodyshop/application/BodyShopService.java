@@ -46,7 +46,7 @@ public class BodyShopService {
     }
 
     @Transactional
-    public Long update(Long id, UpdateBodyShopRequest requestDto, Long userId) {
+    public void update(Long id, UpdateBodyShopRequest requestDto, Long userId) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
 
@@ -59,7 +59,6 @@ public class BodyShopService {
 			requestDto.link(),
 			new PhoneNumber(requestDto.phoneNumber()),
 			requestDto.pickupAvailable());
-		return bodyShop.getId();
     }
 
     public BodyShopInfoResponse findOne(Long id) {

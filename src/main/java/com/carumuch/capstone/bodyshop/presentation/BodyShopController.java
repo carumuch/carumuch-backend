@@ -34,8 +34,9 @@ public class BodyShopController {
     }
 
     @PutMapping("/{bodyShopId}")
-    public ResponseEntity<ApiResponse<Long>> update(@RequestBody UpdateBodyShopRequest requestDto, @PathVariable Long bodyShopId, User user) {
-        return ResponseEntity.status(CREATED).body(ApiResponse.of(bodyShopService.update(bodyShopId, requestDto, user.getId())));
+    public ResponseEntity<ApiResponse<Void>> update(@RequestBody UpdateBodyShopRequest requestDto, @PathVariable Long bodyShopId, User user) {
+		bodyShopService.update(bodyShopId, requestDto, user.getId());
+        return ResponseEntity.ok().body(ApiResponse.of());
     }
 
     @GetMapping("/{bodyShopId}")

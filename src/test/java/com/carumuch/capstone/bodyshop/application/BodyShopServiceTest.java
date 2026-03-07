@@ -1,5 +1,7 @@
 package com.carumuch.capstone.bodyshop.application;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -17,6 +19,8 @@ import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
@@ -216,4 +220,114 @@ class BodyShopServiceTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("공업사 업데이트")
+	class Update {
+		@Test
+		void 공업사_정보를_조회한다() {
+		    //given
+			Long userId = 1L;
+			Long bodyShopId = 500L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				"이름변경이요",
+				bodyShop.getDescription(),
+				bodyShop.getPhoneNumber().getValue(),
+				bodyShop.getLocation(),
+				bodyShop.getLink(),
+				bodyShop.isPickupAvailable()
+			);
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.of(bodyShop));
+
+		    //when
+			bodyShopService.update(bodyShopId, requestDto, userId);
+
+		    //then
+			Mockito.verify(bodyShopRepository, Mockito.times(1))
+				.findById(bodyShopId);
+		}
+
+		@Test
+		void 공업사를_찾을_수_없으면_예외를_반환한다() {
+			//given
+			Long userId = 1L;
+			Long bodyShopId = 500L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				"이름변경이요",
+				bodyShop.getDescription(),
+				bodyShop.getPhoneNumber().getValue(),
+				bodyShop.getLocation(),
+				bodyShop.getLink(),
+				bodyShop.isPickupAvailable()
+			);
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.empty());
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.update(bodyShopId, requestDto, userId))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 공업사에_접근권한이_없다면_예외를_반환환다() {
+			//given
+			Long userId = 1L;
+			Long bodyShopId = 500L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				"이름변경이요",
+				bodyShop.getDescription(),
+				bodyShop.getPhoneNumber().getValue(),
+				bodyShop.getLocation(),
+				bodyShop.getLink(),
+				bodyShop.isPickupAvailable()
+			);
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.of(bodyShop));
+
+			Long wrongUserId = 2L;
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.update(bodyShopId, requestDto, wrongUserId))
+				.isInstanceOf(ForbiddenException.class);
+		}
+
+		@Test
+		void 공업사_정보를_업데이트한다() {
+			//given
+			Long userId = 1L;
+			Long bodyShopId = 500L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				"이름변경이요",
+				"설명변경이요",
+				"010-9876-5432",
+				bodyShop.getLocation(),
+				bodyShop.getLink(),
+				bodyShop.isPickupAvailable()
+			);
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.of(bodyShop));
+
+			//when
+			bodyShopService.update(bodyShopId, requestDto, userId);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(bodyShop.getName()).isEqualTo(requestDto.name()),
+				() -> Assertions.assertThat(bodyShop.getDescription()).isEqualTo(requestDto.description()),
+				() -> Assertions.assertThat(bodyShop.getPhoneNumber().getValue()).isEqualTo(requestDto.phoneNumber())
+			);
+		}
+	}
 }

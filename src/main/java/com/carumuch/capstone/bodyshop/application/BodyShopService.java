@@ -54,7 +54,7 @@ public class BodyShopService {
 			throw new ForbiddenException();
         }
 		bodyShop.update(requestDto.name(),
-			requestDto.location(),
+			requestDto.locationRequest().toLocation(),
 			requestDto.description(),
 			requestDto.link(),
 			new PhoneNumber(requestDto.phoneNumber()),

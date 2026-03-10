@@ -234,7 +234,14 @@ class BodyShopServiceTest {
 				"이름변경이요",
 				bodyShop.getDescription(),
 				bodyShop.getPhoneNumber().getValue(),
-				bodyShop.getLocation(),
+				new LocationRequest(
+					bodyShop.getLocation().getSido(),
+					bodyShop.getLocation().getSiqungu(),
+					bodyShop.getLocation().getBname(),
+					bodyShop.getLocation().getJibunAddress(),
+					bodyShop.getLocation().getRoadAddress(),
+					bodyShop.getLocation().getDetail()
+				),
 				bodyShop.getLink(),
 				bodyShop.isPickupAvailable()
 			);
@@ -261,7 +268,14 @@ class BodyShopServiceTest {
 				"이름변경이요",
 				bodyShop.getDescription(),
 				bodyShop.getPhoneNumber().getValue(),
-				bodyShop.getLocation(),
+				new LocationRequest(
+					bodyShop.getLocation().getSido(),
+					bodyShop.getLocation().getSiqungu(),
+					bodyShop.getLocation().getBname(),
+					bodyShop.getLocation().getJibunAddress(),
+					bodyShop.getLocation().getRoadAddress(),
+					bodyShop.getLocation().getDetail()
+				),
 				bodyShop.getLink(),
 				bodyShop.isPickupAvailable()
 			);
@@ -285,7 +299,14 @@ class BodyShopServiceTest {
 				"이름변경이요",
 				bodyShop.getDescription(),
 				bodyShop.getPhoneNumber().getValue(),
-				bodyShop.getLocation(),
+				new LocationRequest(
+					bodyShop.getLocation().getSido(),
+					bodyShop.getLocation().getSiqungu(),
+					bodyShop.getLocation().getBname(),
+					bodyShop.getLocation().getJibunAddress(),
+					bodyShop.getLocation().getRoadAddress(),
+					bodyShop.getLocation().getDetail()
+				),
 				bodyShop.getLink(),
 				bodyShop.isPickupAvailable()
 			);
@@ -311,7 +332,14 @@ class BodyShopServiceTest {
 				"이름변경이요",
 				"설명변경이요",
 				"010-9876-5432",
-				bodyShop.getLocation(),
+				new LocationRequest(
+					bodyShop.getLocation().getSido(),
+					bodyShop.getLocation().getSiqungu(),
+					bodyShop.getLocation().getBname(),
+					bodyShop.getLocation().getJibunAddress(),
+					bodyShop.getLocation().getRoadAddress(),
+					bodyShop.getLocation().getDetail()
+				),
 				bodyShop.getLink(),
 				bodyShop.isPickupAvailable()
 			);

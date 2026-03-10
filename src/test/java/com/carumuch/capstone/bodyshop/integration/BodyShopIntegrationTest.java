@@ -173,7 +173,14 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber().getValue(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailable()
 			);
@@ -190,12 +197,12 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				() -> Assertions.assertThat(result.getDescription()).isEqualTo(requestDto.description()),
 				() -> Assertions.assertThat(result.getPhoneNumber().getValue()).isEqualTo(requestDto.phoneNumber()),
 				() -> Assertions.assertThat(result.getLink()).isEqualTo(requestDto.link()),
-				() -> Assertions.assertThat(result.getLocation().getSido()).isEqualTo(requestDto.location().getSido()),
-				() -> Assertions.assertThat(result.getLocation().getBname()).isEqualTo(requestDto.location().getBname()),
-				() -> Assertions.assertThat(result.getLocation().getJibunAddress()).isEqualTo(requestDto.location().getJibunAddress()),
-				() -> Assertions.assertThat(result.getLocation().getDetail()).isEqualTo(requestDto.location().getDetail()),
-				() -> Assertions.assertThat(result.getLocation().getSiqungu()).isEqualTo(requestDto.location().getSiqungu()),
-				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(requestDto.location().getRoadAddress()),
+				() -> Assertions.assertThat(result.getLocation().getSido()).isEqualTo(requestDto.locationRequest().toLocation().getSido()),
+				() -> Assertions.assertThat(result.getLocation().getBname()).isEqualTo(requestDto.locationRequest().toLocation().getBname()),
+				() -> Assertions.assertThat(result.getLocation().getJibunAddress()).isEqualTo(requestDto.locationRequest().toLocation().getJibunAddress()),
+				() -> Assertions.assertThat(result.getLocation().getDetail()).isEqualTo(requestDto.locationRequest().toLocation().getDetail()),
+				() -> Assertions.assertThat(result.getLocation().getSiqungu()).isEqualTo(requestDto.locationRequest().toLocation().getSiqungu()),
+				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(requestDto.locationRequest().toLocation().getRoadAddress()),
 				() -> Assertions.assertThat(result.isPickupAvailable()).isEqualTo(requestDto.pickupAvailable())
 			);
 		}
@@ -208,7 +215,14 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber().getValue(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailable()
 			);
@@ -229,7 +243,14 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),
 				bodyShopFixture.getPhoneNumber().getValue(),
-				bodyShopFixture.getLocation(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
 				bodyShopFixture.getLink(),
 				bodyShopFixture.isPickupAvailable()
 			);

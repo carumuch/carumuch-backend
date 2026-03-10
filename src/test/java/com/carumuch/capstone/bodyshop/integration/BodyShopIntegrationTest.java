@@ -14,6 +14,8 @@ import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
@@ -156,6 +158,85 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(registerBodyShopRequest.locationRequest().toLocation().getRoadAddress()),
 				() -> Assertions.assertThat(result.isPickupAvailable()).isEqualTo(registerBodyShopRequest.pickupAvailable())
 			);
+		}
+	}
+
+	@Nested
+	@DisplayName("공업사 업데이트 기능")
+	class Update {
+		@Test
+		void 공업사를_업데이트한다() {
+
+			Long userId = mechanicUser.getId();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				bodyShopFixture.getName(),
+				bodyShopFixture.getDescription(),
+				bodyShopFixture.getPhoneNumber().getValue(),
+				bodyShopFixture.getLocation(),
+				bodyShopFixture.getLink(),
+				bodyShopFixture.isPickupAvailable()
+			);
+
+			//when
+			bodyShopService.update(bodyShop.getId(), requestDto, userId);
+
+			//then
+			BodyShop result = bodyShopRepository.findById(bodyShop.getId())
+				.orElseThrow(() -> new AssertionError("BodyShop not found"));
+
+			assertAll(
+				() -> Assertions.assertThat(result.getName()).isEqualTo(requestDto.name()),
+				() -> Assertions.assertThat(result.getDescription()).isEqualTo(requestDto.description()),
+				() -> Assertions.assertThat(result.getPhoneNumber().getValue()).isEqualTo(requestDto.phoneNumber()),
+				() -> Assertions.assertThat(result.getLink()).isEqualTo(requestDto.link()),
+				() -> Assertions.assertThat(result.getLocation().getSido()).isEqualTo(requestDto.location().getSido()),
+				() -> Assertions.assertThat(result.getLocation().getBname()).isEqualTo(requestDto.location().getBname()),
+				() -> Assertions.assertThat(result.getLocation().getJibunAddress()).isEqualTo(requestDto.location().getJibunAddress()),
+				() -> Assertions.assertThat(result.getLocation().getDetail()).isEqualTo(requestDto.location().getDetail()),
+				() -> Assertions.assertThat(result.getLocation().getSiqungu()).isEqualTo(requestDto.location().getSiqungu()),
+				() -> Assertions.assertThat(result.getLocation().getRoadAddress()).isEqualTo(requestDto.location().getRoadAddress()),
+				() -> Assertions.assertThat(result.isPickupAvailable()).isEqualTo(requestDto.pickupAvailable())
+			);
+		}
+
+		@Test
+		void 공업사를_찾을_수_없으면_예외를_반환한다() {
+			//given
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(mechanicUser.getId());
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				bodyShopFixture.getName(),
+				bodyShopFixture.getDescription(),
+				bodyShopFixture.getPhoneNumber().getValue(),
+				bodyShopFixture.getLocation(),
+				bodyShopFixture.getLink(),
+				bodyShopFixture.isPickupAvailable()
+			);
+
+			Long wrongBodyShopId = 5555L;
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.update(wrongBodyShopId, requestDto, mechanicUser.getId()))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 공업사에_접근권한이_없으면_예외를_반환한다() {
+			//given
+			Long userId = 9999L;
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
+				bodyShopFixture.getName(),
+				bodyShopFixture.getDescription(),
+				bodyShopFixture.getPhoneNumber().getValue(),
+				bodyShopFixture.getLocation(),
+				bodyShopFixture.getLink(),
+				bodyShopFixture.isPickupAvailable()
+			);
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.update(bodyShop.getId(), requestDto, userId))
+				.isInstanceOf(ForbiddenException.class);
 		}
 	}
 }

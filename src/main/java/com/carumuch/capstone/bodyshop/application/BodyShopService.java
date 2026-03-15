@@ -39,12 +39,6 @@ public class BodyShopService {
 		return bodyShop.getId();
     }
 
-    public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {
-        Page<BodyShop> bodyShops = bodyShopRepository
-                .findPageByNameLikeKeyword(keyword, PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort())));
-		return PagingResponse.from(bodyShops.map(BodyShopListResponse::new));
-    }
-
     @Transactional
     public void update(Long id, UpdateBodyShopRequest requestDto, Long userId) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
@@ -61,18 +55,15 @@ public class BodyShopService {
 			requestDto.pickupAvailable());
     }
 
-    public BodyShopInfoResponse findOne(Long id) {
+    public BodyShopInfoResponse info(Long id) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(BodyShop.class));
-        return new BodyShopInfoResponse(
-			bodyShop.getId(),
-			bodyShop.getName(),
-			bodyShop.getLocation(),
-			bodyShop.getDescription(),
-			bodyShop.getPhoneNumber().getValue(),
-			bodyShop.getLink(),
-			bodyShop.getAcceptCount(),
-			bodyShop.isPickupAvailable()
-		);
+        return BodyShopInfoResponse.from(bodyShop);
     }
+
+	public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {
+		Page<BodyShop> bodyShops = bodyShopRepository
+			.findPageByNameLikeKeyword(keyword, PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort())));
+		return PagingResponse.from(bodyShops.map(BodyShopListResponse::new));
+	}
 }

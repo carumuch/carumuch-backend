@@ -20,6 +20,7 @@ import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -355,6 +356,74 @@ class BodyShopServiceTest {
 				() -> Assertions.assertThat(bodyShop.getName()).isEqualTo(requestDto.name()),
 				() -> Assertions.assertThat(bodyShop.getDescription()).isEqualTo(requestDto.description()),
 				() -> Assertions.assertThat(bodyShop.getPhoneNumber().getValue()).isEqualTo(requestDto.phoneNumber())
+			);
+		}
+	}
+
+	@Nested
+	@DisplayName("공업사 조회 기능")
+	class Info {
+		@Test
+		void 공업사를_조회한다() {
+		    //given
+			Long bodyShopId = 500L;
+			Long userId = 1L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.of(bodyShop));
+
+		    //when
+			bodyShopService.info(bodyShopId);
+
+			//then
+			Mockito.verify(bodyShopRepository, Mockito.times(1))
+				.findById(bodyShopId);
+		}
+
+		@Test
+		void 공업사를_찾지_못하면_예외를_반환한다() {
+		    //given
+			Long bodyShopId = 500L;
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.empty());
+
+		    //when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.info(bodyShopId))
+				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 공업사_정보를_반환한다() {
+			//given
+			Long bodyShopId = 500L;
+			Long userId = 1L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
+
+			Mockito.when(bodyShopRepository.findById(bodyShopId))
+				.thenReturn(Optional.of(bodyShop));
+
+			//when
+			BodyShopInfoResponse result = bodyShopService.info(bodyShopId);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.id()).isEqualTo(bodyShop.getId()),
+				() -> Assertions.assertThat(result.name()).isEqualTo(bodyShop.getName()),
+				() -> Assertions.assertThat(result.description()).isEqualTo(bodyShop.getDescription()),
+				() -> Assertions.assertThat(result.link()).isEqualTo(bodyShop.getLink()),
+				() -> Assertions.assertThat(result.acceptCount()).isEqualTo(bodyShop.getAcceptCount()),
+				() -> Assertions.assertThat(result.phoneNumber()).isEqualTo(bodyShop.getPhoneNumber().getValue()),
+				() -> Assertions.assertThat(result.pickupAvailable()).isEqualTo(bodyShop.isPickupAvailable()),
+				() -> Assertions.assertThat(result.locationResponse().bname()).isEqualTo(bodyShop.getLocation().getBname()),
+				() -> Assertions.assertThat(result.locationResponse().sido()).isEqualTo(bodyShop.getLocation().getSido()),
+				() -> Assertions.assertThat(result.locationResponse().sigungu()).isEqualTo(bodyShop.getLocation().getSiqungu()),
+				() -> Assertions.assertThat(result.locationResponse().roadAddress()).isEqualTo(bodyShop.getLocation().getRoadAddress()),
+				() -> Assertions.assertThat(result.locationResponse().jibunAddress()).isEqualTo(bodyShop.getLocation().getJibunAddress()),
+				() -> Assertions.assertThat(result.locationResponse().detail()).isEqualTo(bodyShop.getLocation().getDetail())
 			);
 		}
 	}

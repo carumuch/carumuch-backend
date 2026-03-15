@@ -41,6 +41,6 @@ public class BodyShopController {
 
     @GetMapping("/{bodyShopId}")
     public ResponseEntity<ApiResponse<BodyShopInfoResponse>> detail(@PathVariable Long bodyShopId) {
-        return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.findOne(bodyShopId)));
+        return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.info(bodyShopId)));
     }
 }

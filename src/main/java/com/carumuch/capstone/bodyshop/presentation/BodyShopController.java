@@ -28,15 +28,15 @@ public class BodyShopController {
         return ResponseEntity.status(CREATED).body(ApiResponse.of(bodyShopService.register(requestDto, user.getId())));
     }
 
+	@PutMapping("/{bodyShopId}")
+	public ResponseEntity<ApiResponse<Void>> update(@RequestBody UpdateBodyShopRequest requestDto, @PathVariable Long bodyShopId, User user) {
+		bodyShopService.update(bodyShopId, requestDto, user.getId());
+		return ResponseEntity.ok().body(ApiResponse.of());
+	}
+
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<PagingResponse<BodyShopListResponse>>> searchKeyword(@ModelAttribute PagingRequest pagingRequest, @RequestParam String keyword) {
         return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.searchKeyword(pagingRequest, keyword)));
-    }
-
-    @PutMapping("/{bodyShopId}")
-    public ResponseEntity<ApiResponse<Void>> update(@RequestBody UpdateBodyShopRequest requestDto, @PathVariable Long bodyShopId, User user) {
-		bodyShopService.update(bodyShopId, requestDto, user.getId());
-        return ResponseEntity.ok().body(ApiResponse.of());
     }
 
     @GetMapping("/{bodyShopId}")

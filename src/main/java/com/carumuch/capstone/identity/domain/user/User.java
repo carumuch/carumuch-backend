@@ -2,6 +2,7 @@ package com.carumuch.capstone.identity.domain.user;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.community.domain.Comment;
 import jakarta.persistence.*;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
+
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "users")
@@ -71,6 +74,9 @@ public class User extends AggregateRoot<User> {
 	}
 
 	public void assignBodyShop(BodyShop bodyShop) {
+		if (this.bodyShop != null) {
+			throw new CustomException(HttpStatus.CONFLICT, "이미 공업사가 등록된 사용자입니다.");
+		}
 		this.bodyShop = bodyShop;
 	}
 

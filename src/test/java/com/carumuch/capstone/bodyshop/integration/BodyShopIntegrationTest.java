@@ -15,6 +15,7 @@ import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -85,6 +86,32 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			//when & then
 			Assertions.assertThatThrownBy(() -> bodyShopService.register(registerBodyShopRequest, userId))
 					.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 이미_공업사를_등록한_사용자라면_예외를_반환한다() {
+			//given
+			Long userId = mechanicUser.getId();
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+			RegisterBodyShopRequest registerBodyShopRequest = new RegisterBodyShopRequest(
+				bodyShopFixture.getName(),
+				bodyShopFixture.getDescription(),
+				bodyShopFixture.getPhoneNumber().getValue(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
+				bodyShopFixture.getLink(),
+				bodyShopFixture.isPickupAvailable()
+			);
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.register(registerBodyShopRequest, userId))
+				.isInstanceOf(CustomException.class);
 		}
 
 		@Test

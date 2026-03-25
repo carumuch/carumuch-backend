@@ -21,6 +21,7 @@ import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.identity.domain.user.User;
@@ -218,6 +219,40 @@ class BodyShopServiceTest {
 		    //when & then
 			Assertions.assertThatThrownBy(() -> bodyShopService.register(requestDto, userId))
 				.isInstanceOf(NotFoundException.class);
+		}
+
+		@Test
+		void 이미_공업사가_등록된_사용자라면_예외를_반환한다() {
+			//given
+			Long userId = 1L;
+
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+
+			User userFixture = UserFixture.USER_FIXTURE_1.create();
+			userFixture.assignBodyShop(bodyShopFixture);
+
+			RegisterBodyShopRequest requestDto = new RegisterBodyShopRequest(
+				bodyShopFixture.getName(),
+				bodyShopFixture.getDescription(),
+				bodyShopFixture.getPhoneNumber().getValue(),
+				new LocationRequest(
+					bodyShopFixture.getLocation().getSido(),
+					bodyShopFixture.getLocation().getSiqungu(),
+					bodyShopFixture.getLocation().getBname(),
+					bodyShopFixture.getLocation().getJibunAddress(),
+					bodyShopFixture.getLocation().getRoadAddress(),
+					bodyShopFixture.getLocation().getDetail()
+				),
+				bodyShopFixture.getLink(),
+				bodyShopFixture.isPickupAvailable()
+			);
+
+			Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(userFixture));
+
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.register(requestDto, userId))
+				.isInstanceOf(CustomException.class);
 		}
 	}
 

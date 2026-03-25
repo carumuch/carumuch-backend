@@ -279,4 +279,4 @@ openapi3.yaml
 *.png
 
 #AI agent metadata
-.omx
+*.omx

@@ -10,6 +10,7 @@ import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,19 @@ public class BodyShopController {
     private final BodyShopService bodyShopService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Long>> register(@RequestBody RegisterBodyShopRequest requestDto, User user) {
+    public ResponseEntity<ApiResponse<Long>> register(
+		@Valid @RequestBody RegisterBodyShopRequest requestDto,
+		User user
+	) {
         return ResponseEntity.status(CREATED).body(ApiResponse.of(bodyShopService.register(requestDto, user.getId())));
     }
 
 	@PutMapping("/{bodyShopId}")
-	public ResponseEntity<ApiResponse<Void>> update(@RequestBody UpdateBodyShopRequest requestDto, @PathVariable Long bodyShopId, User user) {
+	public ResponseEntity<ApiResponse<Void>> update(
+		@Valid @RequestBody UpdateBodyShopRequest requestDto,
+		@PathVariable Long bodyShopId,
+		User user
+	) {
 		bodyShopService.update(bodyShopId, requestDto, user.getId());
 		return ResponseEntity.ok().body(ApiResponse.of());
 	}

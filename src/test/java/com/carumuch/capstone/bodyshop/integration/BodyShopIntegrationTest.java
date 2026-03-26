@@ -166,10 +166,10 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			);
 
 			//when
-			bodyShopService.register(registerBodyShopRequest, userId);
+			Long bodyShopId = bodyShopService.register(registerBodyShopRequest, userId);
 
 			//then
-			BodyShop result = bodyShopRepository.findById(bodyShop.getId())
+			BodyShop result = bodyShopRepository.findById(bodyShopId)
 				.orElseThrow(() -> new AssertionError("BodyShop not found"));
 
 			assertAll(
@@ -195,7 +195,7 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 		void 공업사를_업데이트한다() {
 
 			Long userId = mechanicUser.getId();
-			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(userId);
+			BodyShop bodyShopFixture = BodyShopFixture.BODY_SHOP_FIXTURE_3.create(userId);
 			UpdateBodyShopRequest requestDto = new UpdateBodyShopRequest(
 				bodyShopFixture.getName(),
 				bodyShopFixture.getDescription(),

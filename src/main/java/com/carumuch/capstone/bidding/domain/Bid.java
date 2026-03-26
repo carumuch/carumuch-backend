@@ -28,12 +28,10 @@ public class Bid extends AggregateRoot<Bid> {
     @Column(name = "status")
     private BidStatus bidStatus; // 입찰 상태
 
-    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "body_shop_id")
     private BodyShop bodyShop;
 
-    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "estimate_id")
     private Estimate estimate;
@@ -43,23 +41,14 @@ public class Bid extends AggregateRoot<Bid> {
         this.cost = cost;
         this.repairMethod = repairMethod;
         this.bidStatus = bidStatus;
-        apply(bodyShop, estimate);
-    }
-
-    /* 연관 관계 메서드 */
-    public void setBodyShop(BodyShop bodyShop) {
         this.bodyShop = bodyShop;
-        bodyShop.getBids().add(this);
-    }
-    public void setEstimate(Estimate estimate) {
-        this.estimate = estimate;
-        estimate.getBids().add(this);
+		apply(bodyShop, estimate);
     }
 
     /* 입찰 신청 */
     public void apply(BodyShop bodyShop, Estimate estimate) {
-        setBodyShop(bodyShop);
-        setEstimate(estimate);
+        this.bodyShop = bodyShop;
+        this.estimate = estimate;
     }
 
     /* 입찰 정보 수정 */

@@ -1,10 +1,10 @@
 package com.carumuch.capstone.identity.domain.user;
 
-import com.carumuch.capstone.common.domain.AggregateRoot;
-import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.exception.CustomException;
+import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.community.domain.Comment;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.*;
+
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "users")
@@ -39,19 +41,15 @@ public class User extends AggregateRoot<User> {
 	@Column(name = "role", length = 20, nullable = false)
 	private Role role;
 
-    @Column(name = "is_mechanic")
-    private boolean isMechanic;
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "body_shop_id")
+	private BodyShop bodyShop;
 
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Board> boards = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Comment> comments = new ArrayList<>();
-
-    @JsonIgnore
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "body_shop_id")
-    private BodyShop bodyShop;
 
 	@Builder
     public User(String loginId, String password, String email, String name, Role role) {
@@ -60,7 +58,6 @@ public class User extends AggregateRoot<User> {
         this.email = email;
         this.name = name;
         this.role = role;
-        this.isMechanic = false;
 		registerEvent(new UserRegisteredEvent(this));
     }
 
@@ -76,13 +73,14 @@ public class User extends AggregateRoot<User> {
 		registerEvent(new UserWithdrawnEvent(this.loginId));
 	}
 
-	//== 레거시 도메인 로직==// TODO: 사용되지 않을 때 삭제합니다.
-    public void setBodyShop(BodyShop bodyShop) {
-        this.bodyShop = bodyShop;
-        bodyShop.getUsers().add(this);
-    }
+	public void assignBodyShop(BodyShop bodyShop) {
+		if (this.bodyShop != null) {
+			throw new CustomException(HttpStatus.CONFLICT, "이미 공업사가 등록된 사용자입니다.");
+		}
+		this.bodyShop = bodyShop;
+	}
 
-    public void registerMechanic() {
-        this.isMechanic = true;
-    }
+	public boolean isMechanic() {
+		return bodyShop != null;
+	}
 }

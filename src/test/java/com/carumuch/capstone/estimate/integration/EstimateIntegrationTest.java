@@ -291,7 +291,7 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			);
 
 			Estimate estimateFixture2 = EstimateFixture.ESTIMATE_FIXTURE_4.create();
-			Estimate estimate2 = estimateRepository.save(
+			Estimate recentEstimate = estimateRepository.save(
 				new Estimate(
 					estimateFixture2.getRepairCost(),
 					estimateFixture2.getRepairParts(),
@@ -314,10 +314,10 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 
 			//then
 			assertAll(
-				() -> assertThat(result.content().get(0).estimateId()).isEqualTo(estimate.getId()),
-				() -> assertThat(result.content().get(0).imagePath()).isEqualTo(estimate.getImagePath()),
-				() -> assertThat(result.content().get(1).estimateId()).isEqualTo(estimate2.getId()),
-				() -> assertThat(result.content().get(1).imagePath()).isEqualTo(estimate2.getImagePath())
+				() -> assertThat(result.content().get(0).estimateId()).isEqualTo(recentEstimate.getId()),
+				() -> assertThat(result.content().get(0).imagePath()).isEqualTo(recentEstimate.getImagePath()),
+				() -> assertThat(result.content().get(1).estimateId()).isEqualTo(estimate.getId()),
+				() -> assertThat(result.content().get(1).imagePath()).isEqualTo(estimate.getImagePath())
 			);
 		}
 	}

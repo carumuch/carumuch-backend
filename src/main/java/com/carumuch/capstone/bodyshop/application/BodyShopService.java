@@ -1,264 +1,69 @@
 package com.carumuch.capstone.bodyshop.application;
 
-import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
-import com.carumuch.capstone.bidding.domain.BidStatus;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopBidCreateReqDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopBidDetailResDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopBidPageResDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopBidUpdateReqDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopInfoResDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopPageResDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopRegistrationReqDto;
-import com.carumuch.capstone.bodyshop.presentation.dto.BodyShopUpdateReqDto;
-import com.carumuch.capstone.bidding.domain.BidRepository;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
-import com.carumuch.capstone.common.legacy.exception.ErrorCode;
-import com.carumuch.capstone.common.legacy.exception.CustomException;
+import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.common.exception.ForbiddenException;
+import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.identity.domain.user.User;
-import com.carumuch.capstone.identity.domain.user.UserLegacyRepository;
-import com.carumuch.capstone.estimate.domain.Estimate;
-import com.carumuch.capstone.estimate.domain.EstimateRepository;
+import com.carumuch.capstone.identity.domain.user.UserRepository;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BodyShopService {
     private final BodyShopRepository bodyShopRepository;
-    private final UserLegacyRepository userLegacyRepository;
-    private final EstimateRepository estimateRepository;
-    private final BidRepository bidRepository;
+    private final UserRepository userRepository;
 
-    /**
-     * 공업사 직업 여부
-     */
-    public void validateMechanicUser() {
-        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!userLegacyRepository.findLoginUserByLoginId(loginId).isMechanic()) {
-            throw new CustomException(ErrorCode.ACCESS_DENIED);
+    @Transactional
+    public Long register(RegisterBodyShopRequest requestDto, Long userId) {
+        User user = userRepository.findById(userId)
+			.orElseThrow(() -> new NotFoundException(User.class));
+
+		BodyShop bodyShop = bodyShopRepository.save(requestDto.toEntity(userId));
+		user.assignBodyShop(bodyShop);
+
+		return bodyShop.getId();
+    }
+
+    @Transactional
+    public void update(Long id, UpdateBodyShopRequest requestDto, Long userId) {
+        BodyShop bodyShop = bodyShopRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BodyShop.class));
+
+        if (!bodyShop.canAccess(userId)) {
+			throw new ForbiddenException();
         }
+		bodyShop.update(requestDto.name(),
+			requestDto.locationRequest().toLocation(),
+			requestDto.description(),
+			requestDto.link(),
+			new PhoneNumber(requestDto.phoneNumber()),
+			requestDto.pickupAvailable());
     }
 
-    /**
-     * 해당 공업사의 입찰 건이 맞는지 여부
-     */
-    public void validationBodyShopBid(Long bodyShopId) {
-        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userLegacyRepository.findByLoginIdWithBodyShop(loginId);
-        if (user.getBodyShop() == null) throw new CustomException(ErrorCode.ACCESS_DENIED); // 공업사 유저가 아닐 경우
-        if (!user.getBodyShop().getId().equals(bodyShopId)) throw new CustomException(ErrorCode.ACCESS_DENIED); // 입찰건 주인이 해당 공업사가 아닐 경우
-    }
-
-    /**
-     * 공업사 가입
-     */
-    @Transactional
-    public Long register(BodyShopRegistrationReqDto requestDto) {
-        User user = userLegacyRepository.findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
-        /* 사용자를 공업사 직원으로 등록 */
-        user.registerMechanic();
-
-        return bodyShopRepository.save(BodyShop.builder()
-                .name(requestDto.getName())
-                .description(requestDto.getDescription())
-                .location(requestDto.getLocation())
-                .link(requestDto.getLink())
-                .phoneNumber(requestDto.getPhoneNumber())
-                .pickupAvailability(requestDto.isPickupAvailability())
-                .user(user)
-                .build()).getId();
-    }
-
-    /**
-     * Select: 공업사 키워드 검색
-     * 공업사 가입 전 해당 공업사 검색
-     */
-    public Page<BodyShopPageResDto> searchKeyword(int page, String keyword) {
-        Page<BodyShop> bodyShopPage = bodyShopRepository
-                .findPageByNameLikeKeyword(keyword, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC,"createDate")));
-        return bodyShopPage.map(bodyShop -> BodyShopPageResDto.builder()
-                        .id(bodyShop.getId())
-                        .name(bodyShop.getName())
-                        .acceptCount(bodyShop.getAcceptCount())
-                        .pickupAvailability(bodyShop.isPickupAvailability())
-                        .location(bodyShop.getLocation())
-                        .build());
-    }
-
-    /**
-     * Update: 기존 공업사에 직원으로 가입
-     */
-    @Transactional
-    public Long join(Long id) {
+    public BodyShopInfoResponse info(Long id) {
         BodyShop bodyShop = bodyShopRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        User user = userLegacyRepository
-                .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        user.registerMechanic(); // 사용자를 공업사 직원으로 등록
-        user.setBodyShop(bodyShop); // 해당 공업사로 등록
-        return user.getId();
+                .orElseThrow(() -> new NotFoundException(BodyShop.class));
+        return BodyShopInfoResponse.from(bodyShop);
     }
 
-    /**
-     * Update: 공업사 정보 수정
-     */
-    @Transactional
-    public Long update(Long id, BodyShopUpdateReqDto requestDto) {
-        BodyShop bodyShop = bodyShopRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        User user = userLegacyRepository
-                .findByLoginIdWithBodyShop(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        if (user.getBodyShop().getId().equals(id)) {
-            bodyShop.update(requestDto.getName(),
-                    requestDto.getLocation(),
-                    requestDto.getDescription(),
-                    requestDto.getLink(),
-                    requestDto.getPhoneNumber(),
-                    requestDto.isPickupAvailability());
-            return bodyShop.getId();
-        } else {
-            throw new CustomException(ErrorCode.ACCESS_DENIED);
-        }
-    }
-
-    /**
-     * Update: 다른 공업사로 변경
-     */
-    @Transactional
-    public Long transfer(Long id) {
-        validateMechanicUser();
-        User user = userLegacyRepository
-                .findLoginUserByLoginId(SecurityContextHolder.getContext().getAuthentication().getName());
-        BodyShop bodyShop = bodyShopRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        user.setBodyShop(bodyShop);
-        return user.getId();
-    }
-
-    /**
-     * Select: 공업사 상세 조회
-     */
-    public BodyShopInfoResDto findOne(Long id) {
-        BodyShop bodyShop = bodyShopRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-        return BodyShopInfoResDto.builder()
-                .id(bodyShop.getId())
-                .name(bodyShop.getName())
-                .description(bodyShop.getDescription())
-                .phoneNumber(bodyShop.getPhoneNumber())
-                .link(bodyShop.getLink())
-                .acceptCount(bodyShop.getAcceptCount())
-                .pickupAvailability(bodyShop.isPickupAvailability())
-                .location(bodyShop.getLocation())
-                .build();
-    }
-
-    /**
-     * Create: 공업사 측 특정 견적서에 대해 입찰 신청
-     */
-    @Transactional
-    public Long createBid(Long estimateId, BodyShopBidCreateReqDto bodyShopBidCreateReqDto) {
-
-        /* 공업사 측인지 확인 */
-        validateMechanicUser();
-
-        User user = userLegacyRepository
-                .findByLoginIdWithBodyShop(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        /* 이미 입찰을 신청했을 경우  */
-        if (bidRepository.existsByEstimateId(user.getBodyShop().getId(), estimateId)) {
-            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
-        }
-
-        Estimate estimate = estimateRepository.findById(estimateId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        /* 견적서 입찰 신청 수 증가 */
-        estimate.increaseApplicant();
-
-        return bidRepository.save(Bid.builder()
-                        .bidStatus(BidStatus.WAITING)
-                        .cost(bodyShopBidCreateReqDto.getCost())
-                        .repairMethod(bodyShopBidCreateReqDto.getRepairMethod())
-                        .bodyShop(user.getBodyShop())
-                        .estimate(estimate)
-                .build()).getId();
-    }
-
-    /**
-     * Select: 공업사 측 입찰 상세 조회
-     */
-    public BodyShopBidDetailResDto bidDetail(Long bidId) {
-
-        Bid bid = bidRepository.findByIdWithBodyShop(bidId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        /* 해당 공업사 입찰 건 이 맞는지 확인 */
-        validationBodyShopBid(bid.getBodyShop().getId());
-
-        return BodyShopBidDetailResDto.builder()
-                .id(bid.getId())
-                .cost(bid.getCost())
-                .repairMethod(bid.getRepairMethod())
-                .bidStatus(bid.getBidStatus().getKey())
-                .createDate(bid.getCreateDate())
-                .build();
-    }
-
-    /**
-     * Update: 공업사 측 입찰 정보 수정
-     */
-    @Transactional
-    public Long updateBid(Long bidId, BodyShopBidUpdateReqDto bodyShopBidUpdateReqDto) {
-        Bid bid = bidRepository.findByIdWithBodyShop(bidId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        /* 해당 공업사 입찰 건 이 맞는지 확인 */
-        validationBodyShopBid(bid.getBodyShop().getId());
-
-        bid.update(bodyShopBidUpdateReqDto.getCost(),bodyShopBidUpdateReqDto.getRepairMethod());
-        return bid.getId();
-    }
-
-    /**
-     * Delete: 공업사 측 입찰 취소
-     */
-    @Transactional
-    public void cancelBid(Long bidId) {
-        Bid bid = bidRepository.findByIdWithBodyShop(bidId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        /* 해당 공업사 입찰 건 이 맞는지 확인 */
-        validationBodyShopBid(bid.getBodyShop().getId());
-
-        bidRepository.deleteById(bid.getId());
-    }
-
-    /**
-     * 입찰 리스트 비드와 견적서 같이 조회 해서 견적주와 비드정보 살짝
-     */
-    public Page<BodyShopBidPageResDto> bidList(int page, Long id) {
-
-        /* 해당 공업사의 입찰 내역들 인지*/
-        validationBodyShopBid(id);
-
-        Page<Bid> bidPage = bidRepository.findPageByBodyShopId(id, PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createDate")));
-        return bidPage.map(bid -> BodyShopBidPageResDto.builder()
-                .id(bid.getId())
-                .client(bid.getEstimate().getCreateBy())
-                .bidStatus(bid.getBidStatus().getKey())
-                .createDate(bid.getCreateDate())
-                .build());
-    }
+	public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {
+		Page<BodyShop> bodyShops = bodyShopRepository
+			.findPageByNameLikeKeyword(keyword, PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort())));
+		return PagingResponse.from(bodyShops.map(BodyShopListResponse::new));
+	}
 }

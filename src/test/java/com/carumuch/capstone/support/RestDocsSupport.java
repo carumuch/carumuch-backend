@@ -2,6 +2,8 @@ package com.carumuch.capstone.support;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.carumuch.capstone.bodyshop.application.BodyShopService;
+import com.carumuch.capstone.bodyshop.presentation.BodyShopController;
 import com.carumuch.capstone.damage.application.DamageReportService;
 import com.carumuch.capstone.damage.application.VehicleService;
 import com.carumuch.capstone.damage.presentation.DamageReportController;
@@ -35,6 +37,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,7 +56,8 @@ import java.util.Optional;
 	AuthController.class,
 	VehicleController.class,
 	DamageReportController.class,
-	EstimateController.class
+	EstimateController.class,
+	BodyShopController.class
 })
 @Import({
 	SecurityConfig.class,
@@ -78,6 +82,9 @@ public abstract class RestDocsSupport {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+	@MockitoBean
+	protected JpaMetamodelMappingContext jpaMetamodelMappingContext;
 
     @MockitoBean
     protected JwtTokenProvider jwtTokenProvider;
@@ -111,6 +118,9 @@ public abstract class RestDocsSupport {
 
 	@MockitoBean
 	protected EstimateService estimateService;
+
+	@MockitoBean
+	protected BodyShopService bodyShopService;
 
     @BeforeEach
     void setUp() {

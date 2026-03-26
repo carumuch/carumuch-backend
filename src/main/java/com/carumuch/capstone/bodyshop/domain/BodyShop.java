@@ -1,76 +1,89 @@
 package com.carumuch.capstone.bodyshop.domain;
 
-import com.carumuch.capstone.bidding.domain.Bid;
+import java.util.Objects;
+
+import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
-import com.carumuch.capstone.identity.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Table(name = "body_shop")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BodyShop extends AggregateRoot<BodyShop> {
+public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
 
     @Column(name = "name", length = 100)
-    private String name; // 샵 이름
+    private String name;
 
     @Embedded
-    private Location location; // 샵 지역
+    private Location location;
 
     @Column(name = "description", length = 200)
-    private String description; // 샵 설명
+    private String description;
 
-    @Column(name = "phone_number", length = 15)
-    private String phoneNumber; // 전화번호
+	@Embedded
+	@AttributeOverride(
+		name = "value",
+		column = @Column(name = "phone_number", length = 15, nullable = false)
+	)
+    private PhoneNumber phoneNumber;
 
     @Column(name = "link", length = 200)
-    private String link; // 홈페이지
+    private String link;
 
     @Column(name = "accept_count")
-    private int acceptCount; // 수리 채결 count
+    private int acceptCount;
 
-    @Column(name = "pickup_availability")
-    private boolean pickupAvailability; // 픽 업 가능 여부
+    @Column(name = "pickup_available")
+    private boolean pickupAvailable;
 
-    @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
-    private List<User> users = new ArrayList<>();
+	@Column(name = "manager_user_id", nullable = false, updatable = false)
+	private Long managerUserId;
 
-    @OneToMany(mappedBy = "bodyShop", cascade = PERSIST)
-    private List<Bid> bids = new ArrayList<>();
-
-    @Builder
-    public BodyShop(String name, Location location, String description, String link, String phoneNumber, User user, int acceptCount, boolean pickupAvailability) {
+    public BodyShop(
+		String name,
+		Location location,
+		String description,
+		String link,
+		PhoneNumber phoneNumber,
+		boolean pickupAvailable,
+		Long managerUserId
+	) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.link = link;
         this.phoneNumber = phoneNumber;
-        this.acceptCount = acceptCount;
-        this.pickupAvailability = pickupAvailability;
-        user.setBodyShop(this);
+        this.pickupAvailable = pickupAvailable;
+		this.managerUserId = managerUserId;
     }
 
-    /* 공업사 정보 수정 */
-    public void update(String name, Location location, String description, String link, String phoneNumber, boolean pickupAvailability) {
+    public void update(
+		String name,
+		Location location,
+		String description,
+		String link,
+		PhoneNumber phoneNumber,
+		boolean pickupAvailability
+	) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.link = link;
         this.phoneNumber = phoneNumber;
-        this.pickupAvailability = pickupAvailability;
+        this.pickupAvailable = pickupAvailability;
     }
 
-    /* 입찰 횟수 증가 */
+	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요
     public void acceptCount() {
         this.acceptCount += 1;
     }
+
+	@Override
+	public boolean canAccess(Long userId) {
+		return Objects.equals(this.managerUserId, userId);
+	}
 }

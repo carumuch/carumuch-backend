@@ -1,6 +1,5 @@
 package com.carumuch.capstone.estimate.domain;
 
-import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.common.exception.CustomException;
@@ -11,13 +10,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import static jakarta.persistence.CascadeType.ALL;
 
 import org.springframework.http.HttpStatus;
 
@@ -51,9 +46,6 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
-
-    @OneToMany(mappedBy = "estimate", cascade = ALL)
-    private List<Bid> bids = new ArrayList<>();
 
     public Estimate(
 		Integer repairCost,
@@ -93,9 +85,4 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 	public boolean canAccess(Long userId) {
 		return Objects.equals(this.userId, userId);
 	}
-
-	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요
-    public void increaseApplicant() {
-        this.applicantCount += 1;
-    }
 }

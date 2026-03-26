@@ -37,6 +37,7 @@ public class SecurityConfig {
 	private static final String VEHICLE_URI = "/vehicles";
 	private static final String DAMAGE_REPORT_URI = "/damage-reports";
 	private static final String ESTIMATE_URI = "/estimates";
+	private static final String BODY_SHOP_URI = "/body-shops";
 	private static final String[] SWAGGER_PATTERNS = {"/swagger-ui/**", "/v3/api-docs/**", "/static/swagger-ui/**"};
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -106,6 +107,11 @@ public class SecurityConfig {
 						mvc.matcher(GET, ESTIMATE_URI),
 						mvc.matcher(GET, ESTIMATE_URI + "/search"),
 						mvc.matcher(PUT, ESTIMATE_URI + "/{estimateId}/status")
+					).authenticated()
+
+					.requestMatchers(
+						mvc.matcher(POST, BODY_SHOP_URI),
+						mvc.matcher(PUT, BODY_SHOP_URI + "/{bodyShopId}")
 					).authenticated()
 
 					.anyRequest().permitAll()

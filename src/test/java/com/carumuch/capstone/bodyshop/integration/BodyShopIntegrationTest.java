@@ -13,6 +13,7 @@ import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.common.exception.CustomException;
@@ -285,6 +286,44 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			//when & then
 			Assertions.assertThatThrownBy(() -> bodyShopService.update(bodyShop.getId(), requestDto, userId))
 				.isInstanceOf(ForbiddenException.class);
+		}
+	}
+
+	@Nested
+	@DisplayName("공업사 조회 기능")
+	class Info {
+		@Test
+		void 공업사를_조회한다() {
+			//given
+			Long bodyShopId = bodyShop.getId();
+
+			//when
+			BodyShopInfoResponse result = bodyShopService.info(bodyShopId);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.name()).isEqualTo(bodyShop.getName()),
+				() -> Assertions.assertThat(result.description()).isEqualTo(bodyShop.getDescription()),
+				() -> Assertions.assertThat(result.phoneNumber()).isEqualTo(bodyShop.getPhoneNumber().getValue()),
+				() -> Assertions.assertThat(result.link()).isEqualTo(bodyShop.getLink()),
+				() -> Assertions.assertThat(result.locationResponse().sido()).isEqualTo(bodyShop.getLocation().getSido()),
+				() -> Assertions.assertThat(result.locationResponse().sigungu()).isEqualTo(bodyShop.getLocation().getSiqungu()),
+				() -> Assertions.assertThat(result.locationResponse().bname()).isEqualTo(bodyShop.getLocation().getBname()),
+				() -> Assertions.assertThat(result.locationResponse().roadAddress()).isEqualTo(bodyShop.getLocation().getRoadAddress()),
+				() -> Assertions.assertThat(result.locationResponse().jibunAddress()).isEqualTo(bodyShop.getLocation().getJibunAddress()),
+				() -> Assertions.assertThat(result.locationResponse().detail()).isEqualTo(bodyShop.getLocation().getDetail()),
+				() -> Assertions.assertThat(result.pickupAvailable()).isEqualTo(bodyShop.isPickupAvailable())
+			);
+		}
+
+		@Test
+		void 공업사를_찾지_못하면_예외를_반환한다() {
+			//given
+			Long wrongBodyShopId = 9999L;
+
+			//when & then
+			Assertions.assertThatThrownBy(() -> bodyShopService.info(wrongBodyShopId))
+				.isInstanceOf(NotFoundException.class);
 		}
 	}
 }

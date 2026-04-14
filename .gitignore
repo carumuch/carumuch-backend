@@ -277,6 +277,3 @@ openapi3.yaml
 *.jpg
 *.jpeg
 *.png
-
-#AI agent metadata
-*.omx

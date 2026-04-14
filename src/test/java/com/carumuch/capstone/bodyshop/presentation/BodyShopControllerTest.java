@@ -1,12 +1,9 @@
 package com.carumuch.capstone.bodyshop.presentation;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,12 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.ApiErrorResponse;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
@@ -200,6 +199,91 @@ class BodyShopControllerTest extends RestDocsSupport {
 					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
 						.tag(BASE_TAG)
 						.requestSchema(Schema.schema(UpdateBodyShopRequest.class.getSimpleName()))
+						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+						.build())
+					)
+				);
+		}
+	}
+
+	@Nested
+	@DisplayName("공업사 조회 API 테스트")
+	class Info {
+		@Test
+		void 공업사_조회_2XX() throws Exception {
+			//given
+			Long bodyShopId = 1L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(1L);
+			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
+
+			BodyShopInfoResponse responseDto = BodyShopInfoResponse.from(bodyShop);
+
+			Mockito.when(bodyShopService.info(anyLong()))
+				.thenReturn(responseDto);
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/{bodyShopId}", bodyShopId)
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
+				.andExpect(jsonPath("$.data.name").value(responseDto.name()))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.summary("공업사 상세 조회")
+						.description("## 공업사 상세 조회 기능 \n"
+							+ "### 설명 \n"
+							+ "- 공업사 식별자를 통해 공업사의 상세 정보를 조회합니다."
+						)
+						.responseSchema(Schema.schema(BodyShopInfoResponse.class.getSimpleName()))
+						.responseFields(
+							fieldWithPath("message").description("응답 메시지입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.id").description("공업사 식별자입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.name").description("공업사 이름입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.description").description("공업사 소개입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.phoneNumber").description("공업사 연락처입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.locationResponse.sido").description("공업사 소재지 시/도입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.locationResponse.sigungu").description("공업사 소재지 시/군/구입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.locationResponse.bname").description("공업사 소재지 법정동명입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.locationResponse.jibunAddress").description("공업사 지번 주소입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.locationResponse.roadAddress").description("공업사 도로명 주소입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.locationResponse.detail").description("공업사 상세 주소입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.link").description("공업사 관련 링크입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.acceptCount").description("공업사 낙찰 횟수입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.pickupAvailable").description("차량 픽업 가능 여부입니다.").type(JsonFieldType.BOOLEAN)
+						)
+						.build())
+					)
+				);
+		}
+
+		@Test
+		void 공업사_조회_4XX_공업사를_찾지_못한_경우() throws Exception {
+			//given
+			Long bodyShopId = 1L;
+			String errorMessage = BodyShop.class.getSimpleName() + "을(를) 찾을 수 없습니다.";
+
+			Mockito.doThrow(new NotFoundException(BodyShop.class))
+				.when(bodyShopService)
+				.info(anyLong());
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/{bodyShopId}", bodyShopId)
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isNotFound())
+				.andExpect(result -> Assertions.assertInstanceOf(NotFoundException.class, result.getResolvedException()))
+				.andExpect(jsonPath("$.message").value(errorMessage))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
 						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
 						.build())
 					)

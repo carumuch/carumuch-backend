@@ -197,7 +197,12 @@ tasks.jacocoTestCoverageVerification {
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        def exclude = providers.systemProperty("excludeTags").orNull
+        if (exclude) {
+            excludeTags exclude.split(',')
+        }
+    }
     finalizedBy('copyOasToSwagger') // test 태스크 실행 후에 copyOasToSwagger 태스크 실행
     finalizedBy("jacocoTestReport") // test 태스크 실행 후에 jacocoTestReport 테스크 실행
 }

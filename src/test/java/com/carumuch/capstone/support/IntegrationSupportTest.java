@@ -1,5 +1,6 @@
 package com.carumuch.capstone.support;
 
+import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,6 +12,7 @@ import com.carumuch.capstone.support.config.AsyncTestConfig;
 @Transactional
 @Import(AsyncTestConfig.class)
 @ActiveProfiles("test")
+@Tag("integration")
 public abstract class IntegrationSupportTest {
 
 }

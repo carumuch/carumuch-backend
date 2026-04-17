@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+echo "[pre-commit] running verification..."
+./scripts/verify.sh
+
+echo "[pre-commit] passed"

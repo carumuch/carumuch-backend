@@ -58,6 +58,7 @@ prefix_rule(
   match = [
     "git push",
     "git push origin main",
+    "git push origin feature/my-branch",
   ],
   not_match = [
     "git pull",
@@ -71,18 +72,22 @@ prefix_rule(
 
 # 강제 푸시는 금지
 prefix_rule(
-  pattern = ["git", "push", "--force"],
+  pattern = ["git", "push", ["-f", "--force", "--force-with-lease", "--force-if-includes"]],
   decision = "forbidden",
   justification = "Codex에서 원격 히스토리를 덮어쓰면 안 됩니다. 일반 push를 사용하거나 수동으로 처리해야 합니다.",
   match = [
-    "git push --force",
-    "git push --force origin feature-branch",
-  ],
-  not_match = [
-    "git push",
-    "git push --tags",
-  ],
-)
+      "git push -f",
+      "git push --force",
+      "git push --force origin feature-branch",
+      "git push --force-with-lease",
+      "git push --force-if-includes",
+    ],
+    not_match = [
+      "git push",
+      "git push --tags",
+      "git push origin main",
+    ],
+  )
 
 # hard reset 금지
 prefix_rule(

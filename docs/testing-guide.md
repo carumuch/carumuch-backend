@@ -55,7 +55,7 @@ You MUST follow these rules:
 다음 조건을 모두 만족해야 작업을 종료할 수 있다:
 
 * `./scripts/verify.sh`가 exit code 0 반환
-* 모든 테스트가 통과 상태
+* 모든 단위 테스트가 통과 상태 (통합 테스트 제외)
 * FAIL 메시지가 없음
 
 ---

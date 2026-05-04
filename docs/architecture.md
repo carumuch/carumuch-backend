@@ -13,8 +13,8 @@
 
 참고:
 
-- `AGENTS.md`: 작업 규칙과 응답 규칙
-- `docs/code-style.md`: 코드 작성 규칙
+- `AGENTS.md`(추가 예정): 작업 규칙과 응답 규칙
+- `docs/code-style.md`(추가 예정): 코드 작성 규칙
 - `docs/testing-guide.md`: 검증 규칙
 
 이 문서는 구조와 책임을 설명합니다.
@@ -381,5 +381,5 @@ API 문서 생성은 테스트 기반으로 연결되어 있습니다.
 
 필요한 경우 아래 문서를 우선 참고합니다.
 
-- 코드 스타일: `docs/code-style.md`
+- 코드 스타일: `docs/code-style.md`(추가 예정)
 - 테스트 규칙: `docs/testing-guide.md`

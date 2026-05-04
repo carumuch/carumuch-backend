@@ -199,7 +199,7 @@ Client
 
 ### 2. 예외 응답
 
-예외는 `ControllerExceptionAdvice`에서 일관되게 변환합니다.
+주요 비즈니스 및 검증 예외는 `ControllerExceptionAdvice`에서 처리합니다.
 
 - 비즈니스 예외: `CustomException`
 - 요청 검증 오류: `MethodArgumentNotValidException`

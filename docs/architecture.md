@@ -13,7 +13,7 @@
 
 참고:
 
-- `AGENTS.md`(추가 예정): 작업 규칙과 응답 규칙
+- `AGENTS.md`: 작업 규칙과 응답 규칙
 - `docs/code-style.md`: 코드 작성 규칙
 - `docs/testing-guide.md`: 검증 규칙
 

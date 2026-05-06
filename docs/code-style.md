@@ -8,7 +8,7 @@
 
 참고:
 
-- `AGENTS.md`(추가예정): 작업 규칙과 응답 규칙
+- `AGENTS.md`: 작업 규칙과 응답 규칙
 - `docs/architecture.md`: 패키지 구조와 계층 책임
 - `docs/testing-guide.md`: 검증 규칙
 

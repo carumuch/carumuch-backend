@@ -60,8 +60,11 @@ def main():
     for reason, predicate in BLOCKED_COMMAND_CHECKS:
         if predicate(tokens):
             print(json.dumps({
-                "decision": "block",
-                "reason": f"Blocked dangerous command: {reason}"
+                "hookSpecificOutput": {
+                    "hookEventName": "PreToolUse",
+                    "permissionDecision": "deny",
+                    "permissionDecisionReason": f"Blocked dangerous command: {reason}",
+                }
             }))
             sys.exit(0)
 

@@ -50,8 +50,21 @@ def get_staged_files():
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
+def get_unstaged_files():
+    proc = subprocess.run(
+        ["git", "diff", "--name-only"],
+        cwd=PROJECT_ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
 def has_backend_related_changes():
-    return any(BACKEND_CHANGE_PATTERN.match(path) for path in get_staged_files())
+    changed_files = set(get_staged_files()) | set(get_unstaged_files())
+    return any(BACKEND_CHANGE_PATTERN.match(path) for path in changed_files)
 
 
 def is_verify_command(command):

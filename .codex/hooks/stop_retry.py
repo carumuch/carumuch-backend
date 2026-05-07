@@ -105,9 +105,11 @@ def get_latest_verify_result(transcript_path, turn_id):
             if not is_verify_command(payload.get("command")):
                 continue
 
+            raw_output = payload.get("aggregated_output")
+            output_text = "" if raw_output is None else str(raw_output)
             latest = {
                 "exit_code": payload.get("exit_code"),
-                "output": payload.get("aggregated_output", "")[-4000:],
+                "output": output_text[-4000:],
             }
 
     return latest

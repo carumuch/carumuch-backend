@@ -261,7 +261,7 @@ gradle-app.setting
 
 # Codex runtime state
 .codex/state/
-state/
+/state/
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath

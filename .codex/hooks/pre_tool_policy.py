@@ -22,11 +22,26 @@ def parse_command(command):
         return str(command or "").split()
 
 
+def has_short_flag(token, flag):
+    return token.startswith("-") and not token.startswith("--") and flag in token[1:]
+
+
 def is_force_push(tokens):
-    if len(tokens) < 3 or tokens[0] != "git" or tokens[1] != "push":
+    if len(tokens) < 3 or tokens[0] != "git":
         return False
 
-    return any(token in FORCE_PUSH_FLAGS or token.startswith("--force=") for token in tokens[2:])
+    try:
+        push_index = tokens.index("push", 1)
+    except ValueError:
+        return False
+
+    return any(
+        token in FORCE_PUSH_FLAGS
+        or token.startswith("--force=")
+        or token.startswith("--force-with-lease=")
+        or has_short_flag(token, "f")
+        for token in tokens[push_index + 1:]
+    )
 
 
 def is_dangerous_rm(tokens):
@@ -35,8 +50,17 @@ def is_dangerous_rm(tokens):
 
     flags = [token for token in tokens[1:] if token.startswith("-")]
     targets = [token for token in tokens[1:] if not token.startswith("-")]
-    has_recursive_force = any("r" in flag and "f" in flag for flag in flags)
-    return has_recursive_force and any(target in {"/", "."} for target in targets)
+    has_recursive = any(
+        flag in {"-r", "-R", "--recursive"} or has_short_flag(flag, "r") or has_short_flag(flag, "R")
+        for flag in flags
+    )
+    has_force = any(
+        flag in {"-f", "--force"}
+        or flag.startswith("--force=")
+        or has_short_flag(flag, "f")
+        for flag in flags
+    )
+    return has_recursive and has_force and any(target in {"/", ".", "./"} for target in targets)
 
 
 def is_sudo_command(tokens):

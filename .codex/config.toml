@@ -11,3 +11,18 @@ hooks = true
 
 [agents]
 job_max_runtime_seconds = 600
+
+[agents.implementer-agent]
+description = "요청된 백엔드 변경을 최소 범위로 구현하고 필요한 테스트를 함께 맞추는 구현 전담 에이전트입니다."
+config_file = "./agents/implementer-agent.toml"
+nickname_candidates = ["implementer", "backend-implementer", "builder"]
+
+[agents.verifier-agent]
+description = "코드를 수정하지 않고 `bash scripts/verify.sh`만 실행해 검증 결과를 보고하는 검증 전담 에이전트입니다."
+config_file = "./agents/verifier-agent.toml"
+nickname_candidates = ["verifier", "verify-guard", "build-checker"]
+
+[agents.reviewer-agent]
+description = "verify 성공 이후 변경 사항을 리뷰 기준에 따라 점검하고 결함과 회귀 위험을 우선 보고하는 리뷰 전담 에이전트입니다."
+config_file = "./agents/reviewer-agent.toml"
+nickname_candidates = ["reviewer", "code-reviewer", "risk-checker"]

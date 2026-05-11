@@ -18,8 +18,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/stop_retry.py\"",
-            "timeout": 20
+            "command": "/usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/verify_gate.py\"",
+            "timeout": 20,
+            "statusMessage": "Checking verify gate"
           }
         ]
       }

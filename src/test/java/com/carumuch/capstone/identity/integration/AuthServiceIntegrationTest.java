@@ -12,6 +12,7 @@ import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 import com.carumuch.capstone.support.fixture.UserFixture;
 import com.carumuch.capstone.support.IntegrationSupportTest;
+import com.carumuch.capstone.support.RequiresInfraTest;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 
+@RequiresInfraTest
 class AuthServiceIntegrationTest extends IntegrationSupportTest {
 
 	@Autowired AuthService authService;

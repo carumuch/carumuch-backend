@@ -202,6 +202,10 @@ tasks.jacocoTestCoverageVerification {
 
 tasks.named('test') {
     useJUnitPlatform {
+        def include = providers.systemProperty("includeTags").orNull
+        if (include) {
+            includeTags include.split(',')
+        }
         def exclude = providers.systemProperty("excludeTags").orNull
         if (exclude) {
             excludeTags exclude.split(',')

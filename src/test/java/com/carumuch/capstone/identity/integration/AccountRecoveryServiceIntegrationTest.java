@@ -26,10 +26,12 @@ import com.carumuch.capstone.common.exception.UnauthorizedException;
 import com.carumuch.capstone.common.infrastructure.mail.MailSender;
 import com.carumuch.capstone.common.infrastructure.mail.TemplateRenderer;
 import com.carumuch.capstone.support.IntegrationSupportTest;
+import com.carumuch.capstone.support.RequiresInfraTest;
 import com.carumuch.capstone.support.fixture.UserFixture;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 
+@RequiresInfraTest
 public class AccountRecoveryServiceIntegrationTest extends IntegrationSupportTest {
 
 	@Autowired AccountRecoveryService accountRecoveryService;

@@ -18,6 +18,20 @@
 
 다른 방식의 검증은 사용하지 않는다.
 
+`./scripts/verify.sh`의 기본 동작은 단위 테스트 우선이다.
+
+* 기본: `@Tag("integration")`, `@Tag("requires-infra")` 테스트를 제외하고 빠르게 실행한다
+* 조건부 추가 실행: 스테이징된 변경에 통합 테스트 관련 파일이 포함되면 `integration` 테스트를 추가 실행하되, `requires-infra`는 계속 제외한다
+
+통합 테스트 관련 파일은 아래를 기준으로 판단한다:
+
+* `src/test/java/**/integration/**`
+* `IntegrationSupportTest`를 직접 수정한 경우
+* `AsyncTestConfig`를 수정한 경우
+* 스테이징된 테스트 클래스가 `IntegrationSupportTest`를 상속하거나 `@Tag("integration")`를 선언한 경우
+
+`requires-infra`는 Redis, MQ처럼 별도 실행 인프라가 필요한 테스트를 위한 태그다.
+
 ---
 
 ## 실행 규칙
@@ -55,7 +69,8 @@ You MUST follow these rules:
 다음 조건을 모두 만족해야 작업을 종료할 수 있다:
 
 * `./scripts/verify.sh`가 exit code 0 반환
-* 모든 단위 테스트가 통과 상태 (통합 테스트 제외)
+* 기본 단위 테스트가 통과 상태
+* 통합 테스트 관련 변경이 있으면 `requires-infra`를 제외한 통합 테스트까지 통과 상태
 * FAIL 메시지가 없음
 
 ---

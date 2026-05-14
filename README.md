@@ -11,13 +11,14 @@ AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔�
 
 [📄 **API 문서 서버 바로가기**](https://carumuch-api-docs.vercel.app)
 
-
+<br>
 
 # 프로젝트 개요
 카우머치는 **AI 기반 자동차 사고 수리 분석 서비스**입니다. 사용자가 사고 레포트를 제출하면 **AI가 자동으로 수리 견적을 생성**해주며, 여러 공업사로부터 수리 입찰 제안을 받을 수 있습니다. 공업사는 자신들의 수리 이력과 가격 경쟁력을 바탕으로 입찰에 참여합니다.
 
 해당 서비스는 캡스톤 디자인 경진대회에서 **최우수상**을 수상했으며, 현재는 백엔드 시스템 전반에 대한 **리팩토링을 진행 중**입니다.
 
+<br>
 
 ## 인원 소개
 |                                                                조영무                                                                |                                        정석현                                        |                                                                                                              
@@ -25,6 +26,8 @@ AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔�
 | <img width="160px" src="https://avatars.githubusercontent.com/u/75081608?s=400&u=c4c22f3af10105e0fb18a9d346988e9403a533f6&v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/113079762?v=4" /> |
 |                                               [@fprh13](https://github.com/fprh13)                                                |              [@jeongseockhyeon](https://github.com/jeongseockhyeon)               |
 |                                        Identity, Damage,<br/> Estimate, Bodyshop, Bidding                                         |                                 Community, 이미지 처리                                 |
+
+<br>
 
 ## 주요 도메인
 
@@ -34,6 +37,8 @@ AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔�
 - `Bodyshop`: 공업사 등록, 수정, 조회
 - `Community`: 게시물 등록, 댓글 작성 (레거시 영역)
 - `Bidding`: 수리 입찰 처리 (레거시 영역)
+
+<br>
 
 ## 핵심 흐름
 
@@ -56,9 +61,12 @@ AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔�
 - Documentation: Spring REST Docs, OpenAPI 3, Swagger UI
 - Infra/Monitoring: AWS S3, CloudFront, Docker, Prometheus, Grafana, Loki
 
+<br>
 
 ## ERD
 [![carumuch-erd.png](https://i.postimg.cc/cJ1vKptQ/carumuch-erd.png)](https://postimg.cc/fVFzpgKL)
+
+<br>
 
 ## 빠른 시작
 
@@ -69,6 +77,8 @@ AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔�
 - MySQL
 - Redis
 - RabbitMQ
+
+<br>
 
 ### 필수 환경 변수
 
@@ -94,6 +104,8 @@ RABBITMQ_USERNAME=
 RABBITMQ_PASSWORD=
 ```
 
+<br>
+
 ### 실행
 
 애플리케이션 실행:
@@ -114,6 +126,8 @@ docker compose -f infrastructure/docker-compose-ai.yml up -d
 docker compose -f infrastructure/docker-compose-monitoring.yml up -d
 ```
 
+<br>
+
 # 테스트 및 검증
 
 검증 명령은 아래와 같습니다.
@@ -125,12 +139,16 @@ docker compose -f infrastructure/docker-compose-monitoring.yml up -d
 - 기본적으로 단위 테스트를 우선 실행합니다.
 - 통합 테스트 관련 변경이 있으면 `requires-infra`를 제외한 통합 테스트를 추가 실행합니다.
 
+<br>
+
 ## 문서
 
 - 아키텍처: [docs/architecture.md](docs/architecture.md)
 - 코드 스타일: [docs/code-style.md](docs/code-style.md)
 - 테스트 가이드: [docs/testing-guide.md](docs/testing-guide.md)
 - 코드 리뷰 기준: [docs/code-review.md](docs/code-review.md)
+
+<br>
 
 ## AI 협업 워크플로우
 
@@ -142,6 +160,8 @@ AI Agent 개발 워크플로를 함께 사용합니다.
 - 자동 훅: `.codex/hooks.json`
 
 원칙은 `구현 -> 검증 -> 리뷰` 순서를 유지하는 것입니다.
+
+<br>
 
 ## 패키지 구조
 
@@ -164,6 +184,8 @@ application
 domain
 infrastructure
 ```
+
+<br>
 
 ## 현재 상태
 

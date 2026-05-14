@@ -1,239 +1,171 @@
-# 🚗 **카우머치 프로젝트 Back-end**
+[![kaumeochi-baeneo-choesinhwa.jpg](https://i.postimg.cc/DzWzGGdP/kaumeochi-baeneo-choesinhwa.jpg)](https://postimg.cc/GBCrwHf4)
 
-AI 기반 차량 사고 분석 및 견적 입찰 서비스 **백엔드** 레포지토리  
-**📢 캡스톤 디자인 경진대회 최우수상 수상작** 🏆
+> **📢 캡스톤 디자인 경진대회 최우수상 수상작** 🏆
 
-[🎥 **데모 영상 보기**](https://youtu.be/81JoqTP4Jds?si=r36hSpss8QZXQKZV)
+# 🚗 카우머치 Backend
 
-[📄 **API 문서 서버**](https://carumuch-api-docs.vercel.app)
+AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔드 서버입니다.
 
-<br/>
 
-## 📅 개발기간
+[🎥 **데모 영상 바로가기**](https://youtu.be/81JoqTP4Jds?si=r36hSpss8QZXQKZV)
 
-V1 2024.05.01 ~ 2024.11.06
+[📄 **API 문서 서버 바로가기**](https://carumuch-api-docs.vercel.app)
 
-V2 2025.11.11 ~ present
 
-<br/>
 
-# 🔘 **개요**
+# 프로젝트 개요
 카우머치는 **AI 기반 자동차 사고 수리 분석 서비스**입니다. 사용자가 사고 레포트를 제출하면 **AI가 자동으로 수리 견적을 생성**해주며, 여러 공업사로부터 수리 입찰 제안을 받을 수 있습니다. 공업사는 자신들의 수리 이력과 가격 경쟁력을 바탕으로 입찰에 참여합니다.
 
 해당 서비스는 캡스톤 디자인 경진대회에서 **최우수상**을 수상했으며, 현재는 백엔드 시스템 전반에 대한 **리팩토링을 진행 중**입니다.
 
-## 📚 목차
 
-- [인원 소개](#-인원-소개)
-- [사용 기술 및 환경](#-사용-기술-및-환경)
-- [프로젝트 소개](#-프로젝트-소개)
-- [아키텍쳐 구성도](#-아키텍쳐-구성도)
-- [ERD](#-ERD)
-- [기술적 고민 V1](#-기술적-고민-v1)
-- [개선사항 V2](#-개선-사항-v2)
-
-<br/>
-
-## 🧑‍💻 인원 소개
+## 인원 소개
 |                                                                조영무                                                                |                                        정석현                                        |                                                                                                              
 |:---------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
 | <img width="160px" src="https://avatars.githubusercontent.com/u/75081608?s=400&u=c4c22f3af10105e0fb18a9d346988e9403a533f6&v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/113079762?v=4" /> |
 |                                               [@fprh13](https://github.com/fprh13)                                                |              [@jeongseockhyeon](https://github.com/jeongseockhyeon)               |
-|                                                            인증, 견적, 입찰                                                             |                                     이미지, 커뮤니티                                     |
+|                                        Identity, Damage,<br/> Estimate, Bodyshop, Bidding                                         |                                 Community, 이미지 처리                                 |
+
+## 주요 도메인
+
+- `Identity`: 회원가입, 로그인, JWT 인증, 계정 복구
+- `Damage`: 차량 등록, 사고 레포트 등록/조회/수정
+- `Estimate`: AI 견적 생성, 상태 변경, 조건 검색, MQ 결과 처리
+- `Bodyshop`: 공업사 등록, 수정, 조회
+- `Community`: 게시물 등록, 댓글 작성 (레거시 영역)
+- `Bidding`: 수리 입찰 처리 (레거시 영역)
+
+## 핵심 흐름
+
+1. 사용자가 회원가입 및 로그인합니다.
+2. 차량과 사고 레포트를 등록합니다.
+3. 사고 레포트 등록 이후 AI 견적 생성 요청이 RabbitMQ로 비동기 발행됩니다.
+4. AI 결과가 돌아오면 견적서가 생성됩니다.
+5. 공업사는 견적을 조회하고 입찰에 참여합니다.
 
 <br/>
 
-## ⚒️ 사용 기술 및 환경
-### ⚙️ Backend
+## 기술 스택
 
-| 기술 & 환경        | 버전    |
-|----------------|-------|
-| Java           | 17.0.9 |
-| Spring Boot    | 3.2.4 |
-| Gradle         | 8.7   |
-| Spring Security | 6.2.3 |
-| Qeurydsl       | 5.0.0 |
-| Hibernate      | 6.4.4 |
-| MySQL          | 8.0.33 |
-| Redis          | 6.2.12 |
+- Language: Java 17
+- Framework: Spring Boot 3.5.4, Spring Security, Spring Data JPA
+- Query: Querydsl 5.0.0
+- Database: MySQL, H2(test)
+- Cache: Redis
+- Messaging: RabbitMQ
+- Documentation: Spring REST Docs, OpenAPI 3, Swagger UI
+- Infra/Monitoring: AWS S3, CloudFront, Docker, Prometheus, Grafana, Loki
 
-### 🚀 DevOps / Infra
-| 기술 & 환경        |
-|----------------|
-| AWS EC2        |
-| Route53        |
-| S3             |
-| CloudFront     |
-| GitHub Actions |
-| Docker         |
-| Caddy Server   |
 
-<br/>
-
-## 📍 프로젝트 소개
-
-[![image.jpg](https://i.postimg.cc/t7Gyx61g/image.jpg)](https://postimg.cc/Fkp2t7Vt)
-
-AI 통해 사고 파손 부위와 손상 정도를 분석하고, 웹 기술을 접목하여 사고 처리 과정에서 발생하는 비용과 시간을 절약하는 사용자 친화적인 서비스를 제공합니다.
-
-## 📄 아키텍쳐 구성도
-[![image.jpg](https://i.postimg.cc/4yBqJhzM/image.jpg)](https://postimg.cc/Mffd5H3b)
-
-## 📄 ERD
+## ERD
 [![carumuch-erd.png](https://i.postimg.cc/cJ1vKptQ/carumuch-erd.png)](https://postimg.cc/fVFzpgKL)
 
-<br/>
+## 빠른 시작
 
-## ✨ 백엔드 주요 기능
+### 요구사항
 
-- AI를 통한 차량 수리 견적 기능
-    - 사고 파손 부위와 손상 정도를 분석하여 견적서를 작성합니다.
-- 입찰 기능
-    - 공업사는 수리를 희망하는 견적서에 입찰을 신청합니다.
-    - 사용자는 원하는 공업사를 선택하여 수리를 받습니다.
-- 소셜 로그인 기능
-- 커뮤니티 기능
+- JDK 17
+- Docker / Docker Compose
+- MySQL
+- Redis
+- RabbitMQ
 
+### 필수 환경 변수
 
+```env
+DB_URL=
+DB_USERNAME=
+DB_PASSWORD=
 
-<br/>
+ACCESS_SECRET_KEY=
+REFRESH_SECRET_KEY=
+VERIFICATION_SECRET_KEY=
 
-## 🛠️ **리펙토링 사항**
+MAIL_ADDRESS=
+MAIL_PASSWORD=
+HOST_ADDRESS=
 
----
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+AWS_S3_BUCKET=
+AWS_CLOUDFRONT_DOMAIN=
 
-### 🔘DDD기반 아키텍처 재설계
+RABBITMQ_USERNAME=
+RABBITMQ_PASSWORD=
+```
 
-**[문제 상황]**
+### 실행
 
-카우머치 시스템은 단순 CRUD가 아닌 “사고 레포트 → AI 견적 → 입찰 → 낙찰 → 수리”로 이어지는 명확한 비즈니스 흐름과 여러 정책 및 조건이 존재하는 프로젝트였습니다.
+애플리케이션 실행:
 
-기존 프로젝트는 Entity 하나를 기준으로 패키지가 고정되어있었고, 이로 인해 의존성이 과도하게 얽힌 구조가 되어 하나의 변경이 다른 도메인 전체로 전파되었습니다.
+```bash
+./gradlew bootRun
+```
 
-**[1. 해결방법]**
+RabbitMQ와 AI Mock server 실행:
 
-유비쿼터스 언어를 정의하고 이벤트 스토밍으로 도메인 흐름을 확실하게 정리했습니다. 이를 통해 Aggregate 경계를 구분해 서로 다른 도메인 간 결합도를 낮추는 방향으로 설계를 개선했습니다.
+```bash
+docker compose -f infrastructure/docker-compose-ai.yml up -d
+```
 
-**[2. 해결방법]**
+모니터링 스택 실행:
 
-DIP를 이용하여 의존 방향을 정리했습니다. Presentation, Application, Domain, Infra의 역할을 구분하고, 도메인이 인프라를 직접 알지 않도록 의존성을 역전 시켜 외부 기술 요소에 도메인이 영향을 받지 않는 구조로 변경하여 지속가능한 시스템이 되도록 개선 했습니다.
+```bash
+docker compose -f infrastructure/docker-compose-monitoring.yml up -d
+```
 
-**[3. 해결방법]**
+# 테스트 및 검증
 
-핵심 도메인 로직과 부가 작업의 결합도를 낮추기 위해 이벤트 기반 설계를 적용했습니다.
+검증 명령은 아래와 같습니다.
 
-예를 들어 사고 레포트 생성 시 AI 견적 요청 이벤트를 발행하고, 회원가입 완료 시 환영 이메일 발송 이벤트를 발행하도록 했습니다.
+```bash
+./scripts/verify.sh
+```
 
-각 후속 작업은 이벤트 리스너에서 비동기로 처리하도록 분리해 도메인 로직이 부가 작업에 의존하지 않도록 설계했습니다.
+- 기본적으로 단위 테스트를 우선 실행합니다.
+- 통합 테스트 관련 변경이 있으면 `requires-infra`를 제외한 통합 테스트를 추가 실행합니다.
 
----
+## 문서
 
-### 🔘AOP/Filter Logging 모니터링 구축
+- 아키텍처: [docs/architecture.md](docs/architecture.md)
+- 코드 스타일: [docs/code-style.md](docs/code-style.md)
+- 테스트 가이드: [docs/testing-guide.md](docs/testing-guide.md)
+- 코드 리뷰 기준: [docs/code-review.md](docs/code-review.md)
 
-**[문제 상황]**
+## AI 협업 워크플로우
 
-캡스톤 디자인 당시 운영 중 사용자가 장애를 겪었지만, 원인을 파악하지 못해 대응조차 하지 못하는 문제가 발생했습니다. 비즈니스 에러와 클라이언트 에러가 구분되지 않았고, 요청 단위로 로그가 묶이지 않아 장애가 발생했을 때 “어떤 요청에서, 어떤 흐름으로 문제가 발생했는지”를 전혀 추적할 수 없는 상태였습니다.
+AI Agent 개발 워크플로를 함께 사용합니다.
 
-**[1. 해결 방법]**
+- 저장소 규칙: `AGENTS.md`
+- 기본 개발 오케스트레이터 스킬: `.codex/skills/dev-cycle/SKILL.md`
+- 전담 에이전트: `implementer-agent`, `verifier-agent`, `reviewer-agent`
+- 자동 훅: `.codex/hooks.json`
 
-MDC 기반 TraceId를 로깅 AOP와 로깅 Filter에 활용하여 요청 단위로 로그를 추적할 수 있도록 개선했습니다. 모든 요청에 고유한 TraceId를 부여하고, 요청 URL, HTTP 메소드, 쿼리 파라미터, 소요 시간을 하나의 포맷으로 로깅했습니다. 소요시간의 경우 전체 응답과 비즈니스 로직 단위가 기록되도록 구성했습니다.
+원칙은 `구현 -> 검증 -> 리뷰` 순서를 유지하는 것입니다.
 
-**[2. 해결 방법]**
+## 패키지 구조
 
-Grafana + Loki + Promtail을 기반으로 로그 모니터링을 구축했습니다. Logback을 통해 생성된 log파일을 수집하도록 구성했으며, 특정 traceId로 요청하는 전체 로그를 추적할 수 있게 되면서 에러 원인 파악이 가능해졌습니다. 또한 Loki 기술 스택을 선택하면서 Prometheus와 함께 하나의 Grafana 대시보드에서 모니터링되도록 구성할 수 있었습니다.
+```text
+src/main/java/com/carumuch/capstone
+├── identity
+├── damage
+├── estimate
+├── bodyshop
+├── community
+├── bidding
+└── common
+```
 
----
+리팩터링된 주요 컨텍스트는 아래 계층 구조를 따릅니다.
 
-### 🔘JWT 개선
-
-**[문제 상황]**
-
-JWT는 stateless하고 빠르다는 장점을 가지고 있지만, 기존 구조에서는 마치 세션처럼 동작하고 있었습니다. JWT 인증 과정에서 토큰을 키로 검증한 이후에도 매 요청마다 DB에 user를 조회하는 select 쿼리를 수행 한뒤 시큐리티 컨텍스트에 넣고 통과 시키는 구조였습니다.
-
-**[해결방법]**
-
-원인은 로그인 과정에서 사용된 UserDetailsService의 loadUserByUsername이 매 인증 요청마다 권한 객체를 주입하면서 불필요한 select 쿼리를 계속 발생시키고 있었기 때문입니다. 불필요하게 사용되던 Security 프레임워크의 기능을 덜어내고 인증 과정은 JWT 답게 토큰이 키로 정상적으로 검증되는지만 확인하도록 개선했습니다.
-
----
-
-### 🔘AI Code Review 도입
-
-**[문제 상황]**
-
-코드 리뷰는 코드 품질을 높이는 데 중요한 역할을 하지만, V2 리팩터링은 혼자 진행하다 보니 리뷰어가 없어 코드 품질을 스스로 검증해야 하는 어려움이 있었습니다.
-
-**[해결방법]**
-
-CodeRabbit AI Code Review를 활용하여 PR마다 자동으로 코드 리뷰가 이루어지도록 구성했습니다. 동료 개발자처럼 피드백을 제공하는 패르소나를 설정해 로직 오류, 코드 스멜, 중복 코드, 개선 포인트 등을 확인하도록 했습니다.
-
----
-
-### 🔘프론트 협업을 위한 API 문서 환경 개선
-
-**[문제 상황]**
-
-프론트엔드 팀원으로부터 협업 관련 피드백이 있었습니다.
-
-1. 시나리오 별 예제가 부족해서 API를 연동하는데 어려움이 있었다.
-2. API 문서인만큼 서버 실행 유무와 상관없이 언제든 확인할 수 있어야한다.
-3. 문서가 언제 최신화되었는지 기준을 알 수 없어서 변경 사항이 생겼는지 파악하기 어렵다.
-
-**[1. 해결방법]**
-
-RestDocs, OpenAPI 3, Swagger-UI를 활용해 테스트 기반 API 문서화 환경을 구축했습니다. 문서 생성이 테스트에 의해 자동으로 이루어지도록 구성해 Swagger 설정이 프로덕션 코드에 섞이는 문제를 해결했습니다. 또한, 시나리오 기반 테스트가 그대로 문서에 반영되면서 프론트엔드에서 겪던 예제 부족 문제도 해결되었습니다.
-
-**[2. 해결방법]**
-
-GitHub Actions에 API 문서 CD 작업을 추가했습니다. RestDocs와 OpenAPI 3를 통해 생성된 YAML 스니펫을 API 문서 레포지토리에 푸시하도록 설정했습니다. API가 변경될 때마다 API 문서 서버가 자동으로 최신화되기 때문에 서버 실행 여부와 상관없이 항상 최신 문서를 확인할 수 있습니다. 또한, 빌드 시간을 기록해서 문서가 언제 업데이트되었는지 명확하게 파악할 수 있도록 진행 했습니다.
-
-### 🔘메세지 큐 도입
-
-**[문제 상황]**
-
-기존에는 클라이언트가 AI 서버에 직접 요청/응답을 수행하고, AI 분석 결과를 다시 백엔드로 전달하는 구조였습니다.
-
-이 구조는 다음 문제를 유발했습니다.
-
-1. AI 처리 중 클라이언트 이탈 시 결과 데이터 유실
-2. 클라이언트 이탈로 인해 AI 서버 리소스 낭비
-3. 클라이언트가 AI 분석 완료까지 무기한 대기
-
-**[1. 해결방법]**
-
-메시지 큐(RabbitMQ)를 도입하여 AI 견적 처리를 비동기 이벤트 흐름으로 전환했습니다.
-
-- 클라이언트는 사고 레포트만 등록하고 즉시 응답 (대기 제거)
-- Backend 서버는 사고 레포트를 저장한 뒤 견적 요청 이벤트를 MQ로 발행
-- AI worker 서버는 큐를 소비하여 분석 후 결과를 다시 MQ로 발행
-- Backend 서버는 결과 메시지를 받아 견적서를 저장
-
-결과적으로는 클라이언트가 AI 서버와 직접 통신하지 않고 비동기로 처리되어 1,2,3번 문제가 해결되었습니다.
-
-**[2. 해결방법]**
-
-메시지 소비 과정에서 발생할 수 있는 장애에 대비해 DLQ 를 구성했습니다.
-
-- 소비 실패 시 메시지는 DLQ로 라우팅
-- DLQ 메시지를 DB(outbox 테이블)로 저장하여 관리
-- 스케줄러가 재시도 정책(시도 횟수, 백오프, 만료)을 바탕으로 자동 Redrive 수행
-- 최대 재시도 초과 메시지는 GIVE_UP 처리하고, 해당 건수를 메트릭으로 수집하여 Grafana에서 추적 가능하도록 구성
-
-### 🔘 AI Agent · Git 검증 흐름 통합 하네스 구축
-
-**[문제 상황]**
-
-개발자가 직접 작업할 때는 Git pre-commit을 통해 verify.sh 기반 검증이 이루어졌습니다. 하지만 AI Agent 작업은 동일한 검증 정책을 강제하지 않으면, 개발자 작업 흐름과 다른 기준으로 작업이 진행될 수 있었습니다. AGENTS.md와 test-guide.md 문서만으로는 검증 정책이 “권장” 수준에 머무를 수 있다는 한계도 있었습니다.
-
-또한 개발자가 pre-commit 검증에 실패하면 문제를 직접 수정하듯, AI Agent도 검증 실패 시 개발자 개입 없이 스스로 수정과 재검증을 반복하는 구조가 필요했습니다. 즉, 개발자와 AI Agent 모두 동일한 verify.sh 기준 아래에서 동작하도록 작업 흐름을 통합하고자 했습니다.
-
-**[1. 해결방법]**
-
-Sub-Agent 역할을 분리했습니다. Implementer-Agent는 코드 작성과 수정을 담당하고, Verifier-Agent는 bash scripts/verify.sh 실행만 담당하며, Reviewer-Agent는 검증 성공 이후에만 리뷰하도록 작업 순서를 고정했습니다.
-
-Skills를 통해 Orchestrator를 구성하여 Verifier-Agent가 검증에 실패할 시 원인을 식별하고, 다시 Implementer-Agent에게 수정 작업을 넘기는 반복 루프를 만들었습니다. 이를 통해 개발자가 pre-commit 실패 후 스스로 수정하듯, AI Agent도 검증 실패를 스스로 처리하도록 구성했습니다.
-
-**[2. 해결방법]**
-
-하네스의 핵심은 규칙을 “권장”이 아니라 “강제”하는 것이었습니다. Skills와 Sub-Agent만으로는 검증 정책을 완전히 강제하기 어렵기 때문에, Hooks를 사용해 성공한 verify.sh 실행 기록이 없으면 작업이 종료되지 않고 수정 루프로 되돌아가도록 구성했습니다.
-
-그 결과 개발자와 AI Agent의 작업 흐름 모두 동일한 verify.sh 검증 기준을 따르게 되었고, AI Agent의 작업 신뢰도를 높일 수 있었습니다.
+```text
+presentation
+application
+domain
+infrastructure
+```
+
+## 현재 상태
+
+- 리팩터링 중심 영역: `identity`, `damage`, `estimate`, `bodyshop`
+- 레거시 중심 영역: `community`, `bidding`, `common.legacy`

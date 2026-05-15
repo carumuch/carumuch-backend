@@ -21,9 +21,10 @@ AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔�
 <br>
 
 ## 인원 소개
+
 |                                                                조영무                                                                |                                        정석현                                        |                                                                                                              
 |:---------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
-| <img width="160px" src="https://avatars.githubusercontent.com/u/75081608?s=400&u=c4c22f3af10105e0fb18a9d346988e9403a533f6&v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/113079762?v=4" /> |
+| <img width="160px" src="https://avatars.githubusercontent.com/u/75081608?s=400&u=c4c22f3af10105e0fb18a9d346988e9403a533f6&v=4" alt="조영무 프로필 이미지" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/113079762?v=4" alt="정석현 프로필 이미지" /> |
 |                                               [@fprh13](https://github.com/fprh13)                                                |              [@jeongseockhyeon](https://github.com/jeongseockhyeon)               |
 |                                        Identity, Damage,<br/> Estimate, Bodyshop, Bidding                                         |                                 Community, 이미지 처리                                 |
 

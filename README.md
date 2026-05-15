@@ -1,259 +1,194 @@
-# 🚗 **카우머치 프로젝트 Back-end**
+[![kaumeochi-baeneo-choesinhwa.jpg](https://i.postimg.cc/DzWzGGdP/kaumeochi-baeneo-choesinhwa.jpg)](https://postimg.cc/GBCrwHf4)
+
+> **📢 캡스톤 디자인 경진대회 최우수상 수상작** 🏆
+
+# 🚗 카우머치 Backend
+
+AI 기반 차량 사고 분석 및 견적 입찰 서비스 카우머치 백엔드 서버입니다.
 
 
-AI 기반 차량 사고 분석 및 견적 입찰 서비스 **백엔드** 레포지토리  
-**📢 캡스톤 디자인 경진대회 최우수상 수상작** 🏆
+[🎥 **데모 영상 바로가기**](https://youtu.be/81JoqTP4Jds?si=r36hSpss8QZXQKZV)
 
-[🎥 **데모 영상 보기**](https://youtu.be/81JoqTP4Jds?si=r36hSpss8QZXQKZV)
+[📄 **API 문서 서버 바로가기**](https://carumuch-api-docs.vercel.app)
 
-[📄 **API 문서 서버**](https://carumuch-api-docs.vercel.app)
+<br>
 
-[📄 **카우머치 설계 문서**](https://www.notion.so/2c32b0cb232580fd8cb9fd002de73a8b?pvs=21)
-
-<br/>
-
-## 📅 개발기간
-
-V1 2024.05.01 ~ 2024.11.06
-
-V2 2025.11.11 ~ present
-
-<br/>
-
-# 🔘 **개요**
+# 프로젝트 개요
 카우머치는 **AI 기반 자동차 사고 수리 분석 서비스**입니다. 사용자가 사고 레포트를 제출하면 **AI가 자동으로 수리 견적을 생성**해주며, 여러 공업사로부터 수리 입찰 제안을 받을 수 있습니다. 공업사는 자신들의 수리 이력과 가격 경쟁력을 바탕으로 입찰에 참여합니다.
 
 해당 서비스는 캡스톤 디자인 경진대회에서 **최우수상**을 수상했으며, 현재는 백엔드 시스템 전반에 대한 **리팩토링을 진행 중**입니다.
 
-## 📚 목차
+<br>
 
-- [인원 소개](#-인원-소개)
-- [사용 기술 및 환경](#-사용-기술-및-환경)
-- [프로젝트 소개](#-프로젝트-소개)
-- [아키텍쳐 구성도](#-아키텍쳐-구성도)
-- [ERD](#-ERD)
-- [기술적 고민 V1](#-기술적-고민-v1)
-- [개선사항 V2](#-개선-사항-v2)
+## 인원 소개
 
-<br/>
-
-## 🧑‍💻 인원 소개
 |                                                                조영무                                                                |                                        정석현                                        |                                                                                                              
 |:---------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
-| <img width="160px" src="https://avatars.githubusercontent.com/u/75081608?s=400&u=c4c22f3af10105e0fb18a9d346988e9403a533f6&v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/113079762?v=4" /> |
+| <img width="160px" src="https://avatars.githubusercontent.com/u/75081608?s=400&u=c4c22f3af10105e0fb18a9d346988e9403a533f6&v=4" alt="조영무 프로필 이미지" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/113079762?v=4" alt="정석현 프로필 이미지" /> |
 |                                               [@fprh13](https://github.com/fprh13)                                                |              [@jeongseockhyeon](https://github.com/jeongseockhyeon)               |
-|                                                            인증, 견적, 입찰                                                             |                                     이미지, 커뮤니티                                     |
+|                                        Identity, Damage,<br/> Estimate, Bodyshop, Bidding                                         |                                 Community, 이미지 처리                                 |
+
+<br>
+
+## 주요 도메인
+
+- `Identity`: 회원가입, 로그인, JWT 인증, 계정 복구
+- `Damage`: 차량 등록, 사고 레포트 등록/조회/수정
+- `Estimate`: AI 견적 생성, 상태 변경, 조건 검색, MQ 결과 처리
+- `Bodyshop`: 공업사 등록, 수정, 조회
+- `Community`: 게시물 등록, 댓글 작성 (레거시 영역)
+- `Bidding`: 수리 입찰 처리 (레거시 영역)
+
+<br>
+
+## 핵심 흐름
+
+1. 사용자가 회원가입 및 로그인합니다.
+2. 차량과 사고 레포트를 등록합니다.
+3. 사고 레포트 등록 이후 AI 견적 생성 요청이 RabbitMQ로 비동기 발행됩니다.
+4. AI 결과가 돌아오면 견적서가 생성됩니다.
+5. 공업사는 견적을 조회하고 입찰에 참여합니다.
 
 <br/>
 
-## ⚒️ 사용 기술 및 환경
-### ⚙️ Backend
+## 기술 스택
 
-| 기술 & 환경        | 버전    |
-|----------------|-------|
-| Java           | 17.0.9 |
-| Spring Boot    | 3.2.4 |
-| Gradle         | 8.7   |
-| Spring Security | 6.2.3 |
-| Qeurydsl       | 5.0.0 |
-| Hibernate      | 6.4.4 |
-| MySQL          | 8.0.33 |
-| Redis          | 6.2.12 |
+- Language: Java 17
+- Framework: Spring Boot 3.5.4, Spring Security, Spring Data JPA
+- Query: Querydsl 5.0.0
+- Database: MySQL, H2(test)
+- Cache: Redis
+- Messaging: RabbitMQ
+- Documentation: Spring REST Docs, OpenAPI 3, Swagger UI
+- Infra/Monitoring: AWS S3, CloudFront, Docker, Prometheus, Grafana, Loki
 
-### 🚀 DevOps / Infra
-| 기술 & 환경        |
-|----------------|
-| AWS EC2        |
-| Route53        |
-| S3             |
-| CloudFront     |
-| GitHub Actions |
-| Docker         |
-| Caddy Server   |
+<br>
 
-<br/>
+## ERD
+[![carumuch-erd.png](https://i.postimg.cc/cJ1vKptQ/carumuch-erd.png)](https://postimg.cc/fVFzpgKL)
 
-## 📍 프로젝트 소개
+<br>
 
-[![image.jpg](https://i.postimg.cc/t7Gyx61g/image.jpg)](https://postimg.cc/Fkp2t7Vt)
+## 빠른 시작
 
-AI 통해 사고 파손 부위와 손상 정도를 분석하고, 웹 기술을 접목하여 사고 처리 과정에서 발생하는 비용과 시간을 절약하는 사용자 친화적인 서비스를 제공합니다.
+### 요구사항
 
-## 📄 아키텍쳐 구성도
-[![image.jpg](https://i.postimg.cc/4yBqJhzM/image.jpg)](https://postimg.cc/Mffd5H3b)
+- JDK 17
+- Docker / Docker Compose
+- MySQL
+- Redis
+- RabbitMQ
 
-## 📄 ERD
-[![image.jpg](https://i.postimg.cc/9QJtF5ND/image.jpg)](https://postimg.cc/Hr87BKmm)
+<br>
 
-<br/>
+### 필수 환경 변수
 
-## ✨ 백엔드 주요 기능
+```env
+DB_URL=
+DB_USERNAME=
+DB_PASSWORD=
 
-- **사용자 기능 및 인증 서비스**
-  - Spring Security와 JWT를 사용한 인증 서비스 구축 및 소셜 로그인 기능
-- **견적 기능**
-  - S3에 차량 파손 사진을 업로드하는 기능
-  - AI 분석 결과를 기반으로 차량 견적서를 등록하고 Enum 클래스로 정의된 공개 범위를 설정하여 관리하는 기능 제공
-- **공업사 기능**
-  - QueryDSL을 통해 AI 예상 수리 금액, 지역, 픽업 유무 등 다양한 조건으로 차량 견적서에 대한 상세 검색 기능 제공
-- **입찰 기능**
-  - 공업사는 수리를 희망하는 견적서에 신청, 사용자는 원하는 공업사를 선택하며 매칭되는 공개 입찰 기능 제공
-- **커뮤니티 기능**
-  - 사용자들이 게시글과 댓글을 통해 자유롭게 소통할 수 있는 커뮤니티 기능을 제공
+ACCESS_SECRET_KEY=
+REFRESH_SECRET_KEY=
+VERIFICATION_SECRET_KEY=
 
+MAIL_ADDRESS=
+MAIL_PASSWORD=
+HOST_ADDRESS=
 
-<br/>
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+AWS_S3_BUCKET=
+AWS_CLOUDFRONT_DOMAIN=
 
-## 📁 **기술적 고민 V1**
+RABBITMQ_USERNAME=
+RABBITMQ_PASSWORD=
+```
 
----
+<br>
 
-### **Update 진행 후 Id 값을 반환해도 되는가?**
-영무님의 [블로그 정리 보기](https://fprh13.tistory.com/9)
-- **문제 상황**  
-  Update 요청에서 Id와 같은 필수 데이터를 반환하는 것이 CQS(Command Query Separation) 원칙을 위반할 가능성이 있어 바람직하지 않을 수 있다는 고민
+### 실행
 
-- **해결 방안**
-    - update의 `void` 응답에 집착하지 않고, 상황에 따라 Id와 같은 필수 데이터를 반환하는 것은 큰 문제가 되지 않는 것으로 결론
+애플리케이션 실행:
 
----
+```bash
+./gradlew bootRun
+```
 
-### **비밀번호 찾기 기능 개선**
-영무님의 [블로그 정리 보기](https://velog.io/@fprh13/spring-boot-%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EB%B3%80%EA%B2%BD-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EC%9D%B8%EC%A6%9D%EB%B2%88%ED%98%B8-%EA%B5%AC%ED%98%84)
-- **문제 상황**  
-  난수 기반 비밀번호 변경 방식에 대한 사용자 불편 사항 발생
+RabbitMQ와 AI Mock server 실행:
 
-- **해결 방안**
-    - 여러 플랫폼의 비밀번호 찾기 프로세스를 분석
-    - 인증번호와 JWT를 활용하여 즉시 비밀번호를 변경할 수 있는 프로세스를 구현
----
+```bash
+docker compose -f infrastructure/docker-compose-ai.yml up -d
+```
 
-### **소셜 로그인 구현 의견 충돌**
-영무님의 [블로그 정리 보기](https://velog.io/@fprh13/Spring-boot-spring-security-%EC%9E%90%EC%B2%B4-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%86%8C%EC%85%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EB%B0%B1%EC%97%94%EB%93%9C%EC%97%90%EC%84%9C-%EB%AA%A8%EB%91%90-%EC%B2%98%EB%A6%AC-%EC%8B%9C-%ED%9A%8C%EC%9B%90-%ED%83%88%ED%87%B4-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EA%B5%AC%EA%B8%80-%EB%84%A4%EC%9D%B4%EB%B2%84-%EC%97%B0%EA%B2%B0-%EB%81%8A%EA%B8%B0)
-- **문제 상황**  
-  소셜 로그인 기능 제외를 제안받았으나, 백엔드 측에서는 비즈니스적으로 필요하다고 판단하여 의견 충돌 발생
+모니터링 스택 실행:
 
-- **해결 방안**
-    - 모든 인증 과정을 백엔드에서 처리하여 프론트엔드에서 하이퍼링크 GET 요청만으로 소셜 로그인 절차를 진행할 수 있는 프로세스를 설계
----
+```bash
+docker compose -f infrastructure/docker-compose-monitoring.yml up -d
+```
 
-### **모바일 크롬과 사파리 쿠키 문제**
-- **문제 상황**  
-  Vercel과 통신을 위해 Spring Boot를 HTTPS로 설정하면서 모바일 크롬과 사파리에서 쿠키 삽입이 안 되는 문제 발생.
+<br>
 
-- **해결 방안**
-    - 문서를 통해 각 브라우저의 `SameSite` 속성이 어떻게 적용되는지 방식을 분석
-    - 가비아에서 도메인을 구입해 프론트엔드와 백엔드의 서브 도메인을 일치시켜 문제 해결
+# 테스트 및 검증
 
----
+검증 명령은 아래와 같습니다.
 
-### **PathVariable Validation 핸들링 문제**
-영무님의 [블로그 정리 보기](https://velog.io/@fprh13/Spring-boot-PathVariable-값-validation-핸들러)
-- **문제 상황**  
-  `PathVariable` 값에 대한 Validation 핸들링이 제대로 작동하지 않음
+```bash
+./scripts/verify.sh
+```
 
-- **해결 방안**
-    - `ConstraintViolationException.class` 내부를 분석하여 문제를 해결
+- 기본적으로 단위 테스트를 우선 실행합니다.
+- 통합 테스트 관련 변경이 있으면 `requires-infra`를 제외한 통합 테스트를 추가 실행합니다.
 
----
+<br>
 
-### **Validation 적용 순서 문제**
-영무님의 [블로그 정리 보기](https://velog.io/@fprh13/Spring-boot-validation-순서-정하기)
-- **문제 상황**  
-    Validation 순서가 랜덤하게 처리되는 문제 발생
+## 문서
 
-- **해결 방안**
-    - `ValidationSequence` 인터페이스를 작성하여 Validation 순서를 정의
+- 아키텍처: [docs/architecture.md](docs/architecture.md)
+- 코드 스타일: [docs/code-style.md](docs/code-style.md)
+- 테스트 가이드: [docs/testing-guide.md](docs/testing-guide.md)
+- 코드 리뷰 기준: [docs/code-review.md](docs/code-review.md)
 
----
+<br>
 
+## AI 협업 워크플로우
 
-<br/>
+AI Agent 개발 워크플로를 함께 사용합니다.
 
-## 📁 **개선 사항 V2**
+- 저장소 규칙: `AGENTS.md`
+- 기본 개발 오케스트레이터 스킬: `.codex/skills/dev-cycle/SKILL.md`
+- 전담 에이전트: `implementer-agent`, `verifier-agent`, `reviewer-agent`
+- 자동 훅: `.codex/hooks.json`
 
----
+원칙은 `구현 -> 검증 -> 리뷰` 순서를 유지하는 것입니다.
 
-### 🔘DDD기반 아키텍처 재설계
+<br>
 
-**[문제 상황]**
+## 패키지 구조
 
-카우머치 시스템은 단순 CRUD가 아닌 “사고 레포트 → AI 견적 → 입찰 → 낙찰 → 수리”로 이어지는 명확한 비즈니스 흐름과 여러 정책 및 조건이 존재하는 프로젝트였습니다.
+```text
+src/main/java/com/carumuch/capstone
+├── identity
+├── damage
+├── estimate
+├── bodyshop
+├── community
+├── bidding
+└── common
+```
 
-기존 프로젝트는 Entity 하나를 기준으로 패키지가 고정되어있었고, 이로 인해 의존성이 과도하게 얽힌 구조가 되어 하나의 변경이 다른 도메인 전체로 전파되었습니다.
+리팩터링된 주요 컨텍스트는 아래 계층 구조를 따릅니다.
 
-**[1. 해결방법]**
+```text
+presentation
+application
+domain
+infrastructure
+```
 
-유비쿼터스 언어를 정의하고 이벤트 스토밍을 통해 흐름을 정리했습니다. 이를 기준으로 Aggregate를 명확히 구분해 도메인 경계를 나누었습니다.
+<br>
 
-**[2. 해결방법]**
+## 현재 상태
 
-DIP를 이용하여 의존 방향을 정리했습니다. Presentation, Application, Domain, Infra의 역할을 구분하고, 도메인이 인프라를 직접 알지 않도록 의존성을 역전 시켜 외부 기술 요소에 도메인이 영향을 받지 않는 구조로 변경하여 지속가능한 시스템이 되도록 개선 했습니다.
-
-**[3. 해결방법]**
-
-핵심 도메인 로직과 후속 작업을 분리하기 위해 이벤트 기반 설계를 적용했습니다.
-
-예를 들어, 사고 레포트가 생성되면 AI 견적 요청 이벤트를 발행하고, 회원가입이 완료되면 환영 이메일 전송 이벤트 발행과 같은 후속 작업을 이벤트 리스너에서 처리하도록 분리했습니다.
-
-AbstractAggregateRoot를 활용해 도메인 이벤트를 발행하고, @TransactionalEventListener를 통해 트랜잭션 커밋 이후에 후속 작업이 실행되도록 구성했습니다.
-
----
-
-### 🔘AOP/Filter Logging 모니터링 구축
-
-**[문제 상황]**
-
-캡스톤 디자인 당시 운영 중 사용자가 장애를 겪었지만, 원인을 파악하지 못해 대응조차 하지 못하는 문제가 발생했습니다. 비즈니스 에러와 클라이언트 에러가 구분되지 않았고, 요청 단위로 로그가 묶이지 않아 장애가 발생했을 때 “어떤 요청에서, 어떤 흐름으로 문제가 발생했는지”를 전혀 추적할 수 없는 상태였습니다.
-
-**[1. 해결 방법]**
-
-MDC 기반 TraceId를 로깅 AOP와 로깅 Filter에 활용하여 요청 단위로 로그를 추적할 수 있도록 개선했습니다. 모든 요청에 고유한 TraceId를 부여하고, 요청 URL, HTTP 메소드, 쿼리 파라미터, 소요 시간을 하나의 포맷으로 로깅했습니다. 소요시간의 경우 전체 응답과 비즈니스 로직 단위가 기록되도록 구성했습니다.
-
-**[2. 해결 방법]**
-
-Grafana + Loki + Promtail을 기반으로 로그 모니터링을 구축했습니다. Logback을 통해 생성된 log파일을 수집하도록 구성했으며, 특정 traceId로 요청하는 전체 로그를 추적할 수 있게 되면서 에러 원인 파악이 가능해졌습니다. 또한 Loki 기술 스택을 선택하면서 Prometheus와 함께 하나의 Grafana 대시보드에서 모니터링되도록 구성할 수 있었습니다.
-
----
-
-### 🔘JWT 개선
-
-**[문제 상황]**
-
-JWT는 stateless하고 빠르다는 장점을 가지고 있지만, 기존 구조에서는 마치 세션처럼 동작하고 있었습니다. JWT 인증 과정에서 토큰을 키로 검증한 이후에도 매 요청마다 DB에 user를 조회하는 select 쿼리를 수행 한뒤 시큐리티 컨텍스트에 넣고 통과 시키는 구조였습니다.
-
-**[해결방법]**
-
-원인은 로그인 과정에서 사용된 UserDetailsService의 loadUserByUsername이 매 인증 요청마다 권한 객체를 주입하면서 불필요한 select 쿼리를 계속 발생시키고 있었기 때문입니다. 불필요하게 사용되던 Security 프레임워크의 기능을 덜어내고 인증 과정은 JWT 답게 토큰이 키로 정상적으로 검증되는지만 확인하도록 개선했습니다.
-
----
-
-### 🔘AI Code Review 도입
-
-**[문제 상황]**
-
-코드 리뷰는 코드 품질을 높이는 데 중요한 역할을 하지만, V2 리팩터링은 혼자 진행하다 보니 리뷰어가 없어 코드 품질을 스스로 검증해야 하는 어려움이 있었습니다.
-
-**[해결방법]**
-
-CodeRabbit AI Code Review를 활용하여 PR마다 자동으로 코드 리뷰가 이루어지도록 구성했습니다. 동료 개발자처럼 피드백을 제공하는 패르소나를 설정해 로직 오류, 코드 스멜, 중복 코드, 개선 포인트 등을 확인하도록 했습니다.
-
----
-
-### 🔘프론트 협업을 위한 API 문서 환경 개선
-
-**[문제 상황]**
-
-프론트엔드 팀원으로부터 협업 관련 피드백이 있었습니다.
-
-1. 시나리오 별 예제가 부족해서 API를 연동하는데 어려움이 있었다.
-2. API 문서인만큼 서버 실행 유무와 상관없이 언제든 확인할 수 있어야한다.
-3. 문서가 언제 최신화되었는지 기준을 알 수 없어서 변경 사항이 생겼는지 파악하기 어렵다.
-
-**[1. 해결방법]**
-
-RestDocs, OpenAPI 3, Swagger-UI를 활용해 테스트 기반 API 문서화 환경을 구축했습니다. 문서 생성이 테스트에 의해 자동으로 이루어지도록 구성해 Swagger 설정이 프로덕션 코드에 섞이는 문제를 해결했습니다. 또한, 시나리오 기반 테스트가 그대로 문서에 반영되면서 프론트엔드에서 겪던 예제 부족 문제도 해결되었습니다.
-
-**[2. 해결방법]**
-
-GitHub Actions에 API 문서 CD 작업을 추가했습니다. RestDocs와 OpenAPI 3를 통해 생성된 YAML 스니펫을 API 문서 레포지토리에 푸시하도록 설정했습니다. API가 변경될 때마다 API 문서 서버가 자동으로 최신화되기 때문에 서버 실행 여부와 상관없이 항상 최신 문서를 확인할 수 있습니다. 또한, 빌드 시간을 기록해서 문서가 언제 업데이트되었는지 명확하게 파악할 수 있도록 진행 했습니다.
+- 리팩터링 중심 영역: `identity`, `damage`, `estimate`, `bodyshop`
+- 레거시 중심 영역: `community`, `bidding`, `common.legacy`

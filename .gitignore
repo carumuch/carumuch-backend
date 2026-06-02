@@ -1,3 +1,23 @@
+# ===================================================================================
+                            ### Custom ignore ###
+# ===================================================================================
+# applicaion.yml or properties
+
+# API document
+openapi3.yaml
+
+#img
+*.jpg
+*.jpeg
+*.png
+
+# TiDD
+TICKET-**.md
+
+# ===================================================================================
+                            ### Basic ignore ###
+# ===================================================================================
+
 HELP.md
 .gradle
 build/
@@ -23,8 +43,11 @@ bin/
 *.iml
 
 
+# ===================================================================================
+                            ### Custom Toptal.com ignore ###
 # Created by https://www.toptal.com/developers/gitignore/api/gradle,intellij,windows,git,macos,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij,windows,git,macos,java
+# ===================================================================================
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -271,13 +294,3 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/gradle,intellij,windows,git,macos,java
-
-# applicaion.yml or properties
-
-# API document
-openapi3.yaml
-
-#img
-*.jpg
-*.jpeg
-*.png

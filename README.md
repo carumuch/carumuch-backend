@@ -156,7 +156,7 @@ docker compose -f infrastructure/docker-compose-monitoring.yml up -d
 AI Agent 개발 워크플로를 함께 사용합니다.
 
 - 저장소 규칙: `AGENTS.md`
-- 기본 개발 오케스트레이터 스킬: `.codex/skills/dev-cycle/SKILL.md`
+- 기본 개발 오케스트레이터 스킬: `.codex/skills/carumuch-dev-cycle/SKILL.md`
 - 전담 에이전트: `implementer-agent`, `verifier-agent`, `reviewer-agent`
 - 자동 훅: `.codex/hooks.json`
 

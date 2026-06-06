@@ -1,5 +1,5 @@
 ---
-name: dev-cycle
+name: carumuch-dev-cycle
 description: Use when executing backend code changes in this repository and you need a repeatable implementer-verifier-reviewer workflow with bounded retry attempts
 ---
 

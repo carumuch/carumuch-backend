@@ -1,5 +1,5 @@
 ---
-name: ticket-generator
+name: carumuch-ticket-generator
 description: Use when the user provides a GitHub issue number in this repository and wants a TiDD ticket created from `docs/tickets/TEMPLATE.md`
 ---
 

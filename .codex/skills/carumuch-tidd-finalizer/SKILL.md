@@ -77,9 +77,9 @@ description: Use when a user has chosen agent A, agent B, or cancel after a TiDD
 저장소 루트 기준 실행 예시는 아래와 같습니다.
 
 ```bash
-bash .codex/skills/tidd-finalizer/scripts/finalize-tidd.sh 144 A
-bash .codex/skills/tidd-finalizer/scripts/finalize-tidd.sh 144 B
-bash .codex/skills/tidd-finalizer/scripts/finalize-tidd.sh 144 cancel
+bash .codex/skills/carumuch-tidd-finalizer/scripts/finalize-tidd.sh 144 A
+bash .codex/skills/carumuch-tidd-finalizer/scripts/finalize-tidd.sh 144 B
+bash .codex/skills/carumuch-tidd-finalizer/scripts/finalize-tidd.sh 144 cancel
 ```
 
 첫 번째 인자는 ticket id, 두 번째 인자는 선택 결과입니다.

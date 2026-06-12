@@ -33,7 +33,7 @@ description: Use when the user wants a TiDD-style pair of Codex helper panes in 
 - `agent-a`: 티켓 범위를 벗어나지 않는 최소 변경 구현
 - `agent-b`: 같은 티켓 범위 안에서 유지보수성까지 고려한 구현
 
-두 agent 모두 실제 개발 절차는 반드시 [carumuch-dev-cycle](/Users/yeongmujo/Desktop/Repository/carumuch-backend/.codex/skills/dev-cycle/SKILL.md)를 따릅니다.
+두 agent 모두 실제 개발 절차는 반드시 [carumuch-dev-cycle](/Users/yeongmujo/Desktop/Repository/carumuch-backend/.codex/skills/carumuch-dev-cycle/SKILL.md)를 따릅니다.
 
 ## When to Use
 
@@ -98,8 +98,8 @@ description: Use when the user wants a TiDD-style pair of Codex helper panes in 
 저장소 루트 기준 실행 예시는 아래와 같습니다.
 
 ```bash
-bash .codex/skills/tidd-orchestrator/scripts/start-tidd-orchestrator.sh 147
-bash .codex/skills/tidd-orchestrator/scripts/start-tidd-orchestrator.sh 203
+bash .codex/skills/carumuch-tidd-orchestrator/scripts/start-tidd-orchestrator.sh 147
+bash .codex/skills/carumuch-tidd-orchestrator/scripts/start-tidd-orchestrator.sh 203
 ```
 
 인자는 필수이며, 넘긴 ticket id를 그대로 브랜치 suffix로 사용합니다.

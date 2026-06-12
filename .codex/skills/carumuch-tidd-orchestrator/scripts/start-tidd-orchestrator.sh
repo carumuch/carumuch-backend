@@ -110,13 +110,13 @@ $ticket_file 를 기준으로 작업을 시작하세요.
 - docs/code-style.md
 - docs/testing-guide.md
 - $ticket_file
-- .codex/skills/dev-cycle/SKILL.md
+- .codex/skills/carumuch-dev-cycle/SKILL.md
 
 당신의 역할은 $agent_name 입니다.
 $role_instruction
 
 작업 원칙:
-- 반드시 .codex/skills/dev-cycle/SKILL.md 를 따라 개발하세요.
+- 반드시 .codex/skills/carumuch-dev-cycle/SKILL.md 를 따라 개발하세요.
 - implementer -> verifier -> reviewer 순서를 지키세요.
 - verifier 단계에서는 bash scripts/verify.sh 만 실행하세요.
 - 티켓 범위를 벗어나지 마세요.
@@ -291,7 +291,19 @@ send_ticket_prompt \
   "agent-b" \
   "같은 티켓 요구사항을 충족하되, 유지보수성을 향상시키는 방향으로 개선하세요. 네이밍, 계층 책임, 테스트 구조 개선은 허용되지만 티켓 범위를 넘는 기능 추가는 하지 마세요."
 
-collect_agent_results || true
+if ! collect_agent_results; then
+  if [[ -n "$main_pane" ]]; then
+    cmux focus-pane --workspace "$workspace" --pane "$main_pane" >/dev/null
+  fi
+
+  cmux notify \
+    --workspace "$workspace" \
+    --title "tidd-orchestrator failed" \
+    --body "failed to collect agent results within ${result_timeout_sec}s" >/dev/null || true
+
+  echo "failed to collect all agent results within timeout (${result_timeout_sec}s)" >&2
+  exit 1
+fi
 
 if [[ -n "$main_pane" ]]; then
   cmux focus-pane --workspace "$workspace" --pane "$main_pane" >/dev/null

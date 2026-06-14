@@ -15,8 +15,7 @@ description: Use when a user has chosen agent A, agent B, or cancel after a TiDD
 2. 핵심 티켓 브랜치 worktree에서 검증 실행
 3. `agent-a`, `agent-b` pane 정리
 4. agent worktree 정리
-5. 성공적으로 마무리되면 핵심 티켓 브랜치 worktree도 정리
-6. 최종 보고 출력
+5. 최종 보고 출력
 
 `취소`를 선택하면 병합과 테스트는 수행하지 않고, TiDD가 만든 브랜치/worktree/pane 자원을 전부 정리합니다.
 
@@ -48,13 +47,9 @@ description: Use when a user has chosen agent A, agent B, or cancel after a TiDD
 
 - `agent-a`, `agent-b` pane은 닫습니다.
 - `agent-a/<ticket-id>`, `agent-b/<ticket-id>` worktree는 정리 대상으로 봅니다.
-- `A` 또는 `B` 경로에서 merge가 성공하면 `agent-a/<ticket-id>`, `agent-b/<ticket-id>` worktree는 dirty 여부와 관계없이 강제 정리합니다.
-- `A` 또는 `B` 경로에서 merge가 성공하면 `agent-a/<ticket-id>`, `agent-b/<ticket-id>` 브랜치도 함께 삭제합니다.
-- 기본 finalize에서는 merge와 verify가 모두 성공하고 핵심 티켓 worktree가 clean하면 그 worktree도 정리합니다.
-- 핵심 티켓 브랜치 자체는 삭제하지 않으며, 사용자가 메인 worktree에서 직접 `git checkout <target-branch>` 할 수 있게 만드는 것이 목적입니다.
+- 기본 finalize에서는 핵심 티켓 브랜치 worktree를 남깁니다.
 - 현재 사용자의 메인 pane과 현재 worktree는 유지합니다.
-- merge가 실패하면 agent worktree와 agent branch는 자동 삭제하지 않고, final report에 남깁니다.
-- verify가 실패했거나 dirty 상태인 핵심 티켓 worktree는 강제로 삭제하지 않고, final report에 남깁니다.
+- dirty 상태인 worktree는 강제로 삭제하지 않고, final report에 남깁니다.
 - `취소`를 선택하면 아래 자원을 모두 정리 대상으로 봅니다.
   - 핵심 티켓 브랜치 worktree
   - `agent-a/<ticket-id>` worktree
@@ -73,11 +68,9 @@ description: Use when a user has chosen agent A, agent B, or cancel after a TiDD
 5. `A` 또는 `B`면 핵심 티켓 브랜치 worktree에서 선택한 agent 브랜치를 병합합니다.
 6. `A` 또는 `B`면 핵심 티켓 브랜치 worktree에서 `bash scripts/verify.sh`를 실행합니다.
 7. `agent-a`, `agent-b` pane을 닫습니다.
-8. `A` 또는 `B`면 merge가 성공했을 때 agent worktree를 강제 정리합니다.
-9. `A` 또는 `B`면 merge가 성공했을 때 agent branch도 정리합니다.
-10. `A` 또는 `B`면 merge와 verify가 모두 성공했을 때 핵심 티켓 브랜치 worktree도 정리해 메인 worktree에서 수동 checkout 가능 상태를 만듭니다.
-11. `취소`면 티켓 worktree, agent worktree, 관련 브랜치를 모두 정리합니다.
-12. 병합 결과, 검증 결과, pane 정리 결과, worktree/브랜치 정리 결과를 최종 보고로 출력합니다.
+8. `A` 또는 `B`면 agent worktree를 정리합니다.
+9. `취소`면 티켓 worktree, agent worktree, 관련 브랜치를 모두 정리합니다.
+10. 병합 결과, 검증 결과, pane 정리 결과, worktree/브랜치 정리 결과를 최종 보고로 출력합니다.
 
 ## Command
 
@@ -101,5 +94,4 @@ bash .codex/skills/carumuch-tidd-finalizer/scripts/finalize-tidd.sh 144 cancel
 - 병합은 핵심 티켓 브랜치 worktree 내부에서만 수행합니다.
 - 테스트 실패 시에도 pane/worktree 정리 결과는 final report에 함께 남깁니다.
 - verify 실패를 숨기지 않습니다.
-- 성공적으로 finalize되더라도 메인 worktree에서 target branch를 자동 checkout 하지는 않습니다.
 - `취소` 경로는 TiDD가 만든 브랜치/worktree/pane 자원을 제거하지만, 현재 사용자의 작업 브랜치와 현재 worktree는 건드리지 않습니다.

@@ -3,14 +3,13 @@ set -euo pipefail
 
 ticket_id="${1:-}"
 selection_raw="${2:-}"
-selection_normalized="$(printf '%s' "$selection_raw" | tr '[:upper:]' '[:lower:]')"
 
 if [[ -z "$ticket_id" || -z "$selection_raw" ]]; then
   echo "usage: $0 <ticket-id> <A|B|agent-a|agent-b|cancel>" >&2
   exit 1
 fi
 
-case "$selection_normalized" in
+case "${selection_raw,,}" in
   a|agent-a)
     selected_agent="agent-a"
     selected_branch="agent-a/$ticket_id"
@@ -84,7 +83,8 @@ ensure_registered_worktree() {
 
 worktree_is_clean() {
   local path="$1"
-  [[ -z "$(git -C "$path" status --short --untracked-files=normal)" ]]
+  git -C "$path" diff --quiet --ignore-submodules HEAD -- \
+    && git -C "$path" diff --quiet --ignore-submodules --cached --
 }
 
 remove_worktree_if_clean() {
@@ -227,47 +227,14 @@ if [[ "$selected_agent" == "cancel" ]]; then
       delete_branch_if_present "$ticket_branch" "ticket branch"
     } 2>&1
   )"
-  next_step_output="current worktree는 유지되며, TiDD 자원만 정리되었습니다."
 else
-  ticket_worktree_cleanup_output="ticket worktree: preserved-for-inspection"
-
-  if [[ "$merge_status" == "PASS" && "$verify_status" == "PASS" ]]; then
-    ticket_worktree_cleanup_output="$(
-      remove_worktree_if_clean "$ticket_branch_path" "ticket worktree" 2>&1
-    )"
-  fi
-
-  if [[ "$merge_status" == "PASS" ]]; then
-    worktree_cleanup_output="$(
-      {
-        remove_worktree_force_if_registered "$agent_a_path" "agent-a worktree"
-        remove_worktree_force_if_registered "$agent_b_path" "agent-b worktree"
-        printf '%s\n' "$ticket_worktree_cleanup_output"
-      } 2>&1
-    )"
-
-    branch_cleanup_output="$(
-      {
-        delete_branch_if_present "agent-a/$ticket_id" "agent-a branch"
-        delete_branch_if_present "agent-b/$ticket_id" "agent-b branch"
-      } 2>&1
-    )"
-  else
-    worktree_cleanup_output="$(
-      {
-        remove_worktree_if_clean "$agent_a_path" "agent-a worktree"
-        remove_worktree_if_clean "$agent_b_path" "agent-b worktree"
-        printf '%s\n' "$ticket_worktree_cleanup_output"
-      } 2>&1
-    )"
-    branch_cleanup_output="branch cleanup skipped (merge failed)"
-  fi
-
-  if [[ "$ticket_worktree_cleanup_output" == "ticket worktree: removed" ]]; then
-    next_step_output="main worktree에서 git checkout $ticket_branch 로 선택 결과를 확인할 수 있습니다."
-  else
-    next_step_output="ticket worktree가 남아 있으면 main worktree에서 git checkout $ticket_branch 가 막힐 수 있습니다. 남은 경로: $ticket_branch_path"
-  fi
+  worktree_cleanup_output="$(
+    {
+      remove_worktree_if_clean "$agent_a_path" "agent-a worktree"
+      remove_worktree_if_clean "$agent_b_path" "agent-b worktree"
+    } 2>&1
+  )"
+  branch_cleanup_output="branch cleanup skipped"
 fi
 
 printf '\n== TiDD Final Report ==\n'
@@ -286,7 +253,6 @@ printf '\n[브랜치 정리]\n%s\n' "$branch_cleanup_output"
 printf '\n[남은 작업 경로]\n'
 printf 'ticket worktree: %s\n' "$ticket_branch_path"
 printf 'current worktree: %s\n' "$repo_root"
-printf '\n[다음 단계]\n%s\n' "$next_step_output"
 printf '\n[검증 출력]\n%s\n' "$verify_output"
 
 cmux notify \

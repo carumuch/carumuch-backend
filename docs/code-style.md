@@ -327,12 +327,14 @@ You MUST:
 - 들여쓰기는 일관되게 유지한다
 - wildcard import를 사용하지 않는다
 - import는 정리된 상태를 유지한다
+- 코드 본문에서 FQCN(예: `new com.carumuch...Type()`)을 사용하지 않고 import로 정리한다
 - annotation, blank line, 메서드 순서는 읽기 흐름이 드러나게 맞춘다
 
 You SHOULD:
 
 - 같은 파일 안에서는 같은 포맷 스타일을 유지한다
 - 포맷 수정만 하는 커밋과 로직 수정 커밋을 가능하면 분리한다
+- 타입 충돌 등 정말 불가피한 경우에만 FQCN 사용 예외를 둔다
 
 ---
 

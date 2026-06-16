@@ -1,6 +1,6 @@
 ---
 name: carumuch-ticket-generator
-description: Use when the user provides a GitHub issue number in this repository and wants a TiDD ticket created from `docs/tickets/TEMPLATE.md`
+description: GitHub 이슈 번호를 기반으로 TiDD 티켓을 생성할 때 사용
 ---
 
 # Ticket Generator

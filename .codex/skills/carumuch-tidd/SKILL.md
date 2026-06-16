@@ -1,6 +1,6 @@
 ---
 name: carumuch-tidd
-description: Use when the user provides a TiDD ticket number in this repository and wants to start implementation from an existing `docs/tickets/TICKET-<number>.md` ticket
+description: 기존 TiDD 티켓(TICKET-<번호>.md)을 기반으로 구현 작업을 시작할 때 사용
 ---
 
 # carumuch-tidd

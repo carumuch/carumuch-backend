@@ -1,6 +1,6 @@
 ---
 name: carumuch-dev-cycle
-description: Use when executing backend code changes in this repository and you need a repeatable implementer-verifier-reviewer workflow with bounded retry attempts
+description: 구현 → 검증 → 리뷰 단계를 반복 수행하는 백엔드 개발 워크플로우
 ---
 
 # Dev Cycle

@@ -249,11 +249,14 @@ You SHOULD:
 
 - 조회 전용 로직과 상태 변경 로직을 구분한다
 - Querydsl 같은 조회 최적화 코드는 infrastructure에서만 다룬다
+- Querydsl 기반 동적 조건 조합은 `common.infrastructure.querydsl.DynamicBooleanBuilder`를 우선 사용한다
+- Querydsl 공통 보조 클래스는 `common.infrastructure.querydsl` 패키지에 둔다
 
 You MUST NOT:
 
 - controller나 service에서 엔티티 매핑 세부사항을 퍼뜨린다
 - API 응답 편의를 위해 엔티티 구조를 먼저 왜곡한다
+- Repository 구현체마다 동적 조건 조합 로직을 중복 작성한다
 
 ---
 

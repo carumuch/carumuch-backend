@@ -1,9 +1,12 @@
 package com.carumuch.capstone.bodyshop.presentation;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +14,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
@@ -20,9 +26,11 @@ import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.ApiErrorResponse;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.support.RestDocsSupport;
 import com.carumuch.capstone.support.fixture.BodyShopFixture;
 import com.epages.restdocs.apispec.ResourceDocumentation;
@@ -285,6 +293,91 @@ class BodyShopControllerTest extends RestDocsSupport {
 					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
 						.tag(BASE_TAG)
 						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+						.build())
+					)
+				);
+		}
+	}
+
+	@Nested
+	@DisplayName("공업사 검색 API 테스트")
+	class Search {
+		@Test
+		void 공업사_검색_2XX() throws Exception {
+			//given
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(1L);
+			ReflectionTestUtils.setField(bodyShop, "id", 1L);
+
+			PagingResponse<BodyShopListResponse> response = PagingResponse.from(
+				new PageImpl<>(
+					List.of(new BodyShopListResponse(bodyShop)),
+					PageRequest.of(0, 10, Sort.by("createDate")),
+					1
+				)
+			);
+
+			Mockito.when(bodyShopService.search(any(), any()))
+				.thenReturn(response);
+
+			//when
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("keyword", "차")
+					.param("sido", "서울시")
+					.param("sigungu", "송파구")
+					.param("pickupAvailable", "true")
+					.param("page", "1")
+					.param("size", "10")
+					.contentType(MediaType.APPLICATION_JSON));
+
+			//then
+			actions
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
+				.andExpect(jsonPath("$.data.content[0].name").value(bodyShop.getName()))
+				.andExpect(jsonPath("$.data.page.totalElements").value(1))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.summary("공업사 검색")
+						.description("## 공업사 검색 기능 \n"
+							+ "### 설명 \n"
+							+ "- 키워드, 지역, 픽업 가능 여부 조건으로 공업사 목록을 조회합니다.\n"
+							+ "- 페이지 번호는 1부터 시작합니다.\n"
+							+ "- 잘못된 페이지/크기 값은 기본값으로 보정됩니다."
+						)
+						.queryParameters(
+							parameterWithName("keyword").description("공업사 이름 검색 키워드입니다.").optional(),
+							parameterWithName("sido").description("공업사 소재지 시/도입니다.").optional(),
+							parameterWithName("sigungu").description("공업사 소재지 시/군/구입니다.").optional(),
+							parameterWithName("pickupAvailable").description("차량 픽업 가능 여부입니다.").optional(),
+							parameterWithName("page").description("조회할 페이지 번호입니다. 1부터 시작하며, 없거나 0 이하면 첫 페이지로 보정됩니다.").optional(),
+							parameterWithName("size").description("페이지 크기입니다. 1~100 범위만 허용되며, 범위를 벗어나면 10으로 보정됩니다.").optional(),
+							parameterWithName("sort").description("정렬 기준입니다. `name`, `acceptCount`, `pickupAvailable`를 지원하며, 그 외 값은 `createDate`로 처리됩니다.").optional()
+						)
+						.responseSchema(Schema.schema(PagingResponse.class.getSimpleName()))
+						.responseFields(
+							fieldWithPath("message").description("성공 응답 메시지입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content").description("조회된 공업사 목록입니다.").type(JsonFieldType.ARRAY),
+							fieldWithPath("data.page").description("페이지 메타데이터입니다.").type(JsonFieldType.OBJECT),
+							fieldWithPath("data.page.number").description("현재 페이지 번호입니다. 1부터 시작합니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.size").description("페이지 크기입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.totalElements").description("전체 공업사 수입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.totalPages").description("전체 페이지 수입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.page.hasNext").description("다음 페이지 존재 여부입니다.").type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.page.hasPrevious").description("이전 페이지 존재 여부입니다.").type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.content[].id").description("공업사 식별자입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.content[].name").description("공업사 이름입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].acceptCount").description("공업사 낙찰 횟수입니다.").type(JsonFieldType.NUMBER),
+							fieldWithPath("data.content[].pickupAvailable").description("차량 픽업 가능 여부입니다.").type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.content[].locationResponse").description("공업사 위치 정보입니다.").type(JsonFieldType.OBJECT),
+							fieldWithPath("data.content[].locationResponse.sido").description("공업사 소재지 시/도입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].locationResponse.sigungu").description("공업사 소재지 시/군/구입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].locationResponse.bname").description("공업사 소재지 법정동명입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].locationResponse.jibunAddress").description("공업사 지번 주소입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].locationResponse.roadAddress").description("공업사 도로명 주소입니다.").type(JsonFieldType.STRING),
+							fieldWithPath("data.content[].locationResponse.detail").description("공업사 상세 주소입니다.").type(JsonFieldType.STRING)
+						)
 						.build())
 					)
 				);

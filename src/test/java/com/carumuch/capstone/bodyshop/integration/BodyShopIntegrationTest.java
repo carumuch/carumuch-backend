@@ -12,13 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
+import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.SearchBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 import com.carumuch.capstone.support.IntegrationSupportTest;
@@ -325,5 +331,72 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 			Assertions.assertThatThrownBy(() -> bodyShopService.info(wrongBodyShopId))
 				.isInstanceOf(NotFoundException.class);
 		}
+	}
+
+	@Nested
+	@DisplayName("공업사 검색 기능")
+	class Search {
+		@Test
+		void 키워드만으로_공업사를_검색한다() {
+			//given
+			saveBodyShop("송파 차케어", "서울시", "송파구", true, customerUser.getId());
+			saveBodyShop("강남 정비소", "서울시", "강남구", true, customerUser.getId());
+
+			//when
+			PagingResponse<BodyShopListResponse> result = bodyShopService.search(
+				new SearchBodyShopRequest("차", null, null, null),
+				new PagingRequest(1, 10, "createDate")
+			);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.content())
+					.extracting(BodyShopListResponse::name)
+					.containsExactlyInAnyOrder(bodyShop.getName(), "송파 차케어"),
+				() -> Assertions.assertThat(result.page().totalElements()).isEqualTo(2)
+			);
+		}
+
+		@Test
+		void 키워드와_지역_픽업조건을_조합해_검색한다() {
+			//given
+			saveBodyShop("송파 픽업 차케어", "서울시", "송파구", true, customerUser.getId());
+			saveBodyShop("송파 픽업 불가 차케어", "서울시", "송파구", false, customerUser.getId());
+			saveBodyShop("부산 픽업 차케어", "부산시", "해운대구", true, customerUser.getId());
+
+			//when
+			PagingResponse<BodyShopListResponse> result = bodyShopService.search(
+				new SearchBodyShopRequest("픽업", "서울시", "송파구", true),
+				new PagingRequest(1, 10, "createDate")
+			);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.content()).hasSize(1),
+				() -> Assertions.assertThat(result.content().get(0).name()).isEqualTo("송파 픽업 차케어"),
+				() -> Assertions.assertThat(result.page().totalElements()).isEqualTo(1)
+			);
+		}
+	}
+
+	private BodyShop saveBodyShop(String name, String sido, String sigungu, boolean pickupAvailable, Long managerUserId) {
+		return bodyShopRepository.save(
+			new BodyShop(
+				name,
+				new Location(
+					sido,
+					sigungu,
+					"중앙동",
+					sido + " " + sigungu + " 1-1",
+					sido + " " + sigungu + "로 1",
+					"1층"
+				),
+				name + " 설명",
+				"https:" + name + ".com",
+				new PhoneNumber("000-9999-9999"),
+				pickupAvailable,
+				managerUserId
+			)
+		);
 	}
 }

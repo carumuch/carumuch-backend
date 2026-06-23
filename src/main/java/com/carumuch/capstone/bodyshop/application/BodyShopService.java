@@ -1,8 +1,10 @@
 package com.carumuch.capstone.bodyshop.application;
 
+import com.carumuch.capstone.bodyshop.application.dto.BodyShopSearchCondition;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.SearchBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
@@ -61,9 +63,12 @@ public class BodyShopService {
         return BodyShopInfoResponse.from(bodyShop);
     }
 
-	public PagingResponse<BodyShopListResponse> searchKeyword(PagingRequest pagingRequest, String keyword) {
+	public PagingResponse<BodyShopListResponse> search(SearchBodyShopRequest request, PagingRequest pagingRequest) {
 		Page<BodyShop> bodyShops = bodyShopRepository
-			.findPageByNameLikeKeyword(keyword, PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort())));
+			.search(
+				BodyShopSearchCondition.from(request),
+				PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort()))
+			);
 		return PagingResponse.from(bodyShops.map(BodyShopListResponse::new));
 	}
 }

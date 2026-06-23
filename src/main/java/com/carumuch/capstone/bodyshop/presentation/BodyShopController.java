@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bodyshop.presentation;
 
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.SearchBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
@@ -42,10 +43,13 @@ public class BodyShopController {
 		return ResponseEntity.ok().body(ApiResponse.of());
 	}
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<PagingResponse<BodyShopListResponse>>> searchKeyword(@ModelAttribute PagingRequest pagingRequest, @RequestParam String keyword) {
-        return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.searchKeyword(pagingRequest, keyword)));
-    }
+	@GetMapping("/search")
+	public ResponseEntity<ApiResponse<PagingResponse<BodyShopListResponse>>> search(
+		@ModelAttribute SearchBodyShopRequest request,
+		@ModelAttribute PagingRequest pagingRequest
+	) {
+		return ResponseEntity.ok().body(ApiResponse.of(bodyShopService.search(request, pagingRequest)));
+	}
 
     @GetMapping("/{bodyShopId}")
     public ResponseEntity<ApiResponse<BodyShopInfoResponse>> detail(@PathVariable Long bodyShopId) {

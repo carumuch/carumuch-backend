@@ -47,6 +47,7 @@ description: 구현 → 검증 → 리뷰 단계를 반복 수행하는 백엔�
 - reviewer는 verify 성공 전에는 실행하지 않습니다.
 - verify 실패 시 별도 fixer를 두지 않습니다.
 - 3회 안에 verify가 성공하지 않으면 수동 판단이 필요하다고 보고합니다.
+- implementer는 `docs/architecture.md`의 작업 경계 원칙을 따르며, 명시적 요구 없이는 `src/main/java/com/carumuch/capstone/common` 하위 코드를 수정하거나 추가하지 않습니다.
 
 ## Reporting Format
 
@@ -63,3 +64,4 @@ description: 구현 → 검증 → 리뷰 단계를 반복 수행하는 백엔�
 - verify 실패 후 무관한 리팩터링을 하는 것
 - reviewer를 verify 전에 호출하는 것
 - retry 규칙을 hook 상태 머신으로 다시 옮기는 것
+- 명시적 요구 없이 `common` 디렉터리까지 변경 범위를 넓히는 것

@@ -51,6 +51,7 @@ description: 기존 TiDD 티켓(TICKET-<번호>.md)을 기반으로 구현 작�
 
 - 구현 시작 후에는 `carumuch-dev-cycle`의 implementer, verifier, reviewer 흐름을 따릅니다.
 - 최종 검증은 `carumuch-dev-cycle`이 요구하는 방식으로 수행합니다.
+- 구현 범위는 `docs/architecture.md`의 작업 경계 원칙을 따르며, 명시적 요구 없이는 `src/main/java/com/carumuch/capstone/common` 하위 코드를 수정하거나 추가하지 않습니다.
 - `carumuch-tidd`는 개발 진입만 담당하며 구현 절차 자체를 대체하지 않습니다.
 
 ## Hard Stops
@@ -58,3 +59,4 @@ description: 기존 TiDD 티켓(TICKET-<번호>.md)을 기반으로 구현 작�
 - 티켓 파일이 없으면 진행하지 않습니다.
 - `carumuch-dev-cycle`을 우회해 바로 코드를 수정하지 않습니다.
 - 티켓 범위를 추측으로 보강해 개발을 시작하지 않습니다.
+- 명시적 요구가 없는데 `common` 디렉터리까지 수정 범위를 넓혀 구현하지 않습니다.

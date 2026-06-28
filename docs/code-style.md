@@ -242,6 +242,7 @@ You MUST:
 
 - repository interface는 domain에 둔다
 - repository implementation은 infrastructure에 둔다
+- 새로운 DB 기술(Querydsl, JdbcTemplate, jOOQ 등)을 도입할 때는 도메인 repository 구현체와 기술별 조회/영속 구현을 분리한다
 - 복잡한 조회 조건은 persistence 구현으로 격리한다
 - 연관관계와 fetch 전략은 의도를 가지고 선언한다
 
@@ -249,6 +250,7 @@ You SHOULD:
 
 - 조회 전용 로직과 상태 변경 로직을 구분한다
 - Querydsl 같은 조회 최적화 코드는 infrastructure에서만 다룬다
+- 기술별 조회 구현은 `*QueryRepository`, 도메인 repository 어댑터는 `*RepositoryImpl`처럼 역할이 드러나는 형태로 분리한다
 - Querydsl 기반 동적 조건 조합은 `common.infrastructure.querydsl.DynamicBooleanBuilder`를 우선 사용한다
 - Querydsl 공통 보조 클래스는 `common.infrastructure.querydsl` 패키지에 둔다
 

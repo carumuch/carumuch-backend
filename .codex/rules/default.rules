@@ -39,7 +39,6 @@ prefix_rule(
   match = [
     "git add src/main/java/com/carumuch/capstone/bodyshop/application/BodyShopService.java",
     "git add src/test/java/com/carumuch/capstone/bodyshop/application/BodyShopServiceTest.java",
-    "git add .",
   ],
   not_match = [
     "git status",

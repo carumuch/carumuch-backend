@@ -355,7 +355,7 @@ class BodyShopControllerTest extends RestDocsSupport {
 							parameterWithName("size").description("페이지 크기입니다. 1~100 범위만 허용되며, 범위를 벗어나면 10으로 보정됩니다.").optional(),
 							parameterWithName("sort").description("정렬 기준입니다. `name`, `acceptCount`, `pickupAvailable`를 지원하며, 그 외 값은 `createDate`로 처리됩니다.").optional()
 						)
-						.responseSchema(Schema.schema(PagingResponse.class.getSimpleName()))
+						.responseSchema(Schema.schema(BodyShopListResponse.class.getSimpleName()))
 						.responseFields(
 							fieldWithPath("message").description("성공 응답 메시지입니다.").type(JsonFieldType.STRING),
 							fieldWithPath("data.content").description("조회된 공업사 목록입니다.").type(JsonFieldType.ARRAY),

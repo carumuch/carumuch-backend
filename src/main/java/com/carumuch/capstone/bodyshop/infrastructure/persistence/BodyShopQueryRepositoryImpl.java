@@ -38,7 +38,7 @@ public class BodyShopQueryRepositoryImpl implements BodyShopQueryRepository {
 		List<BodyShop> content = jpaQueryFactory
 			.selectFrom(bodyShop)
 			.where(predicate)
-			.orderBy(getOrderSpecifier(pageable))
+			.orderBy(getOrderSpecifiers(pageable))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -51,16 +51,18 @@ public class BodyShopQueryRepositoryImpl implements BodyShopQueryRepository {
 		return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
 	}
 
-	private OrderSpecifier<?> getOrderSpecifier(Pageable pageable) {
+	private OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable) {
 		Sort.Order order = pageable.getSort().stream()
 			.findFirst()
-			.orElse(Sort.Order.asc("createDate"));
+			.orElse(Sort.Order.desc("createDate"));
 
-		return switch (order.getProperty()) {
+		OrderSpecifier<?> primary = switch (order.getProperty()) {
 			case "name" -> order.isAscending() ? bodyShop.name.asc() : bodyShop.name.desc();
 			case "acceptCount" -> order.isAscending() ? bodyShop.acceptCount.asc() : bodyShop.acceptCount.desc();
 			case "pickupAvailable" -> order.isAscending() ? bodyShop.pickupAvailable.asc() : bodyShop.pickupAvailable.desc();
 			default -> order.isAscending() ? bodyShop.createDate.asc() : bodyShop.createDate.desc();
 		};
+
+		return new OrderSpecifier<?>[] { primary, bodyShop.id.desc() };
 	}
 }

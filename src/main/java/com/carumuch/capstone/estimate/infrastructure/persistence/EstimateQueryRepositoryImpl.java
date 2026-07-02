@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import com.carumuch.capstone.common.infrastructure.querydsl.DynamicBooleanBuilder;
 import com.carumuch.capstone.damage.domain.report.QDamageReport;
 import com.carumuch.capstone.damage.domain.vehicle.QVehicle;
 import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;

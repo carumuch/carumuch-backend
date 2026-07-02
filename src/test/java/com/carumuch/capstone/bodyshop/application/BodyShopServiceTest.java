@@ -2,29 +2,39 @@ package com.carumuch.capstone.bodyshop.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.carumuch.capstone.bodyshop.application.dto.BodyShopSearchCondition;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.RegisterBodyShopRequest;
+import com.carumuch.capstone.bodyshop.presentation.dto.request.SearchBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.UpdateBodyShopRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;
+import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopListResponse;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 import com.carumuch.capstone.support.fixture.BodyShopFixture;
@@ -460,6 +470,64 @@ class BodyShopServiceTest {
 				() -> Assertions.assertThat(result.locationResponse().roadAddress()).isEqualTo(bodyShop.getLocation().getRoadAddress()),
 				() -> Assertions.assertThat(result.locationResponse().jibunAddress()).isEqualTo(bodyShop.getLocation().getJibunAddress()),
 				() -> Assertions.assertThat(result.locationResponse().detail()).isEqualTo(bodyShop.getLocation().getDetail())
+			);
+		}
+	}
+
+	@Nested
+	@DisplayName("공업사 검색 기능")
+	class Search {
+		@Test
+		void 검색_조건을_저장소에_전달한다() {
+			//given
+			SearchBodyShopRequest request = new SearchBodyShopRequest("차", "서울시", "송파구", true);
+			PagingRequest pagingRequest = new PagingRequest(1, 10, "createDate");
+			Mockito.when(bodyShopRepository.search(Mockito.any(), Mockito.any()))
+				.thenReturn(new PageImpl<>(List.of()));
+
+			ArgumentCaptor<BodyShopSearchCondition> conditionCaptor = ArgumentCaptor.forClass(BodyShopSearchCondition.class);
+			ArgumentCaptor<org.springframework.data.domain.Pageable> pageableCaptor = ArgumentCaptor.forClass(org.springframework.data.domain.Pageable.class);
+
+			//when
+			bodyShopService.search(request, pagingRequest);
+
+			//then
+			Mockito.verify(bodyShopRepository).search(conditionCaptor.capture(), pageableCaptor.capture());
+			assertAll(
+				() -> Assertions.assertThat(conditionCaptor.getValue())
+					.isEqualTo(new BodyShopSearchCondition("차", "서울시", "송파구", true)),
+				() -> Assertions.assertThat(pageableCaptor.getValue().getPageNumber()).isEqualTo(0),
+				() -> Assertions.assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(10),
+				() -> Assertions.assertThat(pageableCaptor.getValue().getSort()).isEqualTo(Sort.by("createDate"))
+			);
+		}
+
+		@Test
+		void 검색_결과를_페이징_응답으로_반환한다() {
+			//given
+			Long bodyShopId = 500L;
+			BodyShop bodyShop = BodyShopFixture.BODY_SHOP_FIXTURE_1.create(1L);
+			ReflectionTestUtils.setField(bodyShop, "id", bodyShopId);
+
+			SearchBodyShopRequest request = new SearchBodyShopRequest("차", null, null, null);
+			PagingRequest pagingRequest = new PagingRequest(1, 10, "createDate");
+
+			Mockito.when(bodyShopRepository.search(Mockito.any(), Mockito.any()))
+				.thenReturn(new PageImpl<>(
+					List.of(bodyShop),
+					PageRequest.of(0, 10, Sort.by("createDate")),
+					1
+				));
+
+			//when
+			PagingResponse<BodyShopListResponse> result = bodyShopService.search(request, pagingRequest);
+
+			//then
+			assertAll(
+				() -> Assertions.assertThat(result.content()).hasSize(1),
+				() -> Assertions.assertThat(result.content().get(0).id()).isEqualTo(bodyShopId),
+				() -> Assertions.assertThat(result.content().get(0).name()).isEqualTo(bodyShop.getName()),
+				() -> Assertions.assertThat(result.page().totalElements()).isEqualTo(1)
 			);
 		}
 	}

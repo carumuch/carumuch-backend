@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.carumuch.capstone.bodyshop.application.dto.BodyShopSearchCondition;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
 
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class BodyShopRepositoryImpl implements BodyShopRepository {
 
 	private final JpaBodyShopRepository jpaBodyShopRepository;
+	private final BodyShopQueryRepository bodyShopQueryRepository;
 
 	@Override
 	public BodyShop save(BodyShop bodyShop) {
@@ -28,7 +30,7 @@ public class BodyShopRepositoryImpl implements BodyShopRepository {
 	}
 
 	@Override
-	public Page<BodyShop> findPageByNameLikeKeyword(String keyword, Pageable pageable) {
-		return jpaBodyShopRepository.findPageByNameLikeKeyword(keyword, pageable);
+	public Page<BodyShop> search(BodyShopSearchCondition condition, Pageable pageable) {
+		return bodyShopQueryRepository.search(condition, pageable);
 	}
 }

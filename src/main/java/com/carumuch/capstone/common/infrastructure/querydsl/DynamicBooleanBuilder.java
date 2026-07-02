@@ -1,4 +1,4 @@
-package com.carumuch.capstone.estimate.infrastructure.persistence;
+package com.carumuch.capstone.common.infrastructure.querydsl;
 
 import java.util.function.Supplier;
 

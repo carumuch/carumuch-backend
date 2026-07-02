@@ -16,6 +16,13 @@ developer_instructions = """
 - controller, application, domain, infrastructure 책임을 섞지 않습니다.
 - setter 대신 생성자 기반 설계와 의미 있는 상태 변경 메서드를 우선합니다.
 - 레거시 패턴을 신규 코드에 그대로 확장하지 않습니다.
+- 새로운 DB 기술(Querydsl, JdbcTemplate, jOOQ 등)을 도입하거나 확장할 때는 도메인 repository 구현체와 기술별 조회/영속 구현을 한 클래스에 섞지 말고 분리합니다.
+- API 테스트는 기존 `*ControllerTest` 형식을 우선 따릅니다.
+- API 테스트를 추가하거나 수정할 때는 `@Nested`, `@DisplayName`으로 시나리오를 묶고, 성공 시나리오는 가능하면 REST Docs 문서화까지 함께 작성합니다.
+- REST Docs 문서화가 필요한 API 테스트는 `summary`, `description`, `requestSchema` 또는 `queryParameters`, `responseSchema`, `responseFields`를 기존 테스트 스타일에 맞춰 명시합니다.
+- 조회/검색 API 테스트는 페이징 메타데이터와 실제 응답 본문 필드를 함께 검증하고 문서화합니다.
+- 테스트에서 같은 시나리오의 검증이 여러 줄로 이어지는 경우, 다른 테스트 스타일에 맞춰 개별 `Assertions.assertThat(...)`를 나열하기보다 `assertAll(...)`로 묶는 것을 우선합니다.
+- 200 이외 시나리오는 실제 컨트롤러 계약상 존재하는 경우에만 추가하고, 억지로 만들지 않습니다. 추가가 필요하면 같은 컨트롤러 또는 유사 도메인의 기존 API 테스트 패턴을 먼저 참고합니다.
 
 저장소 기준:
 - `docs/architecture.md`

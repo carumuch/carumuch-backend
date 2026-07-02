@@ -1,17 +1,11 @@
-package com.carumuch.capstone.bodyshop.domain;
-
-import java.util.Optional;
+package com.carumuch.capstone.bodyshop.infrastructure.persistence;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.carumuch.capstone.bodyshop.application.dto.BodyShopSearchCondition;
+import com.carumuch.capstone.bodyshop.domain.BodyShop;
 
-public interface BodyShopRepository {
-
-	BodyShop save(BodyShop bodyShop);
-
-	Optional<BodyShop> findById(Long id);
-
+public interface BodyShopQueryRepository {
 	Page<BodyShop> search(BodyShopSearchCondition condition, Pageable pageable);
 }

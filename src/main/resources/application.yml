@@ -14,8 +14,10 @@ spring:
       port: 6379
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+      ddl-auto: validate
+    flyway:
+      enabled: true
+
     properties:
       hibernate:
         format_sql: true
@@ -91,8 +93,11 @@ spring:
       port: 6379
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
+    flyway:
+      enabled: true
     show-sql: true
+
     properties:
       hibernate:
         format_sql: true
@@ -168,8 +173,11 @@ spring:
       port: 6379
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
+    flyway:
+      enabled: true
     show-sql: true
+
     properties:
       hibernate:
         format_sql: true

@@ -15,13 +15,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    flyway:
-      enabled: true
-
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+  flyway:
+    enabled: true
   mail:
     #    host: smtp.naver.com
     host: smtp.${HOST_ADDRESS}
@@ -94,14 +93,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    flyway:
-      enabled: true
     show-sql: true
 
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+  flyway:
+    enabled: true
 
   mail:
     #    host: smtp.naver.com
@@ -160,7 +159,7 @@ spring:
     activate:
       on-profile: test
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -174,14 +173,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    flyway:
-      enabled: true
     show-sql: true
 
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+  flyway:
+    enabled: true
 
   mail:
     #    host: smtp.naver.com
@@ -227,3 +226,11 @@ jwt:
 
 cookie:
   name: CAR_U_MUCH
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  flyway:
+    locations: classpath:db/migration,classpath:db/local

@@ -17,7 +17,8 @@ public class DlqMessage {
 	@Column(nullable = false)
 	private String originalQueue;
 
-	@Lob @Column(nullable = false)
+	@Lob
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String payloadJson;
 
 	@Column(nullable = false)
@@ -72,4 +73,3 @@ public class DlqMessage {
 		this.nextAttemptAt = nextAttemptAt;
 	}
 }
-

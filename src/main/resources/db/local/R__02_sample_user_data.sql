@@ -1,0 +1,38 @@
+INSERT INTO users (
+    id,
+    create_date,
+    login_id,
+    password,
+    email,
+    name,
+    role,
+    body_shop_id
+) VALUES
+    (1, '2026-07-04 10:00:00', 'user01', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user01@test.com', '김민준', 'USER', NULL),
+    (2, '2026-07-04 10:01:00', 'user02', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user02@test.com', '이서연', 'USER', NULL),
+    (3, '2026-07-04 10:02:00', 'user03', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user03@test.com', '박지후', 'USER', NULL),
+    (4, '2026-07-04 10:03:00', 'user04', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user04@test.com', '최지민', 'USER', NULL),
+    (5, '2026-07-04 10:04:00', 'user05', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user05@test.com', '정하은', 'USER', NULL),
+    (6, '2026-07-04 10:05:00', 'user06', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user06@test.com', '조도윤', 'USER', NULL),
+    (7, '2026-07-04 10:06:00', 'user07', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user07@test.com', '윤서진', 'USER', NULL),
+    (8, '2026-07-04 10:07:00', 'user08', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user08@test.com', '한예린', 'USER', NULL),
+    (9, '2026-07-04 10:08:00', 'user09', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user09@test.com', '오현우', 'USER', NULL),
+    (10, '2026-07-04 10:09:00', 'user10', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'user10@test.com', '신아린', 'USER', NULL),
+    (101, '2026-07-04 10:20:00', 'mechanic01', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic01@test.com', '강정비', 'USER', 1),
+    (102, '2026-07-04 10:21:00', 'mechanic02', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic02@test.com', '송기술', 'USER', 2),
+    (103, '2026-07-04 10:22:00', 'mechanic03', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic03@test.com', '분당정', 'USER', 3),
+    (104, '2026-07-04 10:23:00', 'mechanic04', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic04@test.com', '일산수', 'USER', 4),
+    (105, '2026-07-04 10:24:00', 'mechanic05', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic05@test.com', '수원윤', 'USER', 5),
+    (106, '2026-07-04 10:25:00', 'mechanic06', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic06@test.com', '인천한', 'USER', 6),
+    (107, '2026-07-04 10:26:00', 'mechanic07', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic07@test.com', '평촌장', 'USER', 7),
+    (108, '2026-07-04 10:27:00', 'mechanic08', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic08@test.com', '광교배', 'USER', 8),
+    (109, '2026-07-04 10:28:00', 'mechanic09', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic09@test.com', '하남임', 'USER', 9),
+    (110, '2026-07-04 10:29:00', 'mechanic10', '$2a$10$ZL/HvF869J84uiHF6.A7x.RFvtq//CPCO76OM8xMHr4dPVbu9r9lS', 'mechanic10@test.com', '부천문', 'USER', 10)
+ON DUPLICATE KEY UPDATE
+    create_date = VALUES(create_date),
+    login_id = VALUES(login_id),
+    password = VALUES(password),
+    email = VALUES(email),
+    name = VALUES(name),
+    role = VALUES(role),
+    body_shop_id = VALUES(body_shop_id);

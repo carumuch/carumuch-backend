@@ -12,7 +12,7 @@ CREATE TABLE body_shop (
     phone_number VARCHAR(15) NOT NULL,
     link VARCHAR(200),
     accept_count INT NOT NULL,
-    pickup_available TINYINT(1) NOT NULL,
+    pickup_available BOOLEAN NOT NULL,
     manager_user_id BIGINT NOT NULL,
     PRIMARY KEY (id)
 );

@@ -4,7 +4,7 @@ CREATE TABLE damage_report (
     preferred_repair_sido VARCHAR(100),
     preferred_repair_sigungu VARCHAR(100),
     description VARCHAR(300),
-    is_pickup_required TINYINT(1) NOT NULL,
+    is_pickup_required BOOLEAN NOT NULL,
     image_path VARCHAR(500),
     status VARCHAR(20) NOT NULL,
     vehicle_id BIGINT NOT NULL,

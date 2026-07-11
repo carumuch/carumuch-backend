@@ -43,6 +43,10 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
 	@Column(name = "manager_user_id", nullable = false, updatable = false)
 	private Long managerUserId;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
     public BodyShop(
 		String name,
 		Location location,
@@ -77,8 +81,7 @@ public class BodyShop extends AggregateRoot<BodyShop> implements AccessPolicy {
         this.pickupAvailable = pickupAvailability;
     }
 
-	// TODO: 원자적 연산이 아니라 동시성 문제가 우려됨, 수정 필요
-    public void acceptCount() {
+    public void increaseAcceptCount() {
         this.acceptCount += 1;
     }
 

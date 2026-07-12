@@ -1,0 +1,2 @@
+ALTER TABLE body_shop
+    ADD COLUMN version BIGINT NOT NULL DEFAULT 0;

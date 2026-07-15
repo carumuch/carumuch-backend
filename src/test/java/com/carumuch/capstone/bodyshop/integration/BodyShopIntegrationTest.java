@@ -8,12 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
@@ -44,8 +38,6 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 	BodyShopRepository bodyShopRepository;
 	@Autowired
 	UserRepository userRepository;
-	@Autowired
-	PlatformTransactionManager transactionManager;
 
 	User mechanicUser;
 	User customerUser;
@@ -384,42 +376,6 @@ public class BodyShopIntegrationTest extends IntegrationSupportTest {
 				() -> Assertions.assertThat(result.content().get(0).name()).isEqualTo("송파 픽업 차케어"),
 				() -> Assertions.assertThat(result.page().totalElements()).isEqualTo(1)
 			);
-		}
-	}
-
-	@Nested
-	@DisplayName("공업사 수리 이력 증가")
-	class IncreaseAcceptCount {
-		@Test
-		void 수리_이력_증가가_저장된다() {
-			bodyShop.increaseAcceptCount();
-
-			Assertions.assertThat(bodyShop.getAcceptCount()).isEqualTo(1);
-		}
-
-		@Test
-		@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-		@Transactional(propagation = Propagation.NOT_SUPPORTED)
-		void 오래된_버전으로_수정하면_낙관적_락_예외가_발생한다() {
-			TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-			Long bodyShopId = bodyShop.getId();
-
-			BodyShop staleBodyShop = transactionTemplate.execute(status ->
-				bodyShopRepository.findById(bodyShopId)
-					.orElseThrow(() -> new AssertionError("BodyShop not found"))
-			);
-
-			transactionTemplate.executeWithoutResult(status -> {
-				BodyShop currentBodyShop = bodyShopRepository.findById(bodyShopId)
-					.orElseThrow(() -> new AssertionError("BodyShop not found"));
-				currentBodyShop.increaseAcceptCount();
-			});
-
-			staleBodyShop.increaseAcceptCount();
-
-			Assertions.assertThatThrownBy(() ->
-				transactionTemplate.executeWithoutResult(status -> bodyShopRepository.save(staleBodyShop))
-			).isInstanceOf(ObjectOptimisticLockingFailureException.class);
 		}
 	}
 

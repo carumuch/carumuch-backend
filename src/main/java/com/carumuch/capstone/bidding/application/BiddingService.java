@@ -57,7 +57,7 @@ public class BiddingService {
         // 체결 공업사 입찰 횟수 증가
         BodyShop bodyShop = bidRepository.findByIdWithBodyShop(id)
                 .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND)).getBodyShop();
-        bodyShop.acceptCount();
+        bodyShop.increaseAcceptCount();
 
         // 견적서를 공개에서 비공개로 전환
         Estimate estimate = estimateRepository.findById(bid.getEstimate().getId())

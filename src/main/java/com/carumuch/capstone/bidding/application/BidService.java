@@ -22,7 +22,7 @@ import static com.carumuch.capstone.common.legacy.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BiddingService {
+public class BidService {
 
     private final BidRepository bidRepository;
     private final EstimateRepository estimateRepository;

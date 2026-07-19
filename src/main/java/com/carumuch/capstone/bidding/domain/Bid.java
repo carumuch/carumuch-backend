@@ -2,15 +2,16 @@ package com.carumuch.capstone.bidding.domain;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.estimate.domain.Estimate;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
+
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "bid")
@@ -19,14 +20,14 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Bid extends AggregateRoot<Bid> {
 
     @Column(name = "cost")
-    private int cost; // 수리비
+    private int cost;
 
     @Column(name = "repair_method")
-    private String repairMethod;// 수리 방법
+    private String repairMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private BidStatus bidStatus; // 입찰 상태
+    private BidStatus bidStatus;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "body_shop_id")
@@ -36,29 +37,42 @@ public class Bid extends AggregateRoot<Bid> {
     @JoinColumn(name = "estimate_id")
     private Estimate estimate;
 
-    @Builder
-    public Bid(int cost, String repairMethod, BidStatus bidStatus, BodyShop bodyShop, Estimate estimate) {
+    private Bid(int cost, String repairMethod, BodyShop bodyShop, Estimate estimate) {
         this.cost = cost;
         this.repairMethod = repairMethod;
-        this.bidStatus = bidStatus;
-        this.bodyShop = bodyShop;
-		apply(bodyShop, estimate);
-    }
-
-    /* 입찰 신청 */
-    public void apply(BodyShop bodyShop, Estimate estimate) {
+        this.bidStatus = BidStatus.WAITING;
         this.bodyShop = bodyShop;
         this.estimate = estimate;
     }
 
-    /* 입찰 정보 수정 */
+    public static Bid apply(int cost, String repairMethod, BodyShop bodyShop, Estimate estimate) {
+        if (estimate.isClosed()) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "입찰이 종료된 견적서 입니다.");
+        }
+        return new Bid(cost, repairMethod, bodyShop, estimate);
+    }
+
     public void update(int cost, String repairMethod) {
+        if (!this.bidStatus.equals(BidStatus.WAITING)) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "낙찰 혹은 거절된 입찰건입니다.");
+        }
         this.cost = cost;
         this.repairMethod = repairMethod;
     }
 
-    /* 입찰 상태 변경 */
-    public void updateStatus(BidStatus bidStatus) {
-        this.bidStatus = bidStatus;
+    public void accept() {
+        if (!this.bidStatus.equals(BidStatus.WAITING)) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 낙찰 혹은 거절된 입찰건입니다.");
+        }
+        this.bidStatus = BidStatus.ACCEPTED;
+        this.bodyShop.increaseAcceptCount();
+        this.estimate.closeBidding();
+    }
+
+    public void reject() {
+        if (this.bidStatus.equals(BidStatus.ACCEPTED)) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 낙찰되었습니다.");
+        }
+        this.bidStatus = BidStatus.REJECTED;
     }
 }

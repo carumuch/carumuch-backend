@@ -81,6 +81,10 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 		}
 	}
 
+	public boolean isClosed() {
+		return this.estimateStatus == EstimateStatus.CLOSED;
+	}
+
 	@Override
 	public boolean canAccess(Long userId) {
 		return Objects.equals(this.userId, userId);

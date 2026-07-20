@@ -5,7 +5,7 @@ import com.carumuch.capstone.community.domain.Board;
 import com.carumuch.capstone.community.presentation.dto.BoardModifyReqDto;
 import com.carumuch.capstone.community.presentation.dto.BoardReqDto;
 import com.carumuch.capstone.community.application.BoardService;
-import com.carumuch.capstone.common.legacy.dto.ResponseDto;
+import com.carumuch.capstone.community.presentation.dto.ResponseDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

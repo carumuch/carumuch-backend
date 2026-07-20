@@ -1,8 +1,8 @@
 package com.carumuch.capstone.bidding.presentation;
 
 import com.carumuch.capstone.bidding.application.BidService;
+import com.carumuch.capstone.bidding.presentation.dto.response.BidInfoResponse;
 import com.carumuch.capstone.bidding.presentation.dto.response.BidListResponse;
-import com.carumuch.capstone.common.legacy.dto.ResponseDto;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
@@ -17,6 +17,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/bids")
 @RequiredArgsConstructor
 public class BidController {
+
     private final BidService bidService;
 
     @GetMapping("history/{estimateId}")
@@ -28,12 +29,12 @@ public class BidController {
     }
 
     @GetMapping("/{bidId}")
-    public ResponseEntity<?> bidDetail(@PathVariable Long BidId) {
-        return ResponseEntity.status(OK).body(ResponseDto.success(OK, bidService.detailBid(BidId)));
+    public ResponseEntity<ApiResponse<BidInfoResponse>> bidDetail(@PathVariable Long BidId) {
+        return ResponseEntity.ok().body(ApiResponse.of(bidService.detailBid(BidId)));
     }
 
     @PatchMapping("/{bidId}")
-    public ResponseEntity<?> bidStatusUpdate(@PathVariable Long bidId) {
+    public ResponseEntity<ApiResponse<Void>> bidStatusUpdate(@PathVariable Long bidId) {
         bidService.acceptBidding(bidId);
         return ResponseEntity.status(CREATED).body(ApiResponse.of());
     }

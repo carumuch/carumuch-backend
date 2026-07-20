@@ -1,4 +1,4 @@
-package com.carumuch.capstone.common.legacy.infrastructure.image;
+package com.carumuch.capstone.community.application;
 
 import java.util.UUID;
 

@@ -47,6 +47,10 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
+	@Version
+	@Column(name = "version", nullable = false)
+	private Long version;
+
     public Estimate(
 		Integer repairCost,
 		Set<String> repairParts,
@@ -81,8 +85,24 @@ public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {
 		}
 	}
 
+	public void increaseApplicantCount() {
+		this.applicantCount++;
+	}
+
+	public void decreaseApplicantCount() {
+		this.applicantCount--;
+	}
+
+	public boolean isOpen() {
+		return this.estimateStatus == EstimateStatus.OPEN;
+	}
+
 	public boolean isClosed() {
 		return this.estimateStatus == EstimateStatus.CLOSED;
+	}
+
+	public boolean isPrivate() {
+		return this.estimateStatus == EstimateStatus.PRIVATE;
 	}
 
 	@Override

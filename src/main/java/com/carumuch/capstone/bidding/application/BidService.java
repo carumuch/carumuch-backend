@@ -35,8 +35,10 @@ public class BidService {
     }
 
     @Transactional
-    public void acceptBidding(Long id) {
+    public void acceptBidding(Long id) { //TODO 레거시 유지용입니다, 쿼리를 개선해야합니다.
         Bid bid = bidRepository.findByIdWithEstimate(id);
         bid.accept();
+        bid.getBodyShop().increaseAcceptCount();
+        bid.getEstimate().closeBidding();
     }
 }

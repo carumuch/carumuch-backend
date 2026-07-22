@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bidding.domain;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.estimate.domain.Estimate;
@@ -11,13 +12,15 @@ import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import java.util.Objects;
+
 import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "bid")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Bid extends AggregateRoot<Bid> {
+public class Bid extends AggregateRoot<Bid> implements AccessPolicy {
 
     @Column(name = "cost")
     private int cost;
@@ -49,30 +52,66 @@ public class Bid extends AggregateRoot<Bid> {
         if (estimate.isClosed()) {
             throw new CustomException(HttpStatus.BAD_REQUEST, "입찰이 종료된 견적서 입니다.");
         }
+        validateCost(cost);
         return new Bid(cost, repairMethod, bodyShop, estimate);
     }
 
+    public void accept() {
+        validateBidWaiting();
+        this.bidStatus = BidStatus.ACCEPTED;
+    }
+
+    public void reject() {
+        validateBidWaiting();
+        this.bidStatus = BidStatus.REJECTED;
+    }
+
+    public void cancel() {
+        validateBidWaiting();
+        this.bidStatus = BidStatus.CANCELED;
+    }
+
     public void update(int cost, String repairMethod) {
-        if (!this.bidStatus.equals(BidStatus.WAITING)) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "낙찰 혹은 거절된 입찰건입니다.");
-        }
+        validateBidWaiting();
+        validateCost(cost);
         this.cost = cost;
         this.repairMethod = repairMethod;
     }
 
-    public void accept() {
+    private void validateBidWaiting() {
         if (!this.bidStatus.equals(BidStatus.WAITING)) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 낙찰 혹은 거절된 입찰건입니다.");
+            throw new CustomException(HttpStatus.BAD_REQUEST, "대기 중인 입찰만 처리할 수 있습니다.");
         }
-        this.bidStatus = BidStatus.ACCEPTED;
-        this.bodyShop.increaseAcceptCount();
-        this.estimate.closeBidding();
     }
 
-    public void reject() {
-        if (this.bidStatus.equals(BidStatus.ACCEPTED)) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 낙찰되었습니다.");
+    private static void validateCost(int cost) {
+        if (cost <= 0) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "입찰 금액은 0원보다 커야 합니다.");
         }
-        this.bidStatus = BidStatus.REJECTED;
+    }
+
+    private boolean isBidder(Long userId) {
+        return Objects.equals(this.bodyShop.getManagerUserId(), userId);
+    }
+
+    private boolean isEstimateRequester(Long userId) {
+        return Objects.equals(this.estimate.getUserId(), userId);
+    }
+
+    public void validateBidder(Long userId) {
+        if (!isBidder(userId)) {
+            throw new CustomException(HttpStatus.FORBIDDEN, "입찰한 공업사만 처리할 수 있습니다.");
+        }
+    }
+
+    public void validateEstimateRequester(Long userId) {
+        if (!isEstimateRequester(userId)) {
+            throw new CustomException(HttpStatus.FORBIDDEN, "견적서 주인만 처리할 수 있습니다.");
+        }
+    }
+
+    @Override
+    public boolean canAccess(Long userId) {
+        return isBidder(userId) || isEstimateRequester(userId);
     }
 }

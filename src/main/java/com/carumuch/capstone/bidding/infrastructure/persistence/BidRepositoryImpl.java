@@ -34,8 +34,8 @@ public class BidRepositoryImpl implements BidRepository {
 	}
 
 	@Override
-	public Bid findByIdWithEstimate(Long id) {
-		return jpaBidRepository.findByIdWithEstimate(id)
+	public Bid findByIdWithBodyShopAndEstimate(Long id) {
+		return jpaBidRepository.findByIdWithBodyShopAndEstimate(id)
 			.orElseThrow(() -> new NotFoundException(Bid.class));
 	}
 

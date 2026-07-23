@@ -6,6 +6,7 @@ import com.carumuch.capstone.bidding.presentation.dto.response.BidListResponse;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
 import com.carumuch.capstone.common.presentation.dto.PagingRequest;
 import com.carumuch.capstone.common.presentation.dto.PagingResponse;
+import com.carumuch.capstone.identity.domain.user.User;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,8 @@ public class BidController {
     }
 
     @PatchMapping("/{bidId}")
-    public ResponseEntity<ApiResponse<Void>> bidStatusUpdate(@PathVariable Long bidId) {
-        bidService.acceptBidding(bidId);
+    public ResponseEntity<ApiResponse<Void>> bidStatusUpdate(@PathVariable Long bidId, User user) {
+        bidService.acceptBid(bidId, user.getId());
         return ResponseEntity.status(CREATED).body(ApiResponse.of());
     }
 }

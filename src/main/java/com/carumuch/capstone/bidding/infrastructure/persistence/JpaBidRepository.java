@@ -12,12 +12,27 @@ import com.carumuch.capstone.bidding.domain.Bid;
 
 public interface JpaBidRepository extends JpaRepository<Bid, Long> {
 
-	@Query("select b from Bid b left join fetch b.bodyShop where b.id = :id")
+	@Query("""
+		SELECT b
+		FROM Bid b
+		JOIN FETCH b.bodyShop
+		WHERE b.id =: id
+	""")
 	Optional<Bid> findByIdWithBodyShop(@Param("id") Long id);
 
-	@Query("select b from Bid b left join fetch b.estimate where b.id = :id")
-	Optional<Bid> findByIdWithEstimate(@Param("id") Long id);
+	@Query("""
+		SELECT b
+		FROM Bid b
+		JOIN FETCH b.estimate
+		JOIN FETCH b.bodyShop
+		WHERE b.id =: id
+	""")
+	Optional<Bid> findByIdWithBodyShopAndEstimate(@Param("id") Long id);
 
-	@Query("select b from Bid b where b.estimate.id = :estimateId")
+	@Query("""
+		SELECT b
+		FROM Bid b
+		WHERE b.estimate.id =: estimateId
+	""")
 	Page<Bid> findPageByEstimateId(@Param("estimateId") Long estimateId, Pageable pageable);
 }

@@ -8,6 +8,6 @@ public interface BidRepository {
     Bid findById(Long id);
     Bid save(Bid bid);
     Bid findByIdWithBodyShop(Long id);
-    Bid findByIdWithEstimate(Long id);
+    Bid findByIdWithBodyShopAndEstimate(Long id);
     Page<Bid> findPageByEstimateId(Long estimateId, Pageable pageable);
 }

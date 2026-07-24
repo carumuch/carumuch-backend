@@ -16,7 +16,7 @@ public interface JpaBidRepository extends JpaRepository<Bid, Long> {
 		SELECT b
 		FROM Bid b
 		JOIN FETCH b.bodyShop
-		WHERE b.id =: id
+		WHERE b.id = :id
 	""")
 	Optional<Bid> findByIdWithBodyShop(@Param("id") Long id);
 
@@ -25,14 +25,15 @@ public interface JpaBidRepository extends JpaRepository<Bid, Long> {
 		FROM Bid b
 		JOIN FETCH b.estimate
 		JOIN FETCH b.bodyShop
-		WHERE b.id =: id
+		WHERE b.id = :id
 	""")
 	Optional<Bid> findByIdWithBodyShopAndEstimate(@Param("id") Long id);
 
 	@Query("""
 		SELECT b
 		FROM Bid b
-		WHERE b.estimate.id =: estimateId
+		JOIN FETCH b.bodyShop
+		WHERE b.estimate.id = :estimateId
 	""")
-	Page<Bid> findPageByEstimateId(@Param("estimateId") Long estimateId, Pageable pageable);
+	Page<Bid> findPageByEstimateIdWithBodyShop(@Param("estimateId") Long estimateId, Pageable pageable);
 }

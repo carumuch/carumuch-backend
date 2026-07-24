@@ -1,7 +1,7 @@
 package com.carumuch.capstone.support.fixture;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
-import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.common.domain.Location;
 import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
 
 public enum BodyShopFixture {

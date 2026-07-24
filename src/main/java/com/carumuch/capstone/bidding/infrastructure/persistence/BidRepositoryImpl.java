@@ -40,7 +40,7 @@ public class BidRepositoryImpl implements BidRepository {
 	}
 
 	@Override
-	public Page<Bid> findPageByEstimateId(Long estimateId, Pageable pageable) {
-		return jpaBidRepository.findPageByEstimateId(estimateId, pageable);
+	public Page<Bid> findPageByEstimateIdWithBodyShop(Long estimateId, Pageable pageable) {
+		return jpaBidRepository.findPageByEstimateIdWithBodyShop(estimateId, pageable);
 	}
 }

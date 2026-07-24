@@ -1,6 +1,6 @@
 package com.carumuch.capstone.bodyshop.presentation.dto.request;
 
-import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.common.domain.Location;
 
 import jakarta.validation.constraints.NotBlank;
 

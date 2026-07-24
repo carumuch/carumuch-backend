@@ -2,7 +2,7 @@ package com.carumuch.capstone.bidding.presentation.dto.response;
 
 import com.carumuch.capstone.bidding.domain.Bid;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
-import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.common.domain.Location;
 
 
 public record BidInfoResponse(

@@ -1,5 +1,8 @@
 package com.carumuch.capstone.common.presentation.dto;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 public record PagingRequest(
 	Integer page,
 	Integer size,
@@ -19,5 +22,9 @@ public record PagingRequest(
 
 	public String sort() {
 		return sort == null ? DEFAULT_SORT : sort;
+	}
+
+	public PageRequest toPageRequest() {
+		return PageRequest.of(page(), size(), Sort.by(sort()));
 	}
 }

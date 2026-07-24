@@ -22,11 +22,11 @@ public class BidController {
     private final BidService bidService;
 
     @GetMapping("history/{estimateId}")
-    public ResponseEntity<ApiResponse<PagingResponse<BidListResponse>>> bidPage(
+    public ResponseEntity<ApiResponse<PagingResponse<BidListResponse>>> getBids(
         @PathVariable Long estimateId,
         @ModelAttribute PagingRequest pagingRequest
     ) {
-        return ResponseEntity.ok().body(ApiResponse.of(bidService.findPageByEstimateId(estimateId, pagingRequest)));
+        return ResponseEntity.ok().body(ApiResponse.of(bidService.getBids(estimateId, pagingRequest)));
     }
 
     @GetMapping("/{bidId}")

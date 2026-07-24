@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.carumuch.capstone.bodyshop.application.BodyShopService;
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
 import com.carumuch.capstone.bodyshop.domain.BodyShopRepository;
-import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.common.domain.Location;
 import com.carumuch.capstone.bodyshop.domain.PhoneNumber;
 import com.carumuch.capstone.bodyshop.presentation.dto.request.LocationRequest;
 import com.carumuch.capstone.bodyshop.presentation.dto.response.BodyShopInfoResponse;

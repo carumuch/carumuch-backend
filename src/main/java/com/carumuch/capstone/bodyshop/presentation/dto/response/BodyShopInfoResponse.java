@@ -1,6 +1,7 @@
 package com.carumuch.capstone.bodyshop.presentation.dto.response;
 
 import com.carumuch.capstone.bodyshop.domain.BodyShop;
+import com.carumuch.capstone.common.presentation.dto.LocationResponse;
 
 public record BodyShopInfoResponse(
 	Long id,

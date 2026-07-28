@@ -30,8 +30,8 @@ public class BidController {
     }
 
     @GetMapping("/{bidId}")
-    public ResponseEntity<ApiResponse<BidInfoResponse>> bidDetail(@PathVariable Long BidId) {
-        return ResponseEntity.ok().body(ApiResponse.of(bidService.detailBid(BidId)));
+    public ResponseEntity<ApiResponse<BidInfoResponse>> bidDetail(@PathVariable Long bidId) {
+        return ResponseEntity.ok().body(ApiResponse.of(bidService.detailBid(bidId)));
     }
 
     @PatchMapping("/{bidId}")

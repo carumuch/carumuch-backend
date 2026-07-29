@@ -1,7 +1,7 @@
-package com.carumuch.capstone.common.legacy.presentation;
+package com.carumuch.capstone.community.presentation;
 
-import com.carumuch.capstone.common.legacy.dto.ResponseDto;
-import com.carumuch.capstone.common.legacy.infrastructure.image.ImageService;
+import com.carumuch.capstone.community.presentation.dto.ResponseDto;
+import com.carumuch.capstone.community.application.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,12 +1,15 @@
 package com.carumuch.capstone.bidding.presentation;
 
-import com.carumuch.capstone.bidding.presentation.dto.request.BidStatusUpdateReqDto;
-import com.carumuch.capstone.bidding.application.BiddingService;
-import com.carumuch.capstone.common.legacy.dto.ResponseDto;
-import com.carumuch.capstone.common.legacy.validation.ValidationSequence;
+import com.carumuch.capstone.bidding.application.BidService;
+import com.carumuch.capstone.bidding.presentation.dto.response.BidInfoResponse;
+import com.carumuch.capstone.bidding.presentation.dto.response.BidListResponse;
+import com.carumuch.capstone.common.presentation.dto.ApiResponse;
+import com.carumuch.capstone.common.presentation.dto.PagingRequest;
+import com.carumuch.capstone.common.presentation.dto.PagingResponse;
+import com.carumuch.capstone.identity.domain.user.User;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -15,24 +18,25 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/bids")
 @RequiredArgsConstructor
 public class BidController {
-    private final BiddingService biddingService;
+
+    private final BidService bidService;
 
     @GetMapping("history/{estimateId}")
-    public ResponseEntity<?> bidPage(@RequestParam(defaultValue = "1") int page,
-                                     @PathVariable("estimateId") Long id) {
-        return ResponseEntity.status(OK)
-                .body(ResponseDto.success(OK, biddingService.findPageByEstimateId(page, id)));
+    public ResponseEntity<ApiResponse<PagingResponse<BidListResponse>>> getBids(
+        @PathVariable Long estimateId,
+        @ModelAttribute PagingRequest pagingRequest
+    ) {
+        return ResponseEntity.ok().body(ApiResponse.of(bidService.getBids(estimateId, pagingRequest)));
     }
 
     @GetMapping("/{bidId}")
-    public ResponseEntity<?> bidDetail(@PathVariable("bidId") Long id) {
-        return ResponseEntity.status(OK).body(ResponseDto.success(OK, biddingService.detailBid(id)));
+    public ResponseEntity<ApiResponse<BidInfoResponse>> bidDetail(@PathVariable Long bidId) {
+        return ResponseEntity.ok().body(ApiResponse.of(bidService.detailBid(bidId)));
     }
 
     @PatchMapping("/{bidId}")
-    public ResponseEntity<?> bidStatusUpdate(@PathVariable("bidId") Long id,
-                                             @Validated(ValidationSequence.class) @RequestBody BidStatusUpdateReqDto bidStatusUpdateReqDto) {
-        return ResponseEntity.status(CREATED)
-                .body(ResponseDto.success(CREATED, biddingService.updateBidStatus(id, bidStatusUpdateReqDto.getStatus())));
+    public ResponseEntity<ApiResponse<Void>> bidStatusUpdate(@PathVariable Long bidId, User user) {
+        bidService.acceptBid(bidId, user.getId());
+        return ResponseEntity.status(CREATED).body(ApiResponse.of());
     }
 }

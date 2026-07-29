@@ -1,4 +1,4 @@
-package com.carumuch.capstone.bodyshop.domain;
+package com.carumuch.capstone.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

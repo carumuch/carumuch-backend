@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import com.carumuch.capstone.common.domain.AccessPolicy;
 import com.carumuch.capstone.common.domain.AggregateRoot;
+import com.carumuch.capstone.common.domain.Location;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

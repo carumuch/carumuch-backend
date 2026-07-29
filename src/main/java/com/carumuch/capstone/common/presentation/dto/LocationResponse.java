@@ -1,6 +1,6 @@
-package com.carumuch.capstone.bodyshop.presentation.dto.response;
+package com.carumuch.capstone.common.presentation.dto;
 
-import com.carumuch.capstone.bodyshop.domain.Location;
+import com.carumuch.capstone.common.domain.Location;
 
 public record LocationResponse(
 	String sido,

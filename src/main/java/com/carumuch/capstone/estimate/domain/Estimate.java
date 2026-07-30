@@ -17,7 +17,15 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 
 @Entity
-@Table(name = "estimate")
+@Table(
+	name = "estimate",
+	indexes = {
+		@Index(
+			name = "idx_estimate_status_created_cost",
+			columnList = "status, create_date DESC, ai_estimated_repair_cost, damage_report_id"
+		)
+	}
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Estimate extends AggregateRoot<Estimate> implements AccessPolicy {

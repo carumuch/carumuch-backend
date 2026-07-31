@@ -331,53 +331,5 @@ class EstimateServiceTest {
 			Mockito.verify(estimateRepository, Mockito.times(1))
 				.searchEstimates(estimateSearchCondition, pageRequest);
 		}
-
-		@Test
-		void 견적서를_인기순으로_조회한다() {
-			//given
-			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
-				null, null, null, null, null, null, null, null
-			);
-
-			EstimateSearchCondition estimateSearchCondition = EstimateSearchCondition.from(searchEstimateRequest);
-
-			PagingRequest pagingRequest = new PagingRequest(null, null, "POPULAR");
-			PageRequest pageRequest = PageRequest.of(pagingRequest.page(), pagingRequest.size(),
-				Sort.by(pagingRequest.sort()));
-
-			Estimate midPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
-			ReflectionTestUtils.setField(midPopularityEstimate, "id", 1_000L);
-			ReflectionTestUtils.setField(midPopularityEstimate, "applicantCount", 100);
-
-			Estimate lowPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
-			ReflectionTestUtils.setField(lowPopularityEstimate, "id", 2_000L);
-			ReflectionTestUtils.setField(lowPopularityEstimate, "applicantCount", 50);
-
-			Estimate highPopularityEstimate = EstimateFixture.ESTIMATE_FIXTURE_1.create();
-			ReflectionTestUtils.setField(highPopularityEstimate, "id", 3_000L);
-			ReflectionTestUtils.setField(highPopularityEstimate, "applicantCount", 200);
-
-			List<Estimate> estimateList = List.of(
-				highPopularityEstimate,
-				midPopularityEstimate,
-				lowPopularityEstimate
-			);
-			PageImpl<Estimate> estimates = new PageImpl<>(estimateList, pageRequest, estimateList.size());
-
-			Mockito.when(estimateRepository.searchEstimates(estimateSearchCondition, pageRequest))
-				.thenReturn(estimates);
-
-			//when
-			PagingResponse<EstimateDetailResponse> result = estimateService.searchEstimates(
-				searchEstimateRequest, pagingRequest);
-
-			//then
-			assertAll(
-				() -> Assertions.assertThat(result.content().size()).isEqualTo(3),
-				() -> Assertions.assertThat(result.content().get(0).estimateId()).isEqualTo(highPopularityEstimate.getId()),
-				() -> Assertions.assertThat(result.content().get(1).estimateId()).isEqualTo(midPopularityEstimate.getId()),
-				() -> Assertions.assertThat(result.content().get(2).estimateId()).isEqualTo(lowPopularityEstimate.getId())
-			);
-		}
 	}
 }

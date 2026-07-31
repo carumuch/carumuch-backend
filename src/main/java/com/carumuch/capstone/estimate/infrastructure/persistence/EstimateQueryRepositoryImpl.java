@@ -28,10 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EstimateQueryRepositoryImpl implements EstimateQueryRepository {
 
-	private static final String POPULAR_SORT = "POPULAR";
-	private static final String DEFAULT_SORT = "DEFAULT";
-	private static final OrderSpecifier<?>[] ORDER_POPULAR = {QEstimate.estimate.applicantCount.desc()};
-	private static final OrderSpecifier<?>[] ORDER_DEFAULT = {QEstimate.estimate.createDate.desc()};
+	private static final OrderSpecifier<?>[] ORDER_BY_LATEST = {QEstimate.estimate.createDate.desc()};
 
 	private final JPAQueryFactory jpaQueryFactory;
 
@@ -48,7 +45,7 @@ public class EstimateQueryRepositoryImpl implements EstimateQueryRepository {
 			.join(estimate.damageReport, dr).fetchJoin()
 			.join(dr.vehicle, v).fetchJoin()
 			.where(predicate)
-			.orderBy(getOrderSpecifier(pageable))
+			.orderBy(ORDER_BY_LATEST)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -75,17 +72,5 @@ public class EstimateQueryRepositoryImpl implements EstimateQueryRepository {
 			.and(() -> v.modelYear.eq(condition.modelYear()))
 			.and(() -> v.brand.eq(condition.brand()))
 			.build();
-	}
-
-	private OrderSpecifier<?>[] getOrderSpecifier(Pageable pageable) {
-		String sort = pageable.getSort().stream()
-			.findFirst()
-			.map(Sort.Order::getProperty)
-			.orElse(DEFAULT_SORT);
-
-		return switch (sort) {
-			case POPULAR_SORT -> ORDER_POPULAR;
-			default -> ORDER_DEFAULT;
-		};
 	}
 }

@@ -49,10 +49,8 @@ public class EstimateService {
 	}
 
 	public PagingResponse<EstimateDetailResponse> searchEstimates(SearchEstimateRequest searchEstimateRequest, PagingRequest pagingRequest) {
-		Page<Estimate> estimates = estimateRepository.searchEstimates(
-			EstimateSearchCondition.from(searchEstimateRequest),
-			PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort()))
-		);
+		Page<Estimate> estimates = estimateRepository.searchEstimates(EstimateSearchCondition.from(searchEstimateRequest), pagingRequest.toPageRequest());
+
 		return PagingResponse.from(estimates.map(EstimateDetailResponse::new));
 	}
 }

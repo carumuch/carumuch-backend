@@ -1,0 +1,1 @@
+DROP INDEX idx_estimate_status_created_cost ON estimate;

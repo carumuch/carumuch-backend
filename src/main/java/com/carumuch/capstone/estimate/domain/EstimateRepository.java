@@ -2,9 +2,8 @@ package com.carumuch.capstone.estimate.domain;
 
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
+import com.carumuch.capstone.estimate.application.dto.EstimateScrollQuery;
+import com.carumuch.capstone.estimate.application.dto.EstimateScrollSlice;
 import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 
 public interface EstimateRepository {
@@ -17,5 +16,5 @@ public interface EstimateRepository {
 
 	Optional<Estimate> findDetailByDamageReportId(Long damageReportId);
 
-	Page<Estimate> searchEstimates(EstimateSearchCondition condition, Pageable pageable);
+	EstimateScrollSlice<Estimate> searchEstimates(EstimateSearchCondition condition, EstimateScrollQuery scrollQuery);
 }

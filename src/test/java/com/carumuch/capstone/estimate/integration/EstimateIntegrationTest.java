@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
-import com.carumuch.capstone.common.presentation.dto.PagingRequest;
-import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
@@ -22,8 +20,10 @@ import com.carumuch.capstone.estimate.application.EstimateService;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateScrollRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.estimate.presentation.dto.response.EstimateScrollResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.identity.domain.user.UserRepository;
 import com.carumuch.capstone.support.IntegrationSupportTest;
@@ -304,20 +304,31 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
 				null, null, null, null, null, null, null, null
 			);
-
-			PagingRequest pagingRequest = new PagingRequest(null, null, null);
+			EstimateScrollRequest firstScrollRequest = new EstimateScrollRequest(null, null, 1);
 
 
 		    //when
-			PagingResponse<EstimateDetailResponse> result = estimateService.searchEstimates(
-				searchEstimateRequest, pagingRequest);
+			EstimateScrollResponse firstResult = estimateService.searchEstimates(
+				searchEstimateRequest, firstScrollRequest);
+
+			EstimateScrollRequest secondScrollRequest = new EstimateScrollRequest(
+				firstResult.nextCursorCreatedAt(),
+				firstResult.nextCursorId(),
+				1
+			);
+			EstimateScrollResponse secondResult = estimateService.searchEstimates(
+				searchEstimateRequest, secondScrollRequest);
 
 			//then
 			assertAll(
-				() -> assertThat(result.content().get(0).estimateId()).isEqualTo(recentEstimate.getId()),
-				() -> assertThat(result.content().get(0).imagePath()).isEqualTo(recentEstimate.getImagePath()),
-				() -> assertThat(result.content().get(1).estimateId()).isEqualTo(estimate.getId()),
-				() -> assertThat(result.content().get(1).imagePath()).isEqualTo(estimate.getImagePath())
+				() -> assertThat(firstResult.content()).hasSize(1),
+				() -> assertThat(firstResult.hasNext()).isTrue(),
+				() -> assertThat(firstResult.content().get(0).estimateId()).isEqualTo(recentEstimate.getId()),
+				() -> assertThat(firstResult.content().get(0).imagePath()).isEqualTo(recentEstimate.getImagePath()),
+				() -> assertThat(secondResult.content()).hasSize(1),
+				() -> assertThat(secondResult.hasNext()).isFalse(),
+				() -> assertThat(secondResult.content().get(0).estimateId()).isEqualTo(estimate.getId()),
+				() -> assertThat(secondResult.content().get(0).imagePath()).isEqualTo(estimate.getImagePath())
 			);
 		}
 	}

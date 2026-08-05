@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -25,18 +24,16 @@ import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.ApiErrorResponse;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
-import com.carumuch.capstone.common.presentation.dto.PagingRequest;
-import com.carumuch.capstone.common.presentation.dto.PagingResponse;
-import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateScrollRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.estimate.presentation.dto.response.EstimateScrollResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.support.RestDocsSupport;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
-import com.carumuch.capstone.support.fixture.UserFixture;
 import com.epages.restdocs.apispec.ResourceDocumentation;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
@@ -432,7 +429,7 @@ class EstimateControllerTest extends RestDocsSupport {
 			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
 				null, null, null, null, null, null, null, null
 			);
-			PagingRequest pagingRequest = new PagingRequest(null, null, null);
+			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(null, null, 10);
 
 			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
 			ReflectionTestUtils.setField(estimateFixture, "id", 404L);
@@ -443,24 +440,29 @@ class EstimateControllerTest extends RestDocsSupport {
 			ReflectionTestUtils.setField(estimateFixture2, "createDate", LocalDateTime.now());
 
 
-			PagingResponse<EstimateDetailResponse> responseDto = PagingResponse.from(
-				new PageImpl<>(List.of(estimateFixture, estimateFixture2)).map(EstimateDetailResponse::new));
+			EstimateScrollResponse responseDto = new EstimateScrollResponse(
+				List.of(new EstimateDetailResponse(estimateFixture), new EstimateDetailResponse(estimateFixture2)),
+				true,
+				estimateFixture2.getId(),
+				estimateFixture2.getCreateDate()
+			);
 
-			Mockito.when(estimateService.searchEstimates(searchEstimateRequest, pagingRequest))
+			Mockito.when(estimateService.searchEstimates(searchEstimateRequest, scrollRequest))
 				.thenReturn(responseDto);
 
 			//when
 			ResultActions actions = mockMvc.perform(
 				get(BASE_URI + "/search")
+					.param("size", "10")
 			);
 
 			//then
 			actions
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
-
-				// paging meta
-				.andExpect(jsonPath("$.data.page.number").value(1))
+				.andExpect(jsonPath("$.data.hasNext").value(responseDto.hasNext()))
+				.andExpect(jsonPath("$.data.nextCursorId").value(responseDto.nextCursorId()))
+				.andExpect(jsonPath("$.data.nextCursorCreatedAt").value(responseDto.nextCursorCreatedAt().toString()))
 
 				// content[0] = 견적서 정보
 				.andExpect(jsonPath("$.data.content[0].estimateId").value(responseDto.content().get(0).estimateId()))
@@ -499,12 +501,14 @@ class EstimateControllerTest extends RestDocsSupport {
 						.summary("견적서 조건 검색")
 						.description("## 견적서 조건 검색 기능 \n"
 							+ "### 설명 \n"
-							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)"
+							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)\n"
+							+ "- 다음 요청에는 응답의 nextCursorId, nextCursorCreatedAt 값을 cursorId, cursorCreatedAt으로 전달합니다."
 						)
 						.queryParameters(
 							parameterWithName("size").description(
-								"페이지에 표시할 size입니다. 10 ~ 100입니다. 만약 다른 값이 들어오면 10개로 고정합니다.").optional(),
-							parameterWithName("page").description("page가 없거나, 음수라면 첫 페이지로 고정합니다.").optional(),
+								"한 번에 조회할 개수입니다. 1 ~ 100 범위를 벗어나면 10개로 고정합니다.").optional(),
+							parameterWithName("cursorId").description("다음 조회 시작점의 마지막 견적서 식별자입니다.").optional(),
+							parameterWithName("cursorCreatedAt").description("다음 조회 시작점의 마지막 견적서 생성 시각입니다. ISO-8601 형식입니다.").optional(),
 							parameterWithName("minRepairCost").description("최소 산정 금액").optional(),
 							parameterWithName("maxRepairCost").description("최대 산정 금액").optional(),
 							parameterWithName("sido").description("수리 희망 시/도").optional(),
@@ -514,26 +518,16 @@ class EstimateControllerTest extends RestDocsSupport {
 							parameterWithName("modelYear").description("사고 차량의 연식").optional(),
 							parameterWithName("modelName").description("사고 차량의 이름").optional()
 						)
-						.responseSchema(Schema.schema(PagingResponse.class.getSimpleName()))
+						.responseSchema(Schema.schema(EstimateScrollResponse.class.getSimpleName()))
 						.responseFields(
 							fieldWithPath("message").description("성공 응답 메세지입니다.").type(JsonFieldType.STRING),
 
-							// paging wrapper
-							fieldWithPath("data.content").description("페이징된 견적서 목록입니다.").type(JsonFieldType.ARRAY),
-							fieldWithPath("data.page").description("페이지 메타데이터입니다.").type(JsonFieldType.OBJECT),
-
-							// page meta
-							fieldWithPath("data.page.number").description("현재 페이지 번호(1부터 시작)입니다.")
-								.type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.size").description("페이지 크기입니다.").type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.totalElements").description("전체 요소 개수입니다.")
-								.type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.totalPages").description("전체 페이지 수입니다.")
-								.type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.hasNext").description("다음 페이지 존재 여부입니다.")
-								.type(JsonFieldType.BOOLEAN),
-							fieldWithPath("data.page.hasPrevious").description("이전 페이지 존재 여부입니다.")
-								.type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.content").description("무한 스크롤로 조회한 견적서 목록입니다.").type(JsonFieldType.ARRAY),
+							fieldWithPath("data.hasNext").description("다음 조회 구간 존재 여부입니다.").type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.nextCursorId").description("다음 조회에 사용할 마지막 견적서 식별자입니다.")
+								.type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.nextCursorCreatedAt").description("다음 조회에 사용할 마지막 견적서 생성 시각입니다.")
+								.type(JsonFieldType.STRING).optional(),
 
 							// content
 							fieldWithPath("data.content[].estimateId").description("견적서 식별자입니다.")

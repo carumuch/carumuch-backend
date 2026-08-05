@@ -1,12 +1,12 @@
 package com.carumuch.capstone.estimate.presentation;
 
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
-import com.carumuch.capstone.common.presentation.dto.PagingRequest;
-import com.carumuch.capstone.common.presentation.dto.PagingResponse;
 import com.carumuch.capstone.estimate.application.EstimateService;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateScrollRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.estimate.presentation.dto.response.EstimateScrollResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 
 import lombok.RequiredArgsConstructor;
@@ -32,11 +32,11 @@ public class EstimateController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<ApiResponse<PagingResponse<EstimateDetailResponse>>> search(
+	public ResponseEntity<ApiResponse<EstimateScrollResponse>> search(
 		@ModelAttribute SearchEstimateRequest request,
-		@ModelAttribute PagingRequest pagingRequest
+		@ModelAttribute EstimateScrollRequest scrollRequest
 	) {
-		return ResponseEntity.ok().body(ApiResponse.of(estimateService.searchEstimates(request, pagingRequest)));
+		return ResponseEntity.ok().body(ApiResponse.of(estimateService.searchEstimates(request, scrollRequest)));
 	}
 
 	@PutMapping( "/{estimateId}/status")

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -425,36 +426,71 @@ class EstimateControllerTest extends RestDocsSupport {
 	class SearchEstimates {
 		@Test
 		void 견적서_조건_검색_기능_2XX() throws Exception {
-			//given
+			// given
 			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
-				null, null, null, null, null, null, null, null
+				10_000,
+				100_000,
+				"서울특별시",
+				"강남구",
+				true,
+				"기아",
+				2022,
+				"K5"
 			);
-			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(null, null, 10);
+
+			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(
+				null,
+				null,
+				10
+			);
 
 			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
 			ReflectionTestUtils.setField(estimateFixture, "id", 404L);
-			ReflectionTestUtils.setField(estimateFixture, "createDate", LocalDateTime.now());
+			ReflectionTestUtils.setField(
+				estimateFixture,
+				"createDate",
+				LocalDateTime.of(2026, 8, 6, 12, 0)
+			);
 
 			Estimate estimateFixture2 = EstimateFixture.ESTIMATE_FIXTURE_4.create();
 			ReflectionTestUtils.setField(estimateFixture2, "id", 500L);
-			ReflectionTestUtils.setField(estimateFixture2, "createDate", LocalDateTime.now());
-
+			ReflectionTestUtils.setField(
+				estimateFixture2,
+				"createDate",
+				LocalDateTime.of(2026, 8, 6, 13, 0)
+			);
 
 			EstimateScrollResponse responseDto = new EstimateScrollResponse(
-				List.of(new EstimateDetailResponse(estimateFixture), new EstimateDetailResponse(estimateFixture2)),
+				List.of(
+					new EstimateDetailResponse(estimateFixture),
+					new EstimateDetailResponse(estimateFixture2)
+				),
 				true,
 				estimateFixture2.getId(),
 				estimateFixture2.getCreateDate()
 			);
 
-			Mockito.when(estimateService.searchEstimates(searchEstimateRequest, scrollRequest))
-				.thenReturn(responseDto);
+			Mockito.when(
+				estimateService.searchEstimates(
+					searchEstimateRequest,
+					scrollRequest
+				)
+			).thenReturn(responseDto);
 
-			//when
+			// when
 			ResultActions actions = mockMvc.perform(
 				get(BASE_URI + "/search")
 					.param("size", "10")
+					.param("minRepairCost", searchEstimateRequest.minRepairCost().toString())
+					.param("maxRepairCost", searchEstimateRequest.maxRepairCost().toString())
+					.param("sido", searchEstimateRequest.sido())
+					.param("sigungu", searchEstimateRequest.sigungu())
+					.param("isPickupRequired", searchEstimateRequest.isPickupRequired().toString())
+					.param("brand", searchEstimateRequest.brand())
+					.param("modelYear", searchEstimateRequest.modelYear().toString())
+					.param("modelName", searchEstimateRequest.modelName())
 			);
+
 
 			//then
 			actions
@@ -462,7 +498,8 @@ class EstimateControllerTest extends RestDocsSupport {
 				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
 				.andExpect(jsonPath("$.data.hasNext").value(responseDto.hasNext()))
 				.andExpect(jsonPath("$.data.nextCursorId").value(responseDto.nextCursorId()))
-				.andExpect(jsonPath("$.data.nextCursorCreatedAt").value(responseDto.nextCursorCreatedAt().toString()))
+				.andExpect(jsonPath("$.data.nextCursorCreatedAt").value(responseDto.nextCursorCreatedAt().format(
+					DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
 
 				// content[0] = 견적서 정보
 				.andExpect(jsonPath("$.data.content[0].estimateId").value(responseDto.content().get(0).estimateId()))
@@ -503,6 +540,7 @@ class EstimateControllerTest extends RestDocsSupport {
 							+ "### 설명 \n"
 							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)\n"
 							+ "- 다음 요청에는 응답의 nextCursorId, nextCursorCreatedAt 값을 cursorId, cursorCreatedAt으로 전달합니다."
+							+ "- 견적서는 최신순으로 조회됩니다.\n"
 						)
 						.queryParameters(
 							parameterWithName("size").description(

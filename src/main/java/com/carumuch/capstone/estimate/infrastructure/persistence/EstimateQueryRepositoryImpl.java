@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class EstimateQueryRepositoryImpl implements EstimateQueryRepository {
 
 	private static final int DEFAULT_MIN_REPAIR_COST = 0;
-	private static final int DEFAULT_MAX_REPAIR_COST = 999_999;
+	private static final int DEFAULT_MAX_REPAIR_COST = 99_999_999;
 	private static final OrderSpecifier<?>[] ORDER_BY_LATEST = {estimate.createDate.desc(), estimate.id.desc()};
 
 	private final JPAQueryFactory jpaQueryFactory;

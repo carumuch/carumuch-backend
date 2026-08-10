@@ -21,8 +21,8 @@ import org.springframework.http.HttpStatus;
 	name = "estimate",
 	indexes = {
 		@Index(
-			name = "idx_estimate_status_created_cost",
-			columnList = "status, create_date DESC, ai_estimated_repair_cost, damage_report_id"
+			name = "idx_estimate_status_created_id_cost",
+			columnList = "status, create_date DESC, id DESC, ai_estimated_repair_cost, damage_report_id"
 		)
 	}
 )

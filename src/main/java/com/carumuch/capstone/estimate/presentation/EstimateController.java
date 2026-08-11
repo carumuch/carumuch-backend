@@ -36,6 +36,7 @@ public class EstimateController {
 		@ModelAttribute SearchEstimateRequest request,
 		@ModelAttribute EstimateScrollRequest scrollRequest
 	) {
+		scrollRequest.validateCursorPair();
 		return ResponseEntity.ok().body(ApiResponse.of(estimateService.searchEstimates(request, scrollRequest)));
 	}
 

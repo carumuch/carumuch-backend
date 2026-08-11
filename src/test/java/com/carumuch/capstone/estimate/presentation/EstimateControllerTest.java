@@ -613,5 +613,35 @@ class EstimateControllerTest extends RestDocsSupport {
 					)
 				));
 		}
+
+		@Test
+		void 견적서_조건_검색_4XX_cursorCreatedAt만_전달한_경우() throws Exception {
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("cursorCreatedAt", "2026-08-06T12:00:00")
+					.param("size", "10")
+			);
+
+			actions
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."));
+
+			Mockito.verifyNoInteractions(estimateService);
+		}
+
+		@Test
+		void 견적서_조건_검색_4XX_cursorId만_전달한_경우() throws Exception {
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("cursorId", "100")
+					.param("size", "10")
+			);
+
+			actions
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."));
+
+			Mockito.verifyNoInteractions(estimateService);
+		}
 	}
 }

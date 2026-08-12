@@ -539,7 +539,7 @@ class EstimateControllerTest extends RestDocsSupport {
 						.description("## 견적서 조건 검색 기능 \n"
 							+ "### 설명 \n"
 							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)\n"
-							+ "- 다음 요청에는 응답의 nextCursorId, nextCursorCreatedAt 값을 cursorId, cursorCreatedAt으로 전달합니다."
+							+ "- 다음 요청에는 최초 요청과 동일한 검색 조건을 유지한 상태에서 응답의 nextCursorId, nextCursorCreatedAt 값을 cursorId, cursorCreatedAt으로 전달합니다.\n"
 							+ "- 견적서는 최신순으로 조회됩니다.\n"
 						)
 						.queryParameters(

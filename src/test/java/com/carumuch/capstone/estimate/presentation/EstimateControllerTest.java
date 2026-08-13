@@ -441,7 +441,7 @@ class EstimateControllerTest extends RestDocsSupport {
 			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(
 				null,
 				null,
-				10
+				2
 			);
 
 			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
@@ -462,12 +462,12 @@ class EstimateControllerTest extends RestDocsSupport {
 
 			EstimateScrollResponse responseDto = new EstimateScrollResponse(
 				List.of(
-					new EstimateDetailResponse(estimateFixture),
-					new EstimateDetailResponse(estimateFixture2)
+					new EstimateDetailResponse(estimateFixture2),
+					new EstimateDetailResponse(estimateFixture)
 				),
 				true,
-				estimateFixture2.getId(),
-				estimateFixture2.getCreateDate()
+				estimateFixture.getId(),
+				estimateFixture.getCreateDate()
 			);
 
 			Mockito.when(
@@ -480,7 +480,7 @@ class EstimateControllerTest extends RestDocsSupport {
 			// when
 			ResultActions actions = mockMvc.perform(
 				get(BASE_URI + "/search")
-					.param("size", "10")
+					.param("size", "2")
 					.param("minRepairCost", searchEstimateRequest.minRepairCost().toString())
 					.param("maxRepairCost", searchEstimateRequest.maxRepairCost().toString())
 					.param("sido", searchEstimateRequest.sido())

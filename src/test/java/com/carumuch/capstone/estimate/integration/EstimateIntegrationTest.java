@@ -14,7 +14,9 @@ import com.carumuch.capstone.common.exception.ForbiddenException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.damage.domain.report.DamageReport;
 import com.carumuch.capstone.damage.domain.report.DamageReportRepository;
+import com.carumuch.capstone.damage.domain.report.RepairRegion;
 import com.carumuch.capstone.damage.domain.vehicle.Vehicle;
+import com.carumuch.capstone.damage.domain.vehicle.VehicleOwnershipType;
 import com.carumuch.capstone.damage.domain.vehicle.VehicleRepository;
 import com.carumuch.capstone.estimate.application.EstimateService;
 import com.carumuch.capstone.estimate.domain.Estimate;
@@ -278,33 +280,84 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 		@Test
 		void 견적서를_조회한다() {
 		    //given
-			DamageReport damageReportFixture = DamageReportFixture.DAMAGE_REPORT_FIXTURE_1.create();
-			DamageReport damageReport = damageReportRepository.save(
-				new DamageReport(
-					damageReportFixture.getDescription(),
-					damageReportFixture.getPreferredRepairRegion(),
-					damageReportFixture.isPickupRequired(),
-					damageReportFixture.getImagePath(),
-					vehicle,
-					user.getId()
-				)
-			);
+				Estimate olderEstimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
+				Estimate recentEstimateFixture = EstimateFixture.ESTIMATE_FIXTURE_4.create();
 
-			Estimate estimateFixture2 = EstimateFixture.ESTIMATE_FIXTURE_4.create();
-			Estimate recentEstimate = estimateRepository.save(
-				new Estimate(
-					estimateFixture2.getRepairCost(),
-					estimateFixture2.getRepairParts(),
-					estimateFixture2.getEstimateStatus(),
-					estimateFixture2.getImagePath(),
-					damageReport
-				)
-			);
+				User firstSearchUser = userRepository.save(UserFixture.USER_FIXTURE_2.create());
+				Vehicle firstSearchVehicle = vehicleRepository.save(
+					new Vehicle(
+						"99가9991",
+						VehicleOwnershipType.PERSONAL,
+						"TEST_BRAND_158",
+						2099,
+						"TEST_MODEL_158",
+						"검색유저1",
+						firstSearchUser
+					)
+				);
+				DamageReport firstSearchDamageReport = damageReportRepository.save(
+					new DamageReport(
+						"검색용 사고 1",
+						new RepairRegion("테스트시", "테스트구"),
+						true,
+						"http://search-damage-report-1.com",
+						firstSearchVehicle,
+						firstSearchUser.getId()
+					)
+				);
+				Estimate olderEstimate = estimateRepository.save(
+					new Estimate(
+						olderEstimateFixture.getRepairCost(),
+						olderEstimateFixture.getRepairParts(),
+						EstimateStatus.OPEN,
+						"http://search-estimate-1.com",
+						firstSearchDamageReport
+					)
+				);
 
-			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
-				null, null, null, null, null, null, null, null
-			);
-			EstimateScrollRequest firstScrollRequest = new EstimateScrollRequest(null, null, 1);
+				User secondSearchUser = userRepository.save(UserFixture.USER_FIXTURE_3.create());
+				Vehicle secondSearchVehicle = vehicleRepository.save(
+					new Vehicle(
+						"99가9992",
+						VehicleOwnershipType.PERSONAL,
+						"TEST_BRAND_158",
+						2099,
+						"TEST_MODEL_158",
+						"검색유저2",
+						secondSearchUser
+					)
+				);
+				DamageReport secondSearchDamageReport = damageReportRepository.save(
+					new DamageReport(
+						"검색용 사고 2",
+						new RepairRegion("테스트시", "테스트구"),
+						true,
+						"http://search-damage-report-2.com",
+						secondSearchVehicle,
+						secondSearchUser.getId()
+					)
+				);
+				Estimate recentEstimate = estimateRepository.save(
+					new Estimate(
+						recentEstimateFixture.getRepairCost(),
+						recentEstimateFixture.getRepairParts(),
+						EstimateStatus.OPEN,
+						"http://search-estimate-2.com",
+						secondSearchDamageReport
+					)
+				);
+
+				SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+					null,
+					null,
+					"테스트시",
+					"테스트구",
+					true,
+					"TEST_BRAND_158",
+					2099,
+					"TEST_MODEL_158"
+				);
+				EstimateScrollRequest firstScrollRequest = new EstimateScrollRequest(null, null, 1);
 
 
 		    //when
@@ -325,10 +378,14 @@ public class EstimateIntegrationTest extends IntegrationSupportTest {
 				() -> assertThat(firstResult.hasNext()).isTrue(),
 				() -> assertThat(firstResult.content().get(0).estimateId()).isEqualTo(recentEstimate.getId()),
 				() -> assertThat(firstResult.content().get(0).imagePath()).isEqualTo(recentEstimate.getImagePath()),
+				() -> assertThat(firstResult.nextCursorId()).isEqualTo(recentEstimate.getId()),
+				() -> assertThat(firstResult.nextCursorCreatedAt()).isEqualTo(recentEstimate.getCreateDate()),
 				() -> assertThat(secondResult.content()).hasSize(1),
 				() -> assertThat(secondResult.hasNext()).isFalse(),
-				() -> assertThat(secondResult.content().get(0).estimateId()).isEqualTo(estimate.getId()),
-				() -> assertThat(secondResult.content().get(0).imagePath()).isEqualTo(estimate.getImagePath())
+				() -> assertThat(secondResult.content().get(0).estimateId()).isEqualTo(olderEstimate.getId()),
+				() -> assertThat(secondResult.content().get(0).imagePath()).isEqualTo(olderEstimate.getImagePath()),
+				() -> assertThat(secondResult.nextCursorId()).isNull(),
+				() -> assertThat(secondResult.nextCursorCreatedAt()).isNull()
 			);
 		}
 	}

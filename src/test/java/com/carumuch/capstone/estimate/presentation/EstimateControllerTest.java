@@ -615,6 +615,88 @@ class EstimateControllerTest extends RestDocsSupport {
 		}
 
 		@Test
+		void 견적서_조건_검색_다음_페이지_조회_2XX() throws Exception {
+			// given
+			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+				10_000,
+				100_000,
+				"서울특별시",
+				"강남구",
+				true,
+				"기아",
+				2022,
+				"K5"
+			);
+
+			LocalDateTime cursorCreatedAt = LocalDateTime.of(2026, 8, 6, 12, 0);
+			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(
+				cursorCreatedAt,
+				404L,
+				2
+			);
+
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_2.create();
+			ReflectionTestUtils.setField(estimateFixture, "id", 303L);
+			ReflectionTestUtils.setField(
+				estimateFixture,
+				"createDate",
+				LocalDateTime.of(2026, 8, 5, 18, 30)
+			);
+
+			EstimateScrollResponse responseDto = new EstimateScrollResponse(
+				List.of(new EstimateDetailResponse(estimateFixture)),
+				false,
+				null,
+				null
+			);
+
+			Mockito.when(
+				estimateService.searchEstimates(
+					searchEstimateRequest,
+					scrollRequest
+				)
+			).thenReturn(responseDto);
+
+			// when
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("size", "2")
+					.param("cursorCreatedAt", "2026-08-06T12:00:00")
+					.param("cursorId", "404")
+					.param("minRepairCost", searchEstimateRequest.minRepairCost().toString())
+					.param("maxRepairCost", searchEstimateRequest.maxRepairCost().toString())
+					.param("sido", searchEstimateRequest.sido())
+					.param("sigungu", searchEstimateRequest.sigungu())
+					.param("isPickupRequired", searchEstimateRequest.isPickupRequired().toString())
+					.param("brand", searchEstimateRequest.brand())
+					.param("modelYear", searchEstimateRequest.modelYear().toString())
+					.param("modelName", searchEstimateRequest.modelName())
+			);
+
+			// then
+			actions
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
+				.andExpect(jsonPath("$.data.hasNext").value(responseDto.hasNext()))
+				.andExpect(jsonPath("$.data.content[0].estimateId").value(responseDto.content().get(0).estimateId()))
+				.andExpect(jsonPath("$.data.content[0].repairCost").value(responseDto.content().get(0).repairCost()))
+				.andExpect(
+					jsonPath("$.data.content[0].damageReportInfo.description")
+						.value(responseDto.content().get(0).damageReportInfo().description()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.modelName")
+					.value(responseDto.content().get(0).vehicleInfo().modelName()))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.responseSchema(Schema.schema(EstimateScrollResponse.class.getSimpleName()))
+						.build()
+					)
+				));
+
+			Mockito.verify(estimateService).searchEstimates(searchEstimateRequest, scrollRequest);
+		}
+
+		@Test
 		void 견적서_조건_검색_4XX_cursorCreatedAt만_전달한_경우() throws Exception {
 			ResultActions actions = mockMvc.perform(
 				get(BASE_URI + "/search")
@@ -624,7 +706,14 @@ class EstimateControllerTest extends RestDocsSupport {
 
 			actions
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."));
+				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+						.build()
+					)
+				));
 
 			Mockito.verifyNoInteractions(estimateService);
 		}
@@ -639,7 +728,14 @@ class EstimateControllerTest extends RestDocsSupport {
 
 			actions
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."));
+				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+						.build()
+					)
+				));
 
 			Mockito.verifyNoInteractions(estimateService);
 		}

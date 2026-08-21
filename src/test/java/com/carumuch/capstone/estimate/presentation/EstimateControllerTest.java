@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -25,18 +25,16 @@ import com.carumuch.capstone.common.exception.CustomException;
 import com.carumuch.capstone.common.exception.NotFoundException;
 import com.carumuch.capstone.common.presentation.dto.ApiErrorResponse;
 import com.carumuch.capstone.common.presentation.dto.ApiResponse;
-import com.carumuch.capstone.common.presentation.dto.PagingRequest;
-import com.carumuch.capstone.common.presentation.dto.PagingResponse;
-import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateStatus;
+import com.carumuch.capstone.estimate.presentation.dto.request.EstimateScrollRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.SearchEstimateRequest;
 import com.carumuch.capstone.estimate.presentation.dto.request.UpdateEstimateStatusRequest;
 import com.carumuch.capstone.estimate.presentation.dto.response.EstimateDetailResponse;
+import com.carumuch.capstone.estimate.presentation.dto.response.EstimateScrollResponse;
 import com.carumuch.capstone.identity.domain.user.User;
 import com.carumuch.capstone.support.RestDocsSupport;
 import com.carumuch.capstone.support.fixture.EstimateFixture;
-import com.carumuch.capstone.support.fixture.UserFixture;
 import com.epages.restdocs.apispec.ResourceDocumentation;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
@@ -428,39 +426,80 @@ class EstimateControllerTest extends RestDocsSupport {
 	class SearchEstimates {
 		@Test
 		void 견적서_조건_검색_기능_2XX() throws Exception {
-			//given
+			// given
 			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
-				null, null, null, null, null, null, null, null
+				10_000,
+				100_000,
+				"서울특별시",
+				"강남구",
+				true,
+				"기아",
+				2022,
+				"K5"
 			);
-			PagingRequest pagingRequest = new PagingRequest(null, null, null);
+
+			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(
+				null,
+				null,
+				2
+			);
 
 			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_1.create();
 			ReflectionTestUtils.setField(estimateFixture, "id", 404L);
-			ReflectionTestUtils.setField(estimateFixture, "createDate", LocalDateTime.now());
+			ReflectionTestUtils.setField(
+				estimateFixture,
+				"createDate",
+				LocalDateTime.of(2026, 8, 6, 12, 0)
+			);
 
 			Estimate estimateFixture2 = EstimateFixture.ESTIMATE_FIXTURE_4.create();
 			ReflectionTestUtils.setField(estimateFixture2, "id", 500L);
-			ReflectionTestUtils.setField(estimateFixture2, "createDate", LocalDateTime.now());
+			ReflectionTestUtils.setField(
+				estimateFixture2,
+				"createDate",
+				LocalDateTime.of(2026, 8, 6, 13, 0)
+			);
 
+			EstimateScrollResponse responseDto = new EstimateScrollResponse(
+				List.of(
+					new EstimateDetailResponse(estimateFixture2),
+					new EstimateDetailResponse(estimateFixture)
+				),
+				true,
+				estimateFixture.getId(),
+				estimateFixture.getCreateDate()
+			);
 
-			PagingResponse<EstimateDetailResponse> responseDto = PagingResponse.from(
-				new PageImpl<>(List.of(estimateFixture, estimateFixture2)).map(EstimateDetailResponse::new));
+			Mockito.when(
+				estimateService.searchEstimates(
+					searchEstimateRequest,
+					scrollRequest
+				)
+			).thenReturn(responseDto);
 
-			Mockito.when(estimateService.searchEstimates(searchEstimateRequest, pagingRequest))
-				.thenReturn(responseDto);
-
-			//when
+			// when
 			ResultActions actions = mockMvc.perform(
 				get(BASE_URI + "/search")
+					.param("size", "2")
+					.param("minRepairCost", searchEstimateRequest.minRepairCost().toString())
+					.param("maxRepairCost", searchEstimateRequest.maxRepairCost().toString())
+					.param("sido", searchEstimateRequest.sido())
+					.param("sigungu", searchEstimateRequest.sigungu())
+					.param("isPickupRequired", searchEstimateRequest.isPickupRequired().toString())
+					.param("brand", searchEstimateRequest.brand())
+					.param("modelYear", searchEstimateRequest.modelYear().toString())
+					.param("modelName", searchEstimateRequest.modelName())
 			);
+
 
 			//then
 			actions
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
-
-				// paging meta
-				.andExpect(jsonPath("$.data.page.number").value(1))
+				.andExpect(jsonPath("$.data.hasNext").value(responseDto.hasNext()))
+				.andExpect(jsonPath("$.data.nextCursorId").value(responseDto.nextCursorId()))
+				.andExpect(jsonPath("$.data.nextCursorCreatedAt").value(responseDto.nextCursorCreatedAt().format(
+					DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
 
 				// content[0] = 견적서 정보
 				.andExpect(jsonPath("$.data.content[0].estimateId").value(responseDto.content().get(0).estimateId()))
@@ -499,13 +538,15 @@ class EstimateControllerTest extends RestDocsSupport {
 						.summary("견적서 조건 검색")
 						.description("## 견적서 조건 검색 기능 \n"
 							+ "### 설명 \n"
-							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)"
+							+ "- 원하는 조건을 쿼리파라미터에 추가해주세요 (ex: ?brand=기아)\n"
+							+ "- 다음 요청에는 최초 요청과 동일한 검색 조건을 유지한 상태에서 응답의 nextCursorId, nextCursorCreatedAt 값을 cursorId, cursorCreatedAt으로 전달합니다.\n"
+							+ "- 견적서는 최신순으로 조회됩니다.\n"
 						)
 						.queryParameters(
 							parameterWithName("size").description(
-								"페이지에 표시할 size입니다. 10 ~ 100입니다. 만약 다른 값이 들어오면 10개로 고정합니다.").optional(),
-							parameterWithName("page").description("page가 없거나, 음수라면 첫 페이지로 고정합니다.").optional(),
-							parameterWithName("sort").description("'POPULAR' or 'popular' 시 공업사 수리 희망 수가 높은 순으로 제공합니다.(기본: 생성일 기준 내림차순)").optional(),
+								"한 번에 조회할 개수입니다. 1 ~ 100 범위를 벗어나면 10개로 고정합니다.").optional(),
+							parameterWithName("cursorId").description("다음 조회 시작점의 마지막 견적서 식별자입니다.").optional(),
+							parameterWithName("cursorCreatedAt").description("다음 조회 시작점의 마지막 견적서 생성 시각입니다. ISO-8601 형식입니다.").optional(),
 							parameterWithName("minRepairCost").description("최소 산정 금액").optional(),
 							parameterWithName("maxRepairCost").description("최대 산정 금액").optional(),
 							parameterWithName("sido").description("수리 희망 시/도").optional(),
@@ -515,26 +556,16 @@ class EstimateControllerTest extends RestDocsSupport {
 							parameterWithName("modelYear").description("사고 차량의 연식").optional(),
 							parameterWithName("modelName").description("사고 차량의 이름").optional()
 						)
-						.responseSchema(Schema.schema(PagingResponse.class.getSimpleName()))
+						.responseSchema(Schema.schema(EstimateScrollResponse.class.getSimpleName()))
 						.responseFields(
 							fieldWithPath("message").description("성공 응답 메세지입니다.").type(JsonFieldType.STRING),
 
-							// paging wrapper
-							fieldWithPath("data.content").description("페이징된 견적서 목록입니다.").type(JsonFieldType.ARRAY),
-							fieldWithPath("data.page").description("페이지 메타데이터입니다.").type(JsonFieldType.OBJECT),
-
-							// page meta
-							fieldWithPath("data.page.number").description("현재 페이지 번호(1부터 시작)입니다.")
-								.type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.size").description("페이지 크기입니다.").type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.totalElements").description("전체 요소 개수입니다.")
-								.type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.totalPages").description("전체 페이지 수입니다.")
-								.type(JsonFieldType.NUMBER),
-							fieldWithPath("data.page.hasNext").description("다음 페이지 존재 여부입니다.")
-								.type(JsonFieldType.BOOLEAN),
-							fieldWithPath("data.page.hasPrevious").description("이전 페이지 존재 여부입니다.")
-								.type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.content").description("무한 스크롤로 조회한 견적서 목록입니다.").type(JsonFieldType.ARRAY),
+							fieldWithPath("data.hasNext").description("다음 조회 구간 존재 여부입니다.").type(JsonFieldType.BOOLEAN),
+							fieldWithPath("data.nextCursorId").description("다음 조회에 사용할 마지막 견적서 식별자입니다.")
+								.type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.nextCursorCreatedAt").description("다음 조회에 사용할 마지막 견적서 생성 시각입니다.")
+								.type(JsonFieldType.STRING).optional(),
 
 							// content
 							fieldWithPath("data.content[].estimateId").description("견적서 식별자입니다.")
@@ -581,6 +612,132 @@ class EstimateControllerTest extends RestDocsSupport {
 						.build()
 					)
 				));
+		}
+
+		@Test
+		void 견적서_조건_검색_다음_페이지_조회_2XX() throws Exception {
+			// given
+			SearchEstimateRequest searchEstimateRequest = new SearchEstimateRequest(
+				10_000,
+				100_000,
+				"서울특별시",
+				"강남구",
+				true,
+				"기아",
+				2022,
+				"K5"
+			);
+
+			LocalDateTime cursorCreatedAt = LocalDateTime.of(2026, 8, 6, 12, 0);
+			EstimateScrollRequest scrollRequest = new EstimateScrollRequest(
+				cursorCreatedAt,
+				404L,
+				2
+			);
+
+			Estimate estimateFixture = EstimateFixture.ESTIMATE_FIXTURE_2.create();
+			ReflectionTestUtils.setField(estimateFixture, "id", 303L);
+			ReflectionTestUtils.setField(
+				estimateFixture,
+				"createDate",
+				LocalDateTime.of(2026, 8, 5, 18, 30)
+			);
+
+			EstimateScrollResponse responseDto = new EstimateScrollResponse(
+				List.of(new EstimateDetailResponse(estimateFixture)),
+				false,
+				null,
+				null
+			);
+
+			Mockito.when(
+				estimateService.searchEstimates(
+					searchEstimateRequest,
+					scrollRequest
+				)
+			).thenReturn(responseDto);
+
+			// when
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("size", "2")
+					.param("cursorCreatedAt", "2026-08-06T12:00:00")
+					.param("cursorId", "404")
+					.param("minRepairCost", searchEstimateRequest.minRepairCost().toString())
+					.param("maxRepairCost", searchEstimateRequest.maxRepairCost().toString())
+					.param("sido", searchEstimateRequest.sido())
+					.param("sigungu", searchEstimateRequest.sigungu())
+					.param("isPickupRequired", searchEstimateRequest.isPickupRequired().toString())
+					.param("brand", searchEstimateRequest.brand())
+					.param("modelYear", searchEstimateRequest.modelYear().toString())
+					.param("modelName", searchEstimateRequest.modelName())
+			);
+
+			// then
+			actions
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message").value(BASE_SUCCESS_MESSAGE))
+				.andExpect(jsonPath("$.data.hasNext").value(responseDto.hasNext()))
+				.andExpect(jsonPath("$.data.content[0].estimateId").value(responseDto.content().get(0).estimateId()))
+				.andExpect(jsonPath("$.data.content[0].repairCost").value(responseDto.content().get(0).repairCost()))
+				.andExpect(
+					jsonPath("$.data.content[0].damageReportInfo.description")
+						.value(responseDto.content().get(0).damageReportInfo().description()))
+				.andExpect(jsonPath("$.data.content[0].vehicleInfo.modelName")
+					.value(responseDto.content().get(0).vehicleInfo().modelName()))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.responseSchema(Schema.schema(EstimateScrollResponse.class.getSimpleName()))
+						.build()
+					)
+				));
+
+			Mockito.verify(estimateService).searchEstimates(searchEstimateRequest, scrollRequest);
+		}
+
+		@Test
+		void 견적서_조건_검색_4XX_cursorCreatedAt만_전달한_경우() throws Exception {
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("cursorCreatedAt", "2026-08-06T12:00:00")
+					.param("size", "10")
+			);
+
+			actions
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+						.build()
+					)
+				));
+
+			Mockito.verifyNoInteractions(estimateService);
+		}
+
+		@Test
+		void 견적서_조건_검색_4XX_cursorId만_전달한_경우() throws Exception {
+			ResultActions actions = mockMvc.perform(
+				get(BASE_URI + "/search")
+					.param("cursorId", "100")
+					.param("size", "10")
+			);
+
+			actions
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("cursorCreatedAt과 cursorId는 함께 전달해야 합니다."))
+				.andDo(restDocsHandler.document(
+					ResourceDocumentation.resource(ResourceSnippetParameters.builder()
+						.tag(BASE_TAG)
+						.responseSchema(Schema.schema(ApiErrorResponse.class.getSimpleName()))
+						.build()
+					)
+				));
+
+			Mockito.verifyNoInteractions(estimateService);
 		}
 	}
 }

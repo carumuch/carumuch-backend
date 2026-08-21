@@ -13,13 +13,21 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Table(
 	name = "vehicle",
+	indexes = {
+		@Index(
+			name = "idx_vehicle_brand_model_year",
+			columnList = "brand, model_name, model_year"
+		)
+	},
 	uniqueConstraints = {
 		@UniqueConstraint(
 			name = "uk_vehicle_user_id",
-			columnNames = "user_id"),
+			columnNames = "user_id"
+		),
 		@UniqueConstraint(
 			name = "uk_vehicle_license_number",
-			columnNames = "license_number")
+			columnNames = "license_number"
+		)
 	}
 )
 @Getter

@@ -2,10 +2,10 @@ package com.carumuch.capstone.estimate.infrastructure.persistence;
 
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.carumuch.capstone.estimate.application.dto.EstimateScrollQuery;
+import com.carumuch.capstone.estimate.application.dto.EstimateScrollSlice;
 import com.carumuch.capstone.estimate.application.dto.EstimateSearchCondition;
 import com.carumuch.capstone.estimate.domain.Estimate;
 import com.carumuch.capstone.estimate.domain.EstimateRepository;
@@ -40,7 +40,7 @@ public class EstimateRepositoryImpl implements EstimateRepository {
 	}
 
 	@Override
-	public Page<Estimate> searchEstimates(EstimateSearchCondition condition, Pageable pageable) {
-		return estimateQueryRepository.searchEstimates(condition, pageable);
+	public EstimateScrollSlice<Estimate> searchEstimates(EstimateSearchCondition condition, EstimateScrollQuery scrollQuery) {
+		return estimateQueryRepository.searchEstimates(condition, scrollQuery);
 	}
 }

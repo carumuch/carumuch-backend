@@ -51,9 +51,4 @@ public class DamageReportRepositoryImpl implements DamageReportRepository {
 	public Optional<DamageReport> findByIdAndUserId(Long damageReportId, Long userId) {
 		return jpaDamageRepository.findByIdAndUserId(damageReportId, userId);
 	}
-
-	@Override
-	public DamageReport getReferenceById(Long id) {
-		return jpaDamageRepository.getReferenceById(id);
-	}
 }

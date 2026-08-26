@@ -69,8 +69,8 @@ public class DamageReportService {
 			)).toList();
 	}
 
-	public PagingResponse<DamageReportInfoResponse> findReports(Long userId, PagingRequest requestDto) {
-		Page<DamageReportInfoResponse> page = damageReportRepository.findPageByUserId(userId, requestDto.page(), requestDto.size(), requestDto.sort())
+	public PagingResponse<DamageReportInfoResponse> findReports(Long userId, PagingRequest pagingRequest) {
+		Page<DamageReportInfoResponse> page = damageReportRepository.findPageByUserId(userId, pagingRequest.toPageRequest())
 			.map(dr -> new DamageReportInfoResponse(
 				dr.getId(),
 				dr.getDescription(),

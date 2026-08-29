@@ -66,8 +66,7 @@ public class BodyShopService {
 	public PagingResponse<BodyShopListResponse> search(SearchBodyShopRequest request, PagingRequest pagingRequest) {
 		Page<BodyShop> bodyShops = bodyShopRepository
 			.search(
-				BodyShopSearchCondition.from(request),
-				PageRequest.of(pagingRequest.page(), pagingRequest.size(), Sort.by(pagingRequest.sort()))
+				BodyShopSearchCondition.from(request), pagingRequest.toPageRequest()
 			);
 		return PagingResponse.from(bodyShops.map(BodyShopListResponse::new));
 	}

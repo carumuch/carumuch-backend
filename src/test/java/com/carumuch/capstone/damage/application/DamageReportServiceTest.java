@@ -342,7 +342,7 @@ class DamageReportServiceTest {
 				13
 			);
 
-			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort()))
+			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.toPageRequest()))
 				.thenReturn(page);
 		    
 		    //when
@@ -350,7 +350,7 @@ class DamageReportServiceTest {
 		    
 		    //then
 		    Mockito.verify(damageReportRepository, Mockito.times(1))
-				.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort());
+				.findPageByUserId(userId, pagingRequest.toPageRequest());
 		}
 		
 		@Test
@@ -364,7 +364,7 @@ class DamageReportServiceTest {
 				13
 			);
 
-			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort()))
+			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.toPageRequest()))
 				.thenReturn(page);
 		    
 		    //when
@@ -392,7 +392,7 @@ class DamageReportServiceTest {
 				13
 			);
 
-			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.page(), pagingRequest.size(), pagingRequest.sort()))
+			Mockito.when(damageReportRepository.findPageByUserId(userId, pagingRequest.toPageRequest()))
 				.thenReturn(page);
 
 			//when

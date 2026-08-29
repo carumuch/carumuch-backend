@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
@@ -42,18 +43,12 @@ public class DamageReportRepositoryImpl implements DamageReportRepository {
 	}
 
 	@Override
-	public Page<DamageReport> findPageByUserId(Long userId, int page, int size, String sort) {
-		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort));
-		return jpaDamageRepository.findPageByUserId(userId, pageRequest);
+	public Page<DamageReport> findPageByUserId(Long userId, Pageable pageable) {
+		return jpaDamageRepository.findPageByUserId(userId, pageable);
 	}
 
 	@Override
 	public Optional<DamageReport> findByIdAndUserId(Long damageReportId, Long userId) {
 		return jpaDamageRepository.findByIdAndUserId(damageReportId, userId);
-	}
-
-	@Override
-	public DamageReport getReferenceById(Long id) {
-		return jpaDamageRepository.getReferenceById(id);
 	}
 }

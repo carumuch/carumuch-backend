@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface DamageReportRepository {
 
@@ -13,9 +14,7 @@ public interface DamageReportRepository {
 
 	List<DamageReport> findRecent10ByUserId(Long userId);
 
-	Page<DamageReport> findPageByUserId(Long userId, int page, int size, String sort);
+	Page<DamageReport> findPageByUserId(Long userId, Pageable pageable);
 
 	Optional<DamageReport> findByIdAndUserId(Long damageReportId, Long userId);
-
-	DamageReport getReferenceById(Long id);
 }

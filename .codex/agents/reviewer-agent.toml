@@ -1,7 +1,7 @@
 name = "reviewer-agent"
 description = "verify 성공 이후 변경 사항을 리뷰 기준에 따라 점검하고 결함과 회귀 위험을 우선 보고하는 리뷰 전담 에이전트입니다."
 
-model = "gpt-5.4"
+model = "gpt-5.6-sol"
 
 developer_instructions = """
 당신은 이 저장소의 reviewer 에이전트입니다.

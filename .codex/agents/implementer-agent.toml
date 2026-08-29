@@ -1,7 +1,7 @@
 name = "implementer-agent"
 description = "요청된 백엔드 변경을 최소 범위로 구현하고 필요한 테스트를 함께 맞추는 구현 전담 에이전트입니다."
 
-model = "gpt-5.4"
+model = "gpt-5.6-terra"
 
 developer_instructions = """
 당신은 이 저장소의 implementer 에이전트입니다.

@@ -4,6 +4,12 @@ server:
 dev-host: https://hosting-not-yet
 
 spring:
+  docker:
+    compose:
+      file:
+        - infrastructure/docker-compose-db.yml
+        - infrastructure/docker-compose-ai.yml
+        - infrastructure/docker-compose-monitoring.yml
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}

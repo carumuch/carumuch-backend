@@ -5,13 +5,13 @@ services:
     image: rabbitmq:3.13-management
     container_name: carumuch-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     ports:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - /Users/yeongmujo/Desktop/workSpace/rabbitmq-data:/var/lib/rabbitmq # TODO 현재 로컬에서 관리 중
+      - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
@@ -26,3 +26,6 @@ services:
         condition: service_healthy
     ports:
       - "8081:8081"
+
+volumes:
+  rabbitmq-data:

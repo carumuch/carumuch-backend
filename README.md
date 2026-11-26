@@ -115,16 +115,12 @@ RABBITMQ_PASSWORD=
 ./gradlew bootRun
 ```
 
-RabbitMQ와 AI Mock server 실행:
+`application.yml`에 등록된 Docker Compose 설정에 따라 DB(MySQL, Redis), RabbitMQ·AI Mock server, 모니터링 스택이 함께 자동 기동됩니다.
+
+컨테이너 중지:
 
 ```bash
-docker compose -f infrastructure/docker-compose-ai.yml up -d
-```
-
-모니터링 스택 실행:
-
-```bash
-docker compose -f infrastructure/docker-compose-monitoring.yml up -d
+docker compose -f infrastructure/docker-compose-db.yml -f infrastructure/docker-compose-ai.yml -f infrastructure/docker-compose-monitoring.yml stop
 ```
 
 <br>
